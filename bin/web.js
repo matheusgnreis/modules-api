@@ -56,6 +56,7 @@ module.exports = function (config) {
       let storeId
       if (meta.query.hasOwnProperty('store_id')) {
         storeId = meta.query.store_id
+        delete meta.query.store_id
       } else {
         // default for X-Store-ID header
         storeId = req.headers['x-store-id']
