@@ -37,18 +37,6 @@ const conf = {
   'vary_fields': false
 }
 
-function middleware (id, meta, body, respond, req, res, resource, verb, endpoint) {
-  // function called before endpoints
-  // authentications and other prerequisites when necessary
-  // logger.log(resource)
-  if (typeof req.headers['x-real-ip'] === 'string') {
-    // pass to endpoint
-    endpoint(id, meta, body, respond)
-  } else {
-    respond({}, null, 403, 100, 'Who are you? Unknown IP address')
-  }
-}
-
 module.exports = function (config) {
   if (config.proxyAuthHeader) {
     conf.proxy.auth = config.proxyAuthHeader
@@ -58,6 +46,34 @@ module.exports = function (config) {
   }
   if (config.proxyBaseUri) {
     conf.base_uri = config.proxyBaseUri
+  }
+
+  var middleware = function (id, meta, body, respond, req, res, resource, verb, endpoint) {
+    // function called before endpoints
+    // authentications and other prerequisites when necessary
+    if (typeof req.headers['x-real-ip'] === 'string') {
+      // requires store ID
+      let storeId
+      if (meta.query.hasOwnProperty('store_id')) {
+        storeId = meta.query.store_id
+      } else {
+        // default for X-Store-ID header
+        storeId = req.headers['x-store-id']
+      }
+      if (typeof storeId === 'string') {
+        storeId = parseInt(storeId, 10)
+      }
+      if (typeof storeId !== 'number' || isNaN(storeId)) {
+        // invalid ID string
+        respond({}, null, 403, 121, 'Invalid value on X-Store-ID header')
+        return
+      }
+
+      // pass to endpoint
+      endpoint(id, meta, body, respond, config, storeId)
+    } else {
+      respond({}, null, 403, 100, 'Who are you? Unknown IP address')
+    }
   }
 
   // start web application
