@@ -10,6 +10,8 @@
   "license": "GPL-3.0",
   "private": true,
   "dependencies": {
-    "rest-auto-router": "3.x"
+    "rest-auto-router": "3.x",
+    "ajv": "5.x",
+    "ajv-i18n": "2.x"
   }
 }
