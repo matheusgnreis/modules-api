@@ -3,5 +3,8 @@
   "proxyPort": 3000,
   "proxyAuthHeader": "HASH",
   "modulesHost": "http://modules.e-com.plus",
-  "modulesPort": 80
+  "modulesPort": 80,
+  "apiHost": "127.0.0.1",
+  "apiBaseUri": "/v1/",
+  "apiPort": 443
 }
