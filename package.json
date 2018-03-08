@@ -1,0 +1,15 @@
+{
+  "name": "ecomplus-mods",
+  "version": "0.1.0",
+  "description": "E-Com Plus Mods API Node.js App",
+  "main": "main.js",
+  "scripts": {
+    "test": "node ./main.js"
+  },
+  "author": "E-Com Club",
+  "license": "GPL-3.0",
+  "private": true,
+  "dependencies": {
+    "rest-auto-router": "3.x"
+  }
+}
