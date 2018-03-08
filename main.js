@@ -8,7 +8,7 @@
  * @author E-Com Club
  */
 
-function error (err) {
+process.on('uncaughtException', (err) => {
   // fatal error
   // log to file before exit
   let msg = '\n[' + new Date().toString() + ']\n'
@@ -27,28 +27,11 @@ function error (err) {
   fs.appendFile('/var/log/nodejs/_stderr', msg, () => {
     process.exit(1)
   })
-}
-
-process.on('uncaughtException', error)
-
-// NodeJS filesystem module
-const fs = require('fs')
+})
 
 // web application
 // recieve requests from Nginx by reverse proxy
-let web = require('./bin/web.js')
-
-// read config file
-fs.readFile(process.cwd() + '/config/config.json', 'utf8', (err, data) => {
-  if (err) {
-    // can't read config file
-    throw err
-  } else {
-    let config = JSON.parse(data)
-    // start web app
-    web(config)
-  }
-})
+require('./bin/web.js')
 
 // local application
 // executable server side only

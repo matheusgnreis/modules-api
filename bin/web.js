@@ -3,6 +3,8 @@
 // log on files
 const logger = require('./../lib/Logger.js')
 
+// NodeJS filesystem module
+const fs = require('fs')
 // https://www.npmjs.com/package/rest-auto-router
 const restAutoRouter = require('rest-auto-router')
 
@@ -37,50 +39,58 @@ const conf = {
   'vary_fields': false
 }
 
-module.exports = function (config) {
-  if (config.proxyAuthHeader) {
-    conf.proxy.auth = config.proxyAuthHeader
-  }
-  if (config.proxyPort) {
-    conf.port = config.proxyPort
-  }
-  if (config.proxyBaseUri) {
-    conf.base_uri = config.proxyBaseUri
-  }
-
-  var middleware = function (id, meta, body, respond, req, res, resource, verb, endpoint) {
-    // function called before endpoints
-    // authentications and other prerequisites when necessary
-    if (typeof req.headers['x-real-ip'] === 'string') {
-      // requires store ID
-      let storeId
-      if (meta.query.hasOwnProperty('store_id')) {
-        storeId = meta.query.store_id
-        delete meta.query.store_id
-      } else {
-        // default for X-Store-ID header
-        storeId = req.headers['x-store-id']
-      }
-      if (typeof storeId === 'string') {
-        storeId = parseInt(storeId, 10)
-      }
-      if (typeof storeId !== 'number' || isNaN(storeId)) {
-        // invalid ID string
-        respond({}, null, 403, 121, 'Invalid value on X-Store-ID header')
-        return
-      }
-
-      // pass to endpoint
-      endpoint(id, meta, body, respond, config, storeId)
+function middleware (id, meta, body, respond, req, res, resource, verb, endpoint) {
+  // function called before endpoints
+  // authentications and other prerequisites when necessary
+  if (typeof req.headers['x-real-ip'] === 'string') {
+    // requires store ID
+    let storeId
+    if (meta.query.hasOwnProperty('store_id')) {
+      storeId = meta.query.store_id
+      delete meta.query.store_id
     } else {
-      respond({}, null, 403, 100, 'Who are you? Unknown IP address')
+      // default for X-Store-ID header
+      storeId = req.headers['x-store-id']
     }
+    if (typeof storeId === 'string') {
+      storeId = parseInt(storeId, 10)
+    }
+    if (typeof storeId !== 'number' || isNaN(storeId)) {
+      // invalid ID string
+      respond({}, null, 403, 121, 'Invalid value on X-Store-ID header')
+      return
+    }
+
+    // pass to endpoint
+    endpoint(id, meta, body, respond, storeId)
+  } else {
+    respond({}, null, 403, 100, 'Who are you? Unknown IP address')
   }
-
-  // start web application
-  // recieve requests from Nginx by reverse proxy
-  restAutoRouter(conf, middleware, logger)
-
-  // debug
-  logger.log('Running Mods REST API on port ' + conf.port)
 }
+
+// read config file
+fs.readFile(process.cwd() + '/config/config.json', 'utf8', (err, data) => {
+  if (err) {
+    // can't read config file
+    throw err
+  } else {
+    let config = JSON.parse(data)
+    // setup web app
+    if (config.proxyAuthHeader) {
+      conf.proxy.auth = config.proxyAuthHeader
+    }
+    if (config.proxyPort) {
+      conf.port = config.proxyPort
+    }
+    if (config.proxyBaseUri) {
+      conf.base_uri = config.proxyBaseUri
+    }
+
+    // start web application
+    // recieve requests from Nginx by reverse proxy
+    restAutoRouter(conf, middleware, logger)
+
+    // debug
+    logger.log('Running Mods REST API on port ' + conf.port)
+  }
+})

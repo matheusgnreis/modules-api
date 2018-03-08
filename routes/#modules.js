@@ -14,8 +14,8 @@ const ajv = Ajv({ allErrors: true })
 // Node raw HTTP module
 // const http = require('http')
 
-function ajvErrorHandling (errors, respond, coll) {
-  let moreInfo = '/' + coll + '/schema.json'
+function ajvErrorHandling (errors, respond, modName) {
+  let moreInfo = '/' + modName + '/schema.json'
   let devMsg = 'Bad-formatted JSON body (POST) or URL query params (GET), details in user_message'
   let usrMsg = {
     'en_us': ajv.errorsText(errors, { separator: '\n' })
@@ -27,22 +27,22 @@ function ajvErrorHandling (errors, respond, coll) {
   respond({}, null, 400, 'MOD901', devMsg, usrMsg, moreInfo)
 }
 
-function runModule (obj, respond, config, storeId, modName, validate) {
+function runModule (obj, respond, storeId, modName, validate) {
   // ajv
   let valid = validate(obj)
   if (!valid) {
-    ajvErrorHandling(validate.errors, respond)
+    ajvErrorHandling(validate.errors, respond, modName)
   } else {
     // proceed to modules host
   }
 }
 
-function post ([ id, , body, respond, config, storeId ], modName, validate) {
+function post ([ id, , body, respond, storeId ], modName, validate) {
   // run module with JSON body as object
-  runModule(body, respond, config, storeId, modName, validate)
+  runModule(body, respond, storeId, modName, validate)
 }
 
-function get ([ id, meta, , respond, config, storeId ], modName, validate, schema) {
+function get ([ id, meta, , respond, storeId ], modName, validate, schema) {
   if (id) {
     if (id === 'schema') {
       // return JSON Schema
@@ -53,11 +53,8 @@ function get ([ id, meta, , respond, config, storeId ], modName, validate, schem
     }
   } else {
     // run module with query params as object
-    runModule(meta.query, respond, config, storeId, modName, validate)
+    runModule(meta.query, respond, storeId, modName, validate)
   }
 }
 
-module.exports = {
-  'get': get,
-  'post': post
-}
+module.exports = { 'get': get, 'post': post }
