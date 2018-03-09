@@ -34,6 +34,7 @@ function runModule (obj, respond, storeId, modName, validate) {
     ajvErrorHandling(validate.errors, respond, modName)
   } else {
     // proceed to modules host
+    respond(null, null, 204)
   }
 }
 

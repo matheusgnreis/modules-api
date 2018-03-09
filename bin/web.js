@@ -2,9 +2,6 @@
 
 // log on files
 const logger = require('./../lib/Logger.js')
-
-// NodeJS filesystem module
-const fs = require('fs')
 // https://www.npmjs.com/package/rest-auto-router
 const restAutoRouter = require('rest-auto-router')
 
@@ -69,28 +66,22 @@ function middleware (id, meta, body, respond, req, res, resource, verb, endpoint
 }
 
 // read config file
-fs.readFile(process.cwd() + '/config/config.json', 'utf8', (err, data) => {
-  if (err) {
-    // can't read config file
-    throw err
-  } else {
-    let config = JSON.parse(data)
-    // setup web app
-    if (config.proxyAuthHeader) {
-      conf.proxy.auth = config.proxyAuthHeader
-    }
-    if (config.proxyPort) {
-      conf.port = config.proxyPort
-    }
-    if (config.proxyBaseUri) {
-      conf.base_uri = config.proxyBaseUri
-    }
-
-    // start web application
-    // recieve requests from Nginx by reverse proxy
-    restAutoRouter(conf, middleware, logger)
-
-    // debug
-    logger.log('Running Mods REST API on port ' + conf.port)
+require('./../lib/Config.js')((config) => {
+  // setup web app
+  if (config.proxyAuthHeader) {
+    conf.proxy.auth = config.proxyAuthHeader
   }
+  if (config.proxyPort) {
+    conf.port = config.proxyPort
+  }
+  if (config.proxyBaseUri) {
+    conf.base_uri = config.proxyBaseUri
+  }
+
+  // start web application
+  // recieve requests from Nginx by reverse proxy
+  restAutoRouter(conf, middleware, logger)
+
+  // debug
+  logger.log('Running Mods REST API on port ' + conf.port)
 })
