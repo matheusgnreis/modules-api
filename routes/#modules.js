@@ -1,7 +1,7 @@
 'use strict'
 
 // log on files
-// const logger = require('./../lib/Logger.js')
+const logger = require('./../lib/Logger.js')
 
 // JSON Schema validation with AJV
 // based on http://json-schema.org/
@@ -47,6 +47,7 @@ function runModule (obj, respond, storeId, modName, validate) {
       // not successful API call
       // send error response
       if (err) {
+        logger.error(err)
         respond({}, null, 500, 'MOD801')
       } else {
         if (typeof statusCode !== 'number') {
