@@ -54,7 +54,7 @@ function middleware (id, meta, body, respond, req, res, resource, verb, endpoint
     }
     if (typeof storeId !== 'number' || isNaN(storeId)) {
       // invalid ID string
-      respond({}, null, 403, 121, 'Invalid value on X-Store-ID header')
+      respond({}, null, 403, 121, 'Undefined or invalid Store ID')
       return
     }
 
