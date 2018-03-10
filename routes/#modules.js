@@ -28,7 +28,7 @@ function ajvErrorHandling (errors, respond, modName) {
   respond({}, null, 400, 'MOD901', devMsg, usrMsg, moreInfo)
 }
 
-function runModule (obj, respond, storeId, modName, validate) {
+function runModule (obj, respond, storeId, modName, validate, responseValidate) {
   // ajv
   let valid = validate(obj)
   if (!valid) {
@@ -93,6 +93,7 @@ function runModule (obj, respond, storeId, modName, validate) {
               }
             } else if (typeof parsedData === 'object' && parsedData !== null) {
               // validate response object
+              result.validated = responseValidate(parsedData)
             }
             results.push(result)
 
@@ -113,23 +114,31 @@ function runModule (obj, respond, storeId, modName, validate) {
   }
 }
 
-function post ([ id, , body, respond, storeId ], modName, validate) {
+function post ([ id, , body, respond, storeId ], modName, validate, responseValidate) {
   // run module with JSON body as object
-  runModule(body, respond, storeId, modName, validate)
+  runModule(body, respond, storeId, modName, validate, responseValidate)
 }
 
-function get ([ id, meta, , respond, storeId ], modName, validate, schema) {
+function get ([ id, meta, , respond, storeId ], modName, validate, schema, responseValidate, responseSchema) {
   if (id) {
-    if (id === 'schema') {
-      // return JSON Schema
-      respond(schema)
-    } else {
-      let devMsg = 'Resource ID is acceptable only to JSON schema, at /' + modName + '/schema.json'
-      respond({}, null, 406, 'MOD101', devMsg)
+    switch (id) {
+      case 'schema':
+        // return JSON Schema
+        respond(schema)
+        break
+
+      case 'response_schema':
+        // return module packages responses JSON Schema
+        respond(responseSchema)
+        break
+
+      default:
+        let devMsg = 'Resource ID is acceptable only to JSON schema, at /' + modName + '/schema.json'
+        respond({}, null, 406, 'MOD101', devMsg)
     }
   } else {
     // run module with query params as object
-    runModule(meta.query, respond, storeId, modName, validate)
+    runModule(meta.query, respond, storeId, modName, validate, responseValidate)
   }
 }
 

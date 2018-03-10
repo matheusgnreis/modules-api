@@ -30,11 +30,24 @@ const schema = {
 }
 const validate = Ajv({ allErrors: true, removeAdditional: true }).compile(schema)
 
+// validate module packages responses
+const responseSchema = {
+  '$schema': 'http://json-schema.org/draft-06/schema#',
+  'type': 'object',
+  'additionalProperties': false,
+  'properties': {
+    'custom_data': {
+      'type': 'object'
+    }
+  }
+}
+const responseValidate = Ajv({ allErrors: false }).compile(responseSchema)
+
 module.exports = {
   'GET': function () {
-    httpVerbs.get(arguments, modName, validate, schema)
+    httpVerbs.get(arguments, modName, validate, schema, responseValidate, responseSchema)
   },
   'POST': function () {
-    httpVerbs.post(arguments, modName, validate)
+    httpVerbs.post(arguments, modName, validate, responseValidate)
   }
 }
