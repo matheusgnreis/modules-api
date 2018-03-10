@@ -127,7 +127,7 @@ function get ([ id, meta, , respond, storeId ], modName, validate, schema, respo
         respond(schema)
         break
 
-      case 'response_schema':
+      case 'pkg_response_schema':
         // return module packages responses JSON Schema
         respond(responseSchema)
         break
