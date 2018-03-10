@@ -75,13 +75,27 @@ function runModule (obj, respond, storeId, modName, validate) {
           // ok, proceed to modules
           let pkg = list[i]
           reqBody.application = pkg
-          Modules(pkg.app_id, pkg.version, reqBody, storeId, (err, body) => {
-            if (!err) {
-              results.push({
-                'app_id': pkg.app_id,
-                'result': body
-              })
+          Modules(pkg.app_id, pkg.version, reqBody, storeId, (err, rawData, parsedData) => {
+            let result = {
+              'app_id': pkg.app_id,
+              'response': {
+                'text': rawData,
+                'json': parsedData
+              },
+              'validated': false,
+              'error': false,
+              'error_message': null
             }
+            if (err) {
+              result.error = true
+              if (err.message) {
+                result.error_message = err.message
+              }
+            } else if (typeof parsedData === 'object' && parsedData !== null) {
+              // validate response object
+            }
+            results.push(result)
+
             done++
             if (done === num) {
               // all done
