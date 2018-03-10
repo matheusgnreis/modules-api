@@ -5,7 +5,7 @@
 const Ajv = require('ajv') // version >= 2.0.0
 
 // import common verbs (methods) functions
-const httpVerbs = require('./#inc/modules.js')
+const httpVerbs = require('./#modules.js')
 const modName = 'al'
 
 const schema = {
