@@ -10,7 +10,7 @@ const modName = 'al'
 
 const schema = {
   '$schema': 'http://json-schema.org/draft-06/schema#',
-  'title': 'Module AL',
+  'title': 'Module AL: Input model',
   'description': 'On all storefront page load',
   'type': 'object',
   'required': [ 'domain', 'uri' ],
@@ -33,6 +33,8 @@ const validate = Ajv({ allErrors: true, removeAdditional: true }).compile(schema
 // validate module packages responses
 const responseSchema = {
   '$schema': 'http://json-schema.org/draft-06/schema#',
+  'title': 'Module AL: Package response model',
+  'description': 'On all storefront page load',
   'type': 'object',
   'additionalProperties': false,
   'properties': {
