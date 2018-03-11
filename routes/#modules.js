@@ -61,49 +61,54 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate) 
       // https://ecomstore.docs.apiary.io/#reference/applications/all-applications/list-all-store-applications
       let list = body.result
       if (Array.isArray(list)) {
-        // count packages done
-        let done = 0
         let results = []
         let num = list.length
-        // body to POST to package PHP file
-        let reqBody = {
-          'module': modName,
-          'params': obj
-        }
+        if (num > 0) {
+          // count packages done
+          let done = 0
+          // body to POST to package PHP file
+          let reqBody = {
+            'module': modName,
+            'params': obj
+          }
 
-        for (var i = 0; i < num; i++) {
-          // ok, proceed to modules
-          let pkg = list[i]
-          reqBody.application = pkg
-          Modules(pkg.app_id, pkg.version, reqBody, storeId, (err, rawData, parsedData) => {
-            let result = {
-              'app_id': pkg.app_id,
-              'response': {
-                'text': rawData,
-                'json': parsedData
-              },
-              'validated': false,
-              'error': false,
-              'error_message': null
-            }
-            if (err) {
-              result.error = true
-              if (err.message) {
-                result.error_message = err.message
+          for (var i = 0; i < num; i++) {
+            // ok, proceed to modules
+            let pkg = list[i]
+            reqBody.application = pkg
+            Modules(pkg.app_id, pkg.version, reqBody, storeId, (err, rawData, parsedData) => {
+              let result = {
+                'app_id': pkg.app_id,
+                'response': {
+                  'text': rawData,
+                  'json': parsedData
+                },
+                'validated': false,
+                'error': false,
+                'error_message': null
               }
-            } else if (typeof parsedData === 'object' && parsedData !== null) {
-              // validate response object
-              result.validated = responseValidate(parsedData)
-            }
-            results.push(result)
+              if (err) {
+                result.error = true
+                if (err.message) {
+                  result.error_message = err.message
+                }
+              } else if (typeof parsedData === 'object' && parsedData !== null) {
+                // validate response object
+                result.validated = responseValidate(parsedData)
+              }
+              results.push(result)
 
-            done++
-            if (done === num) {
-              // all done
-              // obj as response 'meta'
-              respond(results, obj)
-            }
-          })
+              done++
+              if (done === num) {
+                // all done
+                // obj as response 'meta'
+                respond(results, obj)
+              }
+            })
+          }
+        } else {
+          // no packages
+          respond(results, obj)
         }
       }
     }
