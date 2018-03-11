@@ -109,8 +109,6 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate) 
     }
 
     Api(endpoint, method, body, storeId, errorCallback, successCallback)
-    // proceed to modules host
-    respond(null, null, 204)
   }
 }
 
