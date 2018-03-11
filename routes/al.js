@@ -13,15 +13,10 @@ const schema = {
   'title': 'Module AL: Input model',
   'description': 'On all storefront page load',
   'type': 'object',
-  'required': [ 'domain', 'uri' ],
+  'required': [ 'full_uri' ],
   'additionalProperties': false,
   'properties': {
-    'domain': {
-      'type': 'string',
-      'maxLength': 80,
-      'format': 'hostname'
-    },
-    'uri': {
+    'full_uri': {
       'type': 'string',
       'maxLength': 255,
       'format': 'uri'
