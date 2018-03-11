@@ -43,7 +43,7 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate) 
     let method = 'GET'
     let body = null
 
-    let errorCallback = (err, statusCode, devMsg, usrMsg) => {
+    let errorCallback = (err, statusCode, devMsg) => {
       // not successful API call
       // send error response
       if (err) {
@@ -53,7 +53,7 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate) 
         if (typeof statusCode !== 'number') {
           statusCode = 400
         }
-        respond({}, null, statusCode, 'MOD802', devMsg, usrMsg)
+        respond({}, null, statusCode, 'MOD802', devMsg)
       }
     }
 
