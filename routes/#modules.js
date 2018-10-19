@@ -155,7 +155,7 @@ function get ([ id, meta, , respond, storeId ], modName, validate, schema, respo
 module.exports = (modName, schema, responseSchema) => {
   // validate request body
   const validate = Ajv(validateOptions).compile(schema)
-  // validate module response body
+  // validate package response body
   const responseValidate = Ajv(validateOptions).compile(responseSchema)
 
   return {
