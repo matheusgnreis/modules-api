@@ -10,6 +10,12 @@ const localize = require('ajv-i18n')
 // option `i18n` is required for this package to work
 const ajv = Ajv({ allErrors: true })
 // https://github.com/epoberezkin/ajv-i18n
+const validateOptions = {
+  allErrors: true,
+  removeAdditional: true,
+  multipleOfPrecision: 5,
+  useDefaults: true
+}
 
 // REST clients
 const Api = require('./../lib/Api.js')
@@ -145,4 +151,19 @@ function get ([ id, meta, , respond, storeId ], modName, validate, schema, respo
   }
 }
 
-module.exports = { 'get': get, 'post': post }
+// setup all modules with same methods
+module.exports = (modName, schema, responseSchema) => {
+  // validate request body
+  const validate = Ajv(validateOptions).compile(schema)
+  // validate module response body
+  const responseValidate = Ajv(validateOptions).compile(responseSchema)
+
+  return {
+    'GET': function () {
+      get(arguments, modName, validate, schema, responseValidate, responseSchema)
+    },
+    'POST': function () {
+      post(arguments, modName, validate, responseValidate)
+    }
+  }
+}
