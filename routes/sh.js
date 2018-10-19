@@ -263,6 +263,9 @@ const responseSchema = {
   'type': 'object',
   'required': [ 'shipping_services' ],
   'additionalProperties': false,
+  'definitions': {
+    ...schema.definitions
+  },
   'properties': {
     'shipping_services': {
       'type': 'array',
