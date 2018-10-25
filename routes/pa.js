@@ -247,6 +247,49 @@ const responseSchema = {
               }
             },
             'description': 'Installments option'
+          },
+          'js_client': {
+            'type': 'object',
+            'required': [ 'script_uri' ],
+            'additionalProperties': false,
+            'properties': {
+              'script_uri': {
+                'type': 'string',
+                'maxLength': 1000,
+                'format': 'uri',
+                'description': 'Script (JS) link'
+              },
+              'fallback_script_uri': {
+                'type': 'string',
+                'maxLength': 1000,
+                'format': 'uri',
+                'description': 'Optional script link to try if the first URI goes offline'
+              },
+              'onload_expression': {
+                'type': 'string',
+                'maxLength': 2000,
+                'description': 'JS expression to run (with `eval`) after script load'
+              },
+              'cc_hash': {
+                'type': 'object',
+                'required': [ 'script_uri' ],
+                'additionalProperties': false,
+                'properties': {
+                  'function': {
+                    'type': 'string',
+                    'maxLength': 50,
+                    'description': 'Func name, receives obj with `name`, `doc`, `number`, `cvc`, `month`, `year`'
+                  },
+                  'is_promise': {
+                    'type': 'boolean',
+                    'default': false,
+                    'description': 'If it is a promise, use for async process'
+                  }
+                },
+                'description': 'Function to call for credit card hash generation'
+              }
+            },
+            'description': 'Gateway web JS SDK, usually to handle credit cards with encryption'
           }
         },
         'description': 'Payment option (gateway)'
