@@ -177,6 +177,7 @@ const responseSchema = {
           'intermediator': {
             'type': 'object',
             'additionalProperties': false,
+            'required': [ 'code' ],
             'properties': {
               'name': {
                 'type': 'string',
@@ -188,6 +189,13 @@ const responseSchema = {
                 'maxLength': 255,
                 'format': 'uri',
                 'description': 'URI to intermediator website'
+              },
+              'code': {
+                'type': 'string',
+                'minLength': 6,
+                'maxLength': 70,
+                'pattern': '^[a-z0-9_]+$',
+                'description': 'Gateway name standardized as identification code'
               }
             },
             'description': 'Payment intermediator'
