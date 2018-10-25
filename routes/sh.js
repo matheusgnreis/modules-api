@@ -588,7 +588,7 @@ const responseSchema = {
                     'pattern': '^[a-f0-9]{24}$',
                     'description': 'Item ID'
                   },
-                  'description': 'List of order items related with this shipping line, use only if items are divided'
+                  'description': 'List of items related with this shipping line, use only if items are divided'
                 },
                 'flags': {
                   'type': 'array',
