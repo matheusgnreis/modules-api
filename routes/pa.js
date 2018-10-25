@@ -161,7 +161,7 @@ const responseSchema = {
       'items': {
         'type': 'object',
         'additionalProperties': false,
-        'required': [ 'label' ],
+        'required': [ 'label', 'payment_method' ],
         'properties': {
           'label': {
             'type': 'string',
@@ -173,6 +173,33 @@ const responseSchema = {
             'maxLength': 255,
             'format': 'uri',
             'description': 'Payment icon image URI'
+          },
+          'payment_method': {
+            'type': 'object',
+            'required': [ 'code' ],
+            'additionalProperties': false,
+            'properties': {
+              'code': {
+                'type': 'string',
+                'enum': [
+                  'credit_card',
+                  'banking_billet',
+                  'online_debit',
+                  'account_deposit',
+                  'debit_card',
+                  'balance_on_intermediary',
+                  'loyalty_points',
+                  'other'
+                ],
+                'description': 'Standardized payment method code'
+              },
+              'name': {
+                'type': 'string',
+                'maxLength': 200,
+                'description': 'Short description for payment method'
+              }
+            },
+            'description': 'Payment method object'
           },
           'intermediator': {
             'type': 'object',
