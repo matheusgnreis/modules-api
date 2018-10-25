@@ -283,7 +283,7 @@ const responseSchema = {
                   'is_promise': {
                     'type': 'boolean',
                     'default': false,
-                    'description': 'If it is a promise, use for async process'
+                    'description': 'If it is a Promise, use for async process'
                   }
                 },
                 'description': 'Function to call for credit card hash generation, must return hash string'
