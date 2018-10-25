@@ -274,7 +274,7 @@ const responseSchema = {
       'items': {
         'type': 'object',
         'additionalProperties': false,
-        'required': [ 'label' ],
+        'required': [ 'label', 'shipping_line' ],
         'properties': {
           'label': {
             'type': 'string',
@@ -331,308 +331,292 @@ const responseSchema = {
             },
             'description': 'Selected shipping rule of this shipping method'
           },
-          'shipping_lines': {
-            'type': 'array',
-            'maxItems': 100,
-            'items': {
-              'type': 'object',
-              'additionalProperties': false,
-              'required': [ 'from', 'to' ],
-              'properties': {
-                'from': {
-                  '$ref': '#/definitions/address',
-                  'description': 'Sender\'s address'
-                },
-                'to': {
-                  '$ref': '#/definitions/address',
-                  'description': 'Shipping address (recipient)'
-                },
-                'package': {
-                  'type': 'object',
-                  'additionalProperties': false,
-                  'properties': {
-                    'dimensions': {
-                      'type': 'object',
-                      'additionalProperties': false,
-                      'patternProperties': {
-                        '^width|height|length$': {
-                          'type': 'object',
-                          'required': [ 'value' ],
-                          'additionalProperties': false,
-                          'properties': {
-                            'value': {
-                              'type': 'number',
-                              'multipleOf': 0.001,
-                              'minimum': 0,
-                              'maximum': 999999,
-                              'description': 'Size in specified unit'
-                            },
-                            'unit': {
-                              'type': 'string',
-                              'enum': [ 'mm', 'cm', 'm', 'ft', 'in', 'yd', 'mi' ],
-                              'default': 'cm',
-                              'description': 'Unit of measurement'
-                            }
-                          },
-                          'description': 'Package width, height and length'
-                        }
-                      },
-                      'description': 'Package dimensions'
-                    },
-                    'weight': {
-                      'type': 'object',
-                      'required': [ 'value' ],
-                      'additionalProperties': false,
-                      'properties': {
-                        'value': {
-                          'type': 'number',
-                          'multipleOf': 0.001,
-                          'minimum': 0,
-                          'maximum': 999999,
-                          'description': 'Size in specified unit'
-                        },
-                        'unit': {
-                          'type': 'string',
-                          'enum': [ 'mg', 'g', 'kg', 'lb', 'oz' ],
-                          'default': 'g',
-                          'description': 'Unit of measurement'
-                        }
-                      },
-                      'description': 'Package weight for freight calculation'
-                    }
-                  },
-                  'description': 'Shipping object information'
-                },
-                'price': {
-                  'type': 'number',
-                  'multipleOf': 0.00001,
-                  'minimum': 0,
-                  'maximum': 9999999999,
-                  'description': 'Freight cost for this shipping line, without additionals'
-                },
-                'declared_value': {
-                  'type': 'number',
-                  'multipleOf': 0.00001,
-                  'minimum': 0,
-                  'maximum': 9999999999,
-                  'description': 'The package value declared to carrier, generally the sum of all items prices'
-                },
-                'declared_value_price': {
-                  'type': 'number',
-                  'multipleOf': 0.00001,
-                  'minimum': 0,
-                  'maximum': 999999,
-                  'description': 'Cost for the "declared value" additional service'
-                },
-                'own_hand': {
-                  'type': 'boolean',
-                  'default': false,
-                  'description': 'Whether the package must be delivered with additional service "own hand"'
-                },
-                'own_hand_price': {
-                  'type': 'number',
-                  'multipleOf': 0.00001,
-                  'minimum': 0,
-                  'maximum': 999999,
-                  'description': 'Cost for the "own hand" additional service'
-                },
-                'receipt': {
-                  'type': 'boolean',
-                  'default': false,
-                  'description': 'If the package will be delivered with acknowledgment of receipt'
-                },
-                'receipt_price': {
-                  'type': 'number',
-                  'multipleOf': 0.00001,
-                  'minimum': 0,
-                  'maximum': 999999,
-                  'description': 'Cost for the "acknowledgment of receipt" additional service'
-                },
-                'other_additionals': {
-                  'type': 'array',
-                  'maxItems': 30,
-                  'items': {
+          'shipping_line': {
+            'type': 'object',
+            'additionalProperties': false,
+            'required': [ 'from', 'to' ],
+            'properties': {
+              'from': {
+                '$ref': '#/definitions/address',
+                'description': 'Sender\'s address'
+              },
+              'to': {
+                '$ref': '#/definitions/address',
+                'description': 'Shipping address (recipient)'
+              },
+              'package': {
+                'type': 'object',
+                'additionalProperties': false,
+                'properties': {
+                  'dimensions': {
                     'type': 'object',
                     'additionalProperties': false,
-                    'required': [ 'label' ],
+                    'patternProperties': {
+                      '^width|height|length$': {
+                        'type': 'object',
+                        'required': [ 'value' ],
+                        'additionalProperties': false,
+                        'properties': {
+                          'value': {
+                            'type': 'number',
+                            'multipleOf': 0.001,
+                            'minimum': 0,
+                            'maximum': 999999,
+                            'description': 'Size in specified unit'
+                          },
+                          'unit': {
+                            'type': 'string',
+                            'enum': [ 'mm', 'cm', 'm', 'ft', 'in', 'yd', 'mi' ],
+                            'default': 'cm',
+                            'description': 'Unit of measurement'
+                          }
+                        },
+                        'description': 'Package width, height and length'
+                      }
+                    },
+                    'description': 'Package dimensions'
+                  },
+                  'weight': {
+                    'type': 'object',
+                    'required': [ 'value' ],
+                    'additionalProperties': false,
                     'properties': {
-                      'tag': {
-                        'type': 'string',
-                        'maxLength': 20,
-                        'pattern': '^[a-z0-9_]+$',
-                        'description': 'Tag to identify object, use only lowercase letters, digits and underscore'
-                      },
-                      'label': {
-                        'type': 'string',
-                        'maxLength': 50,
-                        'description': 'Name of the additional service'
-                      },
-                      'price': {
+                      'value': {
                         'type': 'number',
-                        'multipleOf': 0.00001,
+                        'multipleOf': 0.001,
                         'minimum': 0,
                         'maximum': 999999,
-                        'description': 'Cost for this additional service'
+                        'description': 'Size in specified unit'
+                      },
+                      'unit': {
+                        'type': 'string',
+                        'enum': [ 'mg', 'g', 'kg', 'lb', 'oz' ],
+                        'default': 'g',
+                        'description': 'Unit of measurement'
                       }
                     },
-                    'description': 'Additional service'
-                  },
-                  'description': 'List of other additional services for this shipping line'
+                    'description': 'Package weight for freight calculation'
+                  }
                 },
-                'taxes': {
-                  'type': 'array',
-                  'maxItems': 30,
-                  'items': {
-                    'type': 'object',
-                    'additionalProperties': false,
-                    'required': [ 'label' ],
-                    'properties': {
-                      'tag': {
-                        'type': 'string',
-                        'maxLength': 20,
-                        'pattern': '^[a-z0-9_]+$',
-                        'description': 'Tag to identify object, use only lowercase letters, digits and underscore'
-                      },
-                      'label': {
-                        'type': 'string',
-                        'maxLength': 50,
-                        'description': 'Tax title'
-                      },
-                      'price': {
-                        'type': 'number',
-                        'multipleOf': 0.00001,
-                        'minimum': 0,
-                        'maximum': 999999999,
-                        'description': 'Tax value applied'
-                      },
-                      'rate': {
-                        'type': 'number',
-                        'multipleOf': 0.0001,
-                        'minimum': 0,
-                        'maximum': 100,
-                        'description': 'Tax rate as a function of package value'
-                      }
-                    },
-                    'description': 'Applied tax or additional service'
-                  },
-                  'description': 'List of taxes or other additional services for this shipping line'
-                },
-                'discount': {
-                  'type': 'number',
-                  'multipleOf': 0.0001,
-                  'minimum': -999999999,
-                  'maximum': 999999999,
-                  'description': 'Discount on shipping price, negative if value was additionated (not discounted)'
-                },
-                'total_price': {
-                  'type': 'number',
-                  'multipleOf': 0.00001,
-                  'minimum': 0,
-                  'maximum': 9999999999,
-                  'description': 'Total cost for this shipping line, with additionals and taxes'
-                },
-                'posting_deadline': {
-                  'type': 'object',
-                  'required': [ 'days' ],
-                  'additionalProperties': false,
-                  'properties': {
-                    'days': {
-                      'type': 'integer',
-                      'minimum': 0,
-                      'maximum': 999999,
-                      'description': 'Number of days to post the product after purchase'
-                    },
-                    'working_days': {
-                      'type': 'boolean',
-                      'default': true,
-                      'description': 'If the deadline is calculated in working days'
-                    },
-                    'after_approval': {
-                      'type': 'boolean',
-                      'default': true,
-                      'description': 'Whether days will be counted after payment approval'
-                    }
-                  },
-                  'description': 'Deadline for sending the package'
-                },
-                'delivery_time': {
-                  'type': 'object',
-                  'required': [ 'days' ],
-                  'additionalProperties': false,
-                  'properties': {
-                    'days': {
-                      'type': 'integer',
-                      'minimum': 0,
-                      'maximum': 999999,
-                      'description': 'Number of days for delivery after shipping'
-                    },
-                    'working_days': {
-                      'type': 'boolean',
-                      'default': true,
-                      'description': 'If the deadline is calculated in working days'
-                    }
-                  },
-                  'description': 'Estimated delivery time'
-                },
-                'scheduled_delivery': {
-                  'type': 'string',
-                  'format': 'date-time',
-                  'description': 'When delivery will be made on the ISO 8601 date time representation'
-                },
-                'items': {
-                  'type': 'array',
-                  'uniqueItems': true,
-                  'maxItems': 3000,
-                  'items': {
-                    'type': 'string',
-                    'pattern': '^[a-f0-9]{24}$',
-                    'description': 'Item ID'
-                  },
-                  'description': 'List of items related with this shipping line, use only if items are divided'
-                },
-                'flags': {
-                  'type': 'array',
-                  'uniqueItems': true,
-                  'maxItems': 10,
-                  'items': {
-                    'type': 'string',
-                    'maxLength': 20,
-                    'description': 'Flag title'
-                  },
-                  'description': 'Flags to associate additional info'
-                },
-                'custom_fields': {
-                  'type': 'array',
-                  'maxItems': 10,
-                  'items': {
-                    'type': 'object',
-                    'additionalProperties': false,
-                    'required': [ 'field', 'value' ],
-                    'properties': {
-                      'field': {
-                        'type': 'string',
-                        'maxLength': 50,
-                        'description': 'Field name'
-                      },
-                      'value': {
-                        'type': 'string',
-                        'maxLength': 255,
-                        'description': 'Field value'
-                      }
-                    },
-                    'description': 'Custom field object'
-                  },
-                  'description': 'List of custom fields'
-                },
-                'notes': {
-                  'type': 'string',
-                  'maxLength': 255,
-                  'description': 'Optional notes with additional info about this shipping line'
-                }
+                'description': 'Shipping object information'
               },
-              'description': 'Order shipping method'
+              'price': {
+                'type': 'number',
+                'multipleOf': 0.00001,
+                'minimum': 0,
+                'maximum': 9999999999,
+                'description': 'Freight cost for this shipping line, without additionals'
+              },
+              'declared_value': {
+                'type': 'number',
+                'multipleOf': 0.00001,
+                'minimum': 0,
+                'maximum': 9999999999,
+                'description': 'The package value declared to carrier, generally the sum of all items prices'
+              },
+              'declared_value_price': {
+                'type': 'number',
+                'multipleOf': 0.00001,
+                'minimum': 0,
+                'maximum': 999999,
+                'description': 'Cost for the "declared value" additional service'
+              },
+              'own_hand': {
+                'type': 'boolean',
+                'default': false,
+                'description': 'Whether the package must be delivered with additional service "own hand"'
+              },
+              'own_hand_price': {
+                'type': 'number',
+                'multipleOf': 0.00001,
+                'minimum': 0,
+                'maximum': 999999,
+                'description': 'Cost for the "own hand" additional service'
+              },
+              'receipt': {
+                'type': 'boolean',
+                'default': false,
+                'description': 'If the package will be delivered with acknowledgment of receipt'
+              },
+              'receipt_price': {
+                'type': 'number',
+                'multipleOf': 0.00001,
+                'minimum': 0,
+                'maximum': 999999,
+                'description': 'Cost for the "acknowledgment of receipt" additional service'
+              },
+              'other_additionals': {
+                'type': 'array',
+                'maxItems': 30,
+                'items': {
+                  'type': 'object',
+                  'additionalProperties': false,
+                  'required': [ 'label' ],
+                  'properties': {
+                    'tag': {
+                      'type': 'string',
+                      'maxLength': 20,
+                      'pattern': '^[a-z0-9_]+$',
+                      'description': 'Tag to identify object, use only lowercase letters, digits and underscore'
+                    },
+                    'label': {
+                      'type': 'string',
+                      'maxLength': 50,
+                      'description': 'Name of the additional service'
+                    },
+                    'price': {
+                      'type': 'number',
+                      'multipleOf': 0.00001,
+                      'minimum': 0,
+                      'maximum': 999999,
+                      'description': 'Cost for this additional service'
+                    }
+                  },
+                  'description': 'Additional service'
+                },
+                'description': 'List of other additional services for this shipping line'
+              },
+              'taxes': {
+                'type': 'array',
+                'maxItems': 30,
+                'items': {
+                  'type': 'object',
+                  'additionalProperties': false,
+                  'required': [ 'label' ],
+                  'properties': {
+                    'tag': {
+                      'type': 'string',
+                      'maxLength': 20,
+                      'pattern': '^[a-z0-9_]+$',
+                      'description': 'Tag to identify object, use only lowercase letters, digits and underscore'
+                    },
+                    'label': {
+                      'type': 'string',
+                      'maxLength': 50,
+                      'description': 'Tax title'
+                    },
+                    'price': {
+                      'type': 'number',
+                      'multipleOf': 0.00001,
+                      'minimum': 0,
+                      'maximum': 999999999,
+                      'description': 'Tax value applied'
+                    },
+                    'rate': {
+                      'type': 'number',
+                      'multipleOf': 0.0001,
+                      'minimum': 0,
+                      'maximum': 100,
+                      'description': 'Tax rate as a function of package value'
+                    }
+                  },
+                  'description': 'Applied tax or additional service'
+                },
+                'description': 'List of taxes or other additional services for this shipping line'
+              },
+              'discount': {
+                'type': 'number',
+                'multipleOf': 0.0001,
+                'minimum': -999999999,
+                'maximum': 999999999,
+                'description': 'Discount on shipping price, negative if value was additionated (not discounted)'
+              },
+              'total_price': {
+                'type': 'number',
+                'multipleOf': 0.00001,
+                'minimum': 0,
+                'maximum': 9999999999,
+                'description': 'Total cost for this shipping line, with additionals and taxes'
+              },
+              'posting_deadline': {
+                'type': 'object',
+                'required': [ 'days' ],
+                'additionalProperties': false,
+                'properties': {
+                  'days': {
+                    'type': 'integer',
+                    'minimum': 0,
+                    'maximum': 999999,
+                    'description': 'Number of days to post the product after purchase'
+                  },
+                  'working_days': {
+                    'type': 'boolean',
+                    'default': true,
+                    'description': 'If the deadline is calculated in working days'
+                  },
+                  'after_approval': {
+                    'type': 'boolean',
+                    'default': true,
+                    'description': 'Whether days will be counted after payment approval'
+                  }
+                },
+                'description': 'Deadline for sending the package'
+              },
+              'delivery_time': {
+                'type': 'object',
+                'required': [ 'days' ],
+                'additionalProperties': false,
+                'properties': {
+                  'days': {
+                    'type': 'integer',
+                    'minimum': 0,
+                    'maximum': 999999,
+                    'description': 'Number of days for delivery after shipping'
+                  },
+                  'working_days': {
+                    'type': 'boolean',
+                    'default': true,
+                    'description': 'If the deadline is calculated in working days'
+                  }
+                },
+                'description': 'Estimated delivery time'
+              },
+              'scheduled_delivery': {
+                'type': 'string',
+                'format': 'date-time',
+                'description': 'When delivery will be made on the ISO 8601 date time representation'
+              },
+              'flags': {
+                'type': 'array',
+                'uniqueItems': true,
+                'maxItems': 10,
+                'items': {
+                  'type': 'string',
+                  'maxLength': 20,
+                  'description': 'Flag title'
+                },
+                'description': 'Flags to associate additional info'
+              },
+              'custom_fields': {
+                'type': 'array',
+                'maxItems': 10,
+                'items': {
+                  'type': 'object',
+                  'additionalProperties': false,
+                  'required': [ 'field', 'value' ],
+                  'properties': {
+                    'field': {
+                      'type': 'string',
+                      'maxLength': 50,
+                      'description': 'Field name'
+                    },
+                    'value': {
+                      'type': 'string',
+                      'maxLength': 255,
+                      'description': 'Field value'
+                    }
+                  },
+                  'description': 'Custom field object'
+                },
+                'description': 'List of custom fields'
+              },
+              'notes': {
+                'type': 'string',
+                'maxLength': 255,
+                'description': 'Optional notes with additional info about this shipping line'
+              }
             },
-            'description': 'List of shipping methods and address for this order'
+            'description': 'Order shipping line object'
           }
         },
         'description': 'Shipping method option (service)'

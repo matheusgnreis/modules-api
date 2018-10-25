@@ -161,7 +161,7 @@ const responseSchema = {
       'items': {
         'type': 'object',
         'additionalProperties': false,
-        'required': [ 'label', 'payment_method' ],
+        'required': [ 'label', 'transaction' ],
         'properties': {
           'label': {
             'type': 'string',
@@ -173,33 +173,6 @@ const responseSchema = {
             'maxLength': 255,
             'format': 'uri',
             'description': 'Payment icon image URI'
-          },
-          'payment_method': {
-            'type': 'object',
-            'required': [ 'code' ],
-            'additionalProperties': false,
-            'properties': {
-              'code': {
-                'type': 'string',
-                'enum': [
-                  'credit_card',
-                  'banking_billet',
-                  'online_debit',
-                  'account_deposit',
-                  'debit_card',
-                  'balance_on_intermediary',
-                  'loyalty_points',
-                  'other'
-                ],
-                'description': 'Standardized payment method code'
-              },
-              'name': {
-                'type': 'string',
-                'maxLength': 200,
-                'description': 'Short description for payment method'
-              }
-            },
-            'description': 'Payment method object'
           },
           'intermediator': {
             'type': 'object',
@@ -225,55 +198,140 @@ const responseSchema = {
             'format': 'uri',
             'description': 'Base URI to payments'
           },
-          'currency_id': {
-            'type': 'string',
-            'pattern': '^[A-Z]{3}$',
-            'description': 'Currency ID specific for this transaction, if different of order currency ID'
-          },
-          'currency_symbol': {
-            'type': 'string',
-            'maxLength': 20,
-            'description': 'Currency symbol specific for this transaction'
-          },
-          'discount': {
-            'type': 'number',
-            'multipleOf': 0.0001,
-            'minimum': -999999999,
-            'maximum': 999999999,
-            'description': 'Discount by payment method, negative if value was additionated (not discounted)'
-          },
-          'amount': {
-            'type': 'number',
-            'multipleOf': 0.00001,
-            'minimum': 0,
-            'maximum': 9999999999,
-            'description': 'Transaction amount, disregarding installment rates'
-          },
-          'installments': {
+          'transaction': {
             'type': 'object',
-            'required': [ 'number', 'value' ],
             'additionalProperties': false,
+            'required': [ 'payment_method', 'amount' ],
             'properties': {
-              'number': {
-                'type': 'integer',
-                'minimum': 2,
-                'maximum': 999,
-                'description': 'Number of installments'
+              'type': {
+                'type': 'string',
+                'enum': [ 'payment', 'recurrence' ],
+                'default': 'payment',
+                'description': 'Transaction type'
               },
-              'value': {
+              'payment_method': {
+                'type': 'object',
+                'required': [ 'code' ],
+                'additionalProperties': false,
+                'properties': {
+                  'code': {
+                    'type': 'string',
+                    'enum': [
+                      'credit_card',
+                      'banking_billet',
+                      'online_debit',
+                      'account_deposit',
+                      'debit_card',
+                      'balance_on_intermediary',
+                      'loyalty_points',
+                      'other'
+                    ],
+                    'description': 'Standardized payment method code'
+                  },
+                  'name': {
+                    'type': 'string',
+                    'maxLength': 200,
+                    'description': 'Short description for payment method'
+                  }
+                },
+                'description': 'Payment method object'
+              },
+              'currency_id': {
+                'type': 'string',
+                'pattern': '^[A-Z]{3}$',
+                'description': 'Currency ID specific for this transaction, if different of order currency ID'
+              },
+              'currency_symbol': {
+                'type': 'string',
+                'maxLength': 20,
+                'description': 'Currency symbol specific for this transaction'
+              },
+              'discount': {
+                'type': 'number',
+                'multipleOf': 0.0001,
+                'minimum': -999999999,
+                'maximum': 999999999,
+                'description': 'Discount by payment method, negative if value was additionated (not discounted)'
+              },
+              'amount': {
                 'type': 'number',
                 'multipleOf': 0.00001,
                 'minimum': 0,
-                'maximum': 999999999,
-                'description': 'Installment value'
+                'maximum': 9999999999,
+                'description': 'Transaction amount, disregarding installment rates'
               },
-              'tax': {
-                'type': 'boolean',
-                'default': false,
-                'description': 'Tax applied'
+              'flags': {
+                'type': 'array',
+                'uniqueItems': true,
+                'maxItems': 10,
+                'items': {
+                  'type': 'string',
+                  'maxLength': 20,
+                  'description': 'Flag title'
+                },
+                'description': 'Flags to associate additional info'
+              },
+              'custom_fields': {
+                'type': 'array',
+                'maxItems': 10,
+                'items': {
+                  'type': 'object',
+                  'additionalProperties': false,
+                  'required': [ 'field', 'value' ],
+                  'properties': {
+                    'field': {
+                      'type': 'string',
+                      'maxLength': 50,
+                      'description': 'Field name'
+                    },
+                    'value': {
+                      'type': 'string',
+                      'maxLength': 255,
+                      'description': 'Field value'
+                    }
+                  },
+                  'description': 'Custom field object'
+                },
+                'description': 'List of custom fields'
+              },
+              'notes': {
+                'type': 'string',
+                'maxLength': 255,
+                'description': 'Optional notes with additional info about this transaction'
               }
             },
-            'description': 'Installments option'
+            'description': 'Order payment transaction object'
+          },
+          'installment_options': {
+            'type': 'array',
+            'maxItems': 30,
+            'items': {
+              'type': 'object',
+              'required': [ 'number', 'value' ],
+              'additionalProperties': false,
+              'properties': {
+                'number': {
+                  'type': 'integer',
+                  'minimum': 2,
+                  'maximum': 999,
+                  'description': 'Number of installments'
+                },
+                'value': {
+                  'type': 'number',
+                  'multipleOf': 0.00001,
+                  'minimum': 0,
+                  'maximum': 999999999,
+                  'description': 'Installment value'
+                },
+                'tax': {
+                  'type': 'boolean',
+                  'default': false,
+                  'description': 'Tax applied'
+                }
+              },
+              'description': 'Installment option'
+            },
+            'description': 'List of options for installment'
           },
           'js_client': {
             'type': 'object',
