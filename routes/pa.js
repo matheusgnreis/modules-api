@@ -286,7 +286,7 @@ const responseSchema = {
                     'description': 'If it is a promise, use for async process'
                   }
                 },
-                'description': 'Function to call for credit card hash generation'
+                'description': 'Function to call for credit card hash generation, must return hash string'
               }
             },
             'description': 'Gateway web JS SDK, usually to handle credit cards with encryption'
