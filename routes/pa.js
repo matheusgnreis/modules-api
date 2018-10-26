@@ -644,6 +644,102 @@ const responseSchema = {
                 'maximum': 9999999999,
                 'description': 'Transaction amount, disregarding installment rates'
               },
+              'installments': {
+                'type': 'object',
+                'required': [ 'number' ],
+                'additionalProperties': false,
+                'properties': {
+                  'number': {
+                    'type': 'integer',
+                    'minimum': 1,
+                    'maximum': 199,
+                    'description': 'Number of installments'
+                  },
+                  'value': {
+                    'type': 'number',
+                    'multipleOf': 0.00001,
+                    'minimum': 0,
+                    'maximum': 9999999999,
+                    'description': 'Installment value'
+                  },
+                  'tax': {
+                    'type': 'boolean',
+                    'default': false,
+                    'description': 'Tax applied'
+                  },
+                  'total': {
+                    'type': 'number',
+                    'multipleOf': 0.00001,
+                    'minimum': 0,
+                    'maximum': 9999999999,
+                    'description': 'Total value, sum of all plots'
+                  }
+                },
+                'description': 'Installments option'
+              },
+              'creditor_fees': {
+                'type': 'object',
+                'additionalProperties': false,
+                'properties': {
+                  'installment': {
+                    'type': 'number',
+                    'multipleOf': 0.00001,
+                    'minimum': 0,
+                    'maximum': 99999999,
+                    'description': 'Installment fee'
+                  },
+                  'operational': {
+                    'type': 'number',
+                    'multipleOf': 0.00001,
+                    'minimum': 0,
+                    'maximum': 99999999,
+                    'description': 'Operation fee'
+                  },
+                  'intermediation': {
+                    'type': 'number',
+                    'multipleOf': 0.00001,
+                    'minimum': 0,
+                    'maximum': 99999999,
+                    'description': 'Intermediation fee, if transaction have an intermediary'
+                  },
+                  'other': {
+                    'type': 'number',
+                    'multipleOf': 0.00001,
+                    'minimum': 0,
+                    'maximum': 99999999,
+                    'description': 'Sum of other transaction rates'
+                  }
+                },
+                'description': 'Cost data collected'
+              },
+              'status': {
+                'type': 'object',
+                'additionalProperties': false,
+                'required': [ 'current' ],
+                'properties': {
+                  'updated_at': {
+                    'type': 'string',
+                    'format': 'date-time',
+                    'description': 'Last status change, date and time in ISO 8601 standard representation'
+                  },
+                  'current': {
+                    'type': 'string',
+                    'enum': [
+                      'pending',
+                      'under_analysis',
+                      'authorized',
+                      'paid',
+                      'in_dispute',
+                      'refunded',
+                      'voided',
+                      'unknown'
+                    ],
+                    'default': 'pending',
+                    'description': 'Payment status'
+                  }
+                },
+                'description': 'Financial status and date of change'
+              },
               'flags': {
                 'type': 'array',
                 'uniqueItems': true,
