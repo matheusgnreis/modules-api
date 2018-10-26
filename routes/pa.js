@@ -478,6 +478,148 @@ const responseSchema = {
                 },
                 'description': 'Payment method object'
               },
+              'intermediator': {
+                'type': 'object',
+                'additionalProperties': false,
+                'properties': {
+                  'transaction_id': {
+                    'type': 'string',
+                    'maxLength': 255,
+                    'description': 'Transaction ID in the intermediator'
+                  },
+                  'transaction_code': {
+                    'type': 'string',
+                    'maxLength': 255,
+                    'description': 'Transaction code in the intermediator'
+                  },
+                  'transaction_reference': {
+                    'type': 'string',
+                    'maxLength': 255,
+                    'description': 'Transaction reference code'
+                  },
+                  'payment_method': {
+                    'type': 'object',
+                    'required': [ 'code' ],
+                    'additionalProperties': false,
+                    'properties': {
+                      'code': {
+                        'type': 'string',
+                        'maxLength': 100,
+                        'description': 'Payment method code'
+                      },
+                      'name': {
+                        'type': 'string',
+                        'maxLength': 200,
+                        'description': 'Short description for payment method'
+                      }
+                    },
+                    'description': 'Payment method as defined by intermediator'
+                  },
+                  'buyer_id': {
+                    'type': 'string',
+                    'maxLength': 255,
+                    'description': 'ID of customer account in the intermediator'
+                  }
+                },
+                'description': 'Transaction properties in the intermediator'
+              },
+              'credit_card': {
+                'type': 'object',
+                'additionalProperties': false,
+                'properties': {
+                  'holder_name': {
+                    'type': 'string',
+                    'maxLength': 100,
+                    'description': 'Full name of the holder, as it is on the credit card'
+                  },
+                  'avs_result_code': {
+                    'type': [ 'string', 'null' ],
+                    'maxLength': 1,
+                    'pattern': '^[A-Z]$',
+                    'description': 'Response code from AVS: http://www.emsecommerce.net/avs_cvv2_response_codes.htm'
+                  },
+                  'cvv_result_code': {
+                    'type': [ 'string', 'null' ],
+                    'maxLength': 1,
+                    'pattern': '^[A-Z]$',
+                    'description': 'Response code from credit card company, such as AVS result code'
+                  },
+                  'bin': {
+                    'type': 'integer',
+                    'min': 1,
+                    'max': 9999999,
+                    'description': 'Issuer identification number (IIN), known as bank identification number (BIN)'
+                  },
+                  'company': {
+                    'type': 'string',
+                    'maxLength': 100,
+                    'description': 'Credit card issuer name, eg.: Visa, American Express, MasterCard'
+                  },
+                  'last_digits': {
+                    'type': 'string',
+                    'maxLength': 4,
+                    'pattern': '^[0-9]+$',
+                    'description': 'Last digits (up to 4) of credit card number'
+                  },
+                  'token': {
+                    'type': 'string',
+                    'maxLength': 255,
+                    'description': 'Unique credit card token'
+                  },
+                  'error_code': {
+                    'type': 'string',
+                    'enum': [
+                      'incorrect_number',
+                      'invalid_number',
+                      'invalid_expiry_date',
+                      'invalid_cvc',
+                      'expired_card',
+                      'incorrect_cvc',
+                      'incorrect_zip',
+                      'incorrect_address',
+                      'card_declined',
+                      'processing_error',
+                      'call_issuer',
+                      'pick_up_card'
+                    ],
+                    'description': 'Credit card processing standardized error code'
+                  }
+                },
+                'description': 'Credit card data, if payment was done with credit card'
+              },
+              'banking_billet': {
+                'type': 'object',
+                'additionalProperties': false,
+                'properties': {
+                  'code': {
+                    'type': 'string',
+                    'maxLength': 200,
+                    'description': 'Ticket code, generally a barcode number'
+                  },
+                  'valid_thru': {
+                    'type': 'string',
+                    'format': 'date-time',
+                    'description': 'Date and time of expiration, in ISO 8601 standard representation'
+                  },
+                  'text_lines': {
+                    'type': 'array',
+                    'maxItems': 5,
+                    'items': {
+                      'type': 'string',
+                      'maxLength': 255,
+                      'description': 'Phrase or paragraph'
+                    },
+                    'description': 'Text lines on ticket'
+                  },
+                  'link': {
+                    'type': 'string',
+                    'maxLength': 255,
+                    'format': 'uri',
+                    'description': 'Direct link (URI) to banking billet'
+                  }
+                },
+                'description': 'Banking billet data, if payment was done with banking billet'
+              },
               'currency_id': {
                 'type': 'string',
                 'pattern': '^[A-Z]{3}$',
