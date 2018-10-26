@@ -7,7 +7,7 @@ const modName = 'pa'
 const schema = {
   '$schema': 'http://json-schema.org/draft-06/schema#',
   'title': 'Module PA: Input model',
-  'description': 'On payment methods listing',
+  'description': 'On payment methods listing or creating transactions',
   'type': 'object',
   'required': [ 'items', 'amount' ],
   'additionalProperties': false,
@@ -141,6 +141,240 @@ const schema = {
         }
       },
       'description': 'Object with sums of values'
+    },
+    'checkout': {
+      'type': 'object',
+      'required': [ 'payment_method' ],
+      'additionalProperties': false,
+      'properties': {
+        'payment_method': {
+          'type': 'object',
+          'required': [ 'code' ],
+          'additionalProperties': false,
+          'properties': {
+            'code': {
+              'type': 'string',
+              'enum': [
+                'credit_card',
+                'banking_billet',
+                'online_debit',
+                'account_deposit',
+                'debit_card',
+                'balance_on_intermediary',
+                'loyalty_points',
+                'other'
+              ],
+              'description': 'Standardized payment method code'
+            },
+            'name': {
+              'type': 'string',
+              'maxLength': 200,
+              'description': 'Short description for payment method'
+            }
+          },
+          'description': 'Payment method object'
+        },
+        'payer': {
+          'type': 'object',
+          'additionalProperties': false,
+          'properties': {
+            'fullname': {
+              'type': 'string',
+              'maxLength': 255,
+              'description': 'Payer full name or company corporate name'
+            },
+            'birth_date': {
+              'type': 'object',
+              'additionalProperties': false,
+              'properties': {
+                'day': {
+                  'type': 'integer',
+                  'min': 1,
+                  'max': 31,
+                  'description': 'Day of birth'
+                },
+                'month': {
+                  'type': 'integer',
+                  'min': 1,
+                  'max': 12,
+                  'description': 'Number of month of birth'
+                },
+                'year': {
+                  'type': 'integer',
+                  'min': 1800,
+                  'max': 2200,
+                  'description': 'Year of birth'
+                }
+              },
+              'description': 'Date of payer birth'
+            },
+            'phone': {
+              'type': 'object',
+              'additionalProperties': false,
+              'required': [ 'number' ],
+              'properties': {
+                'country_code': {
+                  'type': 'integer',
+                  'min': 1,
+                  'max': 999,
+                  'description': 'Country calling code (without +), defined by standards E.123 and E.164'
+                },
+                'number': {
+                  'type': 'string',
+                  'maxLength': 19,
+                  'pattern': '^[0-9]+$',
+                  'description': 'The actual phone number, digits only'
+                },
+                'type': {
+                  'type': 'string',
+                  'enum': [ 'home', 'personal', 'work', 'other' ],
+                  'description': 'The type of phone'
+                }
+              },
+              'description': 'Payer contact phone'
+            },
+            'registry_type': {
+              'type': 'string',
+              'enum': [ 'p', 'j' ],
+              'description': 'Physical or juridical (company) person'
+            },
+            'doc_country': {
+              'type': 'string',
+              'minLength': 2,
+              'maxLength': 2,
+              'pattern': '^[A-Z]+$',
+              'description': 'Country of document origin, an ISO 3166-2 code'
+            },
+            'doc_number': {
+              'type': 'string',
+              'maxLength': 19,
+              'pattern': '^[0-9]+$',
+              'description': 'Responsible person or organization document number (only numbers)'
+            }
+          },
+          'description': 'Transation payer info'
+        },
+        'intermediator_buyer_id': {
+          'type': 'string',
+          'maxLength': 255,
+          'description': 'ID of customer account in the intermediator'
+        },
+        'billing_address': {
+          'type': 'object',
+          'additionalProperties': false,
+          'required': [ 'zip' ],
+          'properties': {
+            'zip': {
+              'type': 'string',
+              'maxLength': 30,
+              'description': 'ZIP (CEP, postal...) code'
+            },
+            'street': {
+              'type': 'string',
+              'maxLength': 200,
+              'description': 'Street or public place name'
+            },
+            'number': {
+              'type': 'integer',
+              'min': 1,
+              'max': 9999999,
+              'description': 'House or building street number'
+            },
+            'complement': {
+              'type': 'string',
+              'maxLength': 100,
+              'description': 'Address complement or second line, such as apartment number'
+            },
+            'borough': {
+              'type': 'string',
+              'maxLength': 100,
+              'description': 'Borough name'
+            },
+            'city': {
+              'type': 'string',
+              'maxLength': 100,
+              'description': 'City name'
+            },
+            'country': {
+              'type': 'string',
+              'maxLength': 50,
+              'description': 'Country name'
+            },
+            'country_code': {
+              'type': 'string',
+              'minLength': 2,
+              'maxLength': 2,
+              'pattern': '^[A-Z]+$',
+              'description': 'An ISO 3166-2 country code'
+            },
+            'province': {
+              'type': 'string',
+              'maxLength': 100,
+              'description': 'Province or state name'
+            },
+            'province_code': {
+              'type': 'string',
+              'minLength': 2,
+              'maxLength': 2,
+              'pattern': '^[A-Z]+$',
+              'description': 'The two-letter code for the province or state'
+            }
+          },
+          'description': 'The mailing address associated with the payment method'
+        },
+        'credit_card': {
+          'type': 'object',
+          'additionalProperties': false,
+          'properties': {
+            'holder_name': {
+              'type': 'string',
+              'maxLength': 100,
+              'description': 'Full name of the holder, as it is on the credit card'
+            },
+            'bin': {
+              'type': 'integer',
+              'min': 1,
+              'max': 9999999,
+              'description': 'Issuer identification number (IIN), known as bank identification number (BIN)'
+            },
+            'company': {
+              'type': 'string',
+              'maxLength': 100,
+              'description': 'Credit card issuer name, eg.: Visa, American Express, MasterCard'
+            },
+            'last_digits': {
+              'type': 'string',
+              'maxLength': 4,
+              'pattern': '^[0-9]+$',
+              'description': 'Last digits (up to 4) of credit card number'
+            },
+            'token': {
+              'type': 'string',
+              'maxLength': 255,
+              'description': 'Unique credit card token'
+            },
+            'cvv': {
+              'type': 'integer',
+              'min': 99,
+              'max': 99999,
+              'description': 'Credit card CVV number (Card Verification Value)'
+            },
+            'hash': {
+              'type': 'string',
+              'maxLength': 2000,
+              'description': 'Credit card encrypted hash'
+            }
+          },
+          'description': 'Credit card data, if payment will be done with credit card'
+        },
+        'installments_number': {
+          'type': 'integer',
+          'minimum': 1,
+          'maximum': 199,
+          'description': 'Number of installments chosen'
+        }
+      },
+      'description': 'Checkout payment options, sent if it was already chosen by customer'
     }
   }
 }

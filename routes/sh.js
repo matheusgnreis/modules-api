@@ -251,6 +251,11 @@ const schema = {
       'type': 'boolean',
       'default': false,
       'description': 'If the package will be delivered with acknowledgment of receipt'
+    },
+    'service_code': {
+      'type': 'string',
+      'maxLength': 70,
+      'description': 'Code of service defined by carrier, if shipping method is already defined'
     }
   }
 }
