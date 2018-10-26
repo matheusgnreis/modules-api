@@ -34,7 +34,7 @@ function ajvErrorHandling (errors, respond, modName) {
   respond({}, null, 400, 'MOD901', devMsg, usrMsg, moreInfo)
 }
 
-function runModule (obj, respond, storeId, modName, validate, responseValidate) {
+function runModule (obj, respond, storeId, modName, validate, responseValidate, appId) {
   // ajv
   let valid = validate(obj)
   if (!valid) {
@@ -46,6 +46,9 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate) 
       '&type=module_package' +
       '&module=' + modName +
       '&fields=app_id,version,hidden_data'
+    if (appId) {
+      endpoint += '&app_id=' + appId
+    }
     let method = 'GET'
     let body = null
 
@@ -123,9 +126,9 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate) 
   }
 }
 
-function post ([ id, , body, respond, storeId ], modName, validate, responseValidate) {
+function post ([ id, meta, body, respond, storeId ], modName, validate, responseValidate) {
   // run module with JSON body as object
-  runModule(body, respond, storeId, modName, validate, responseValidate)
+  runModule(body, respond, storeId, modName, validate, responseValidate, meta.query.app_id)
 }
 
 function get ([ id, meta, , respond, storeId ], modName, validate, schema, responseValidate, responseSchema) {
