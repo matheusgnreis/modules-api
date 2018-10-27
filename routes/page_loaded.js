@@ -2,12 +2,10 @@
 
 // import common verbs (methods) functions
 const httpVerbs = require('./#modules.js')
-const modName = 'al'
+const modName = 'page_loaded'
 
 const schema = {
-  '$schema': 'http://json-schema.org/draft-06/schema#',
-  'title': 'Module AL: Input model',
-  'description': 'On all storefront page load',
+  'description': 'Triggered after each storefront page load',
   'type': 'object',
   'required': [ 'full_uri' ],
   'additionalProperties': false,
@@ -20,11 +18,9 @@ const schema = {
   }
 }
 
-// validate module packages responses
+// validate module endpoints responses
 const responseSchema = {
-  '$schema': 'http://json-schema.org/draft-06/schema#',
-  'title': 'Module AL: Package response model',
-  'description': 'On all storefront page load',
+  'description': schema.description,
   'type': 'object',
   'additionalProperties': false,
   'properties': {
