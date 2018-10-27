@@ -2,9 +2,6 @@
   "proxyBaseUri": "/api/v1/",
   "proxyPort": 3000,
   "proxyAuthHeader": "HASH",
-  "modulesHost": "modules.e-com.plus",
-  "modulesHostTLS": false,
-  "modulesPort": 80,
   "apiHost": "127.0.0.1",
   "apiBaseUri": "/v1/",
   "apiPort": 443
