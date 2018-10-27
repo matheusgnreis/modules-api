@@ -2,14 +2,12 @@
 
 // import common verbs (methods) functions
 const httpVerbs = require('./#modules.js')
-const modName = 'sh'
+const modName = 'calculate_shipping'
 
 const schema = {
-  '$schema': 'http://json-schema.org/draft-06/schema#',
-  'title': 'Module SH: Input model',
-  'description': 'On shipping freight calculation',
+  'description': 'Triggered to calculate shipping options, must return calculated values and times',
   'type': 'object',
-  'required': [ 'items', 'from', 'to' ],
+  'required': [ 'items', 'to' ],
   'additionalProperties': false,
   'definitions': {
     'address': {
@@ -260,10 +258,8 @@ const schema = {
   }
 }
 
-// validate module packages responses
+// validate module endpoints responses
 const responseSchema = {
-  '$schema': 'http://json-schema.org/draft-06/schema#',
-  'title': 'Module SH: Package response model',
   'description': schema.description,
   'type': 'object',
   'required': [ 'shipping_services' ],

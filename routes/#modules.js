@@ -138,12 +138,18 @@ function get ([ id, meta, , respond, storeId ], modName, validate, schema, respo
     switch (id) {
       case 'schema':
         // return JSON Schema
-        respond(schema)
+        respond(Object.assign({
+          $schema: 'http://json-schema.org/draft-06/schema#',
+          title: 'Module `' + modName + '`: Input model'
+        }, schema))
         break
 
       case 'pkg_response_schema':
         // return module packages responses JSON Schema
-        respond(responseSchema)
+        respond(Object.assign({
+          $schema: 'http://json-schema.org/draft-06/schema#',
+          title: 'Module `' + modName + '`: Response model'
+        }, responseSchema))
         break
 
       default:
