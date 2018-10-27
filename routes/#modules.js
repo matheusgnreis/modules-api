@@ -43,9 +43,9 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
     // list module packages
     let endpoint = 'applications.json' +
       '?status=active' +
-      '&type=module_package' +
-      '&module=' + modName +
-      '&fields=app_id,version,hidden_data'
+      '&type=external' +
+      '&modules.' + modName + '.enabled=true' +
+      '&fields=app_id,version,data,hidden_data,modules.' + modName
     if (appId) {
       endpoint += '&app_id=' + appId
     }
@@ -77,33 +77,35 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
           let done = 0
           // body to POST to package PHP file
           let reqBody = {
-            'module': modName,
-            'params': obj
+            module: modName,
+            params: obj
           }
 
           for (var i = 0; i < num; i++) {
             // ok, proceed to modules
             let pkg = list[i]
             reqBody.application = pkg
-            Modules(pkg.app_id, pkg.version, reqBody, storeId, (err, rawData, parsedData) => {
+            let url = pkg.modules[modName].endpoint
+            // handle request with big timeout if app ID was specified
+            let bigTimeout = !!(appId)
+
+            // send POST request
+            Modules(url, reqBody, storeId, bigTimeout, (err, response) => {
               let result = {
-                'app_id': pkg.app_id,
-                'response': {
-                  'text': rawData,
-                  'json': parsedData
-                },
-                'validated': false,
-                'error': false,
-                'error_message': null
+                app_id: pkg.app_id,
+                response,
+                validated: false,
+                error: false,
+                error_message: null
               }
               if (err) {
                 result.error = true
                 if (err.message) {
                   result.error_message = err.message
                 }
-              } else if (typeof parsedData === 'object' && parsedData !== null) {
+              } else if (typeof response === 'object' && response !== null) {
                 // validate response object
-                result.validated = responseValidate(parsedData)
+                result.validated = responseValidate(response)
               }
               results.push(result)
 
