@@ -314,24 +314,6 @@ const responseSchema = {
             'format': 'uri',
             'description': 'Shipping method icon image URI'
           },
-          'rule': {
-            'type': 'object',
-            'required': [ '_id' ],
-            'additionalProperties': false,
-            'properties': {
-              '_id': {
-                'type': 'string',
-                'pattern': '^[a-f0-9]{24}$',
-                'description': 'Rule ID'
-              },
-              'label': {
-                'type': 'string',
-                'maxLength': 50,
-                'description': 'Shipping rule label'
-              }
-            },
-            'description': 'Selected shipping rule of this shipping method'
-          },
           'shipping_line': {
             'type': 'object',
             'additionalProperties': false,
