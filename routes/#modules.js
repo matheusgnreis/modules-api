@@ -144,7 +144,7 @@ function get ([ id, meta, , respond, storeId ], modName, validate, schema, respo
         }, schema))
         break
 
-      case 'pkg_response_schema':
+      case 'response_schema':
         // return module packages responses JSON Schema
         respond(Object.assign({
           $schema: 'http://json-schema.org/draft-06/schema#',
