@@ -469,6 +469,11 @@ const schema = {
           'type': 'string',
           'maxLength': 2000,
           'description': 'Credit card encrypted hash'
+        },
+        'save': {
+          'type': 'boolean',
+          'default': true,
+          'description': 'Whether the hashed credit card should be saved for further use'
         }
       },
       'description': 'Credit card data, if payment will be done with credit card'
