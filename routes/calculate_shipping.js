@@ -7,7 +7,7 @@ const modName = 'calculate_shipping'
 const schema = {
   'description': 'Triggered to calculate shipping options, must return calculated values and times',
   'type': 'object',
-  'required': [ 'items', 'to' ],
+  'required': [ 'to' ],
   'additionalProperties': false,
   'definitions': {
     'address': {
@@ -232,6 +232,13 @@ const schema = {
       },
       'description': 'Products composing the cart'
     },
+    'subtotal': {
+      'type': 'number',
+      'multipleOf': 0.00001,
+      'minimum': 0,
+      'maximum': 9999999999,
+      'description': 'The sum of all items prices'
+    },
     'from': {
       '$ref': '#/definitions/address',
       'description': 'Sender\'s address'
@@ -268,9 +275,15 @@ const responseSchema = {
     ...schema.definitions
   },
   'properties': {
+    'free_shipping_from_value': {
+      'type': 'number',
+      'multipleOf': 0.00001,
+      'minimum': 0,
+      'maximum': 9999999999,
+      'description': 'Optional minimum cart subtotal to earn free shipping with some shipping service'
+    },
     'shipping_services': {
       'type': 'array',
-      'minItems': 1,
       'maxItems': 30,
       'items': {
         'type': 'object',
