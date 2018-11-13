@@ -557,6 +557,11 @@ const schema = {
       'maxLength': 100,
       'pattern': '^[0-9a-z-.]+$',
       'description': 'Store domain name (numbers and lowercase letters, eg.: www.myshop.sample)'
+    },
+    'lang': {
+      'type': 'string',
+      'pattern': '^[a-z]{2}(_[a-z]{2})?$',
+      'description': 'Language two letters code, sometimes with region, eg.: pt_br, fr, en_us'
     }
   }
 }

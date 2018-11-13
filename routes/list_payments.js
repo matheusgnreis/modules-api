@@ -139,6 +139,11 @@ const schema = {
         }
       },
       'description': 'Object with sums of values'
+    },
+    'lang': {
+      'type': 'string',
+      'pattern': '^[a-z]{2}(_[a-z]{2})?$',
+      'description': 'Language two letters code, sometimes with region, eg.: pt_br, fr, en_us'
     }
   }
 }

@@ -261,6 +261,11 @@ const schema = {
       'type': 'string',
       'maxLength': 70,
       'description': 'Code of service defined by carrier, if shipping method is already defined'
+    },
+    'lang': {
+      'type': 'string',
+      'pattern': '^[a-z]{2}(_[a-z]{2})?$',
+      'description': 'Language two letters code, sometimes with region, eg.: pt_br, fr, en_us'
     }
   }
 }
