@@ -235,6 +235,16 @@ const responseSchema = {
             },
             'description': 'Payment method object'
           },
+          'card_companies': {
+            'type': 'array',
+            'maxItems': 30,
+            'items': {
+              'type': 'string',
+              'maxLength': 100,
+              'description': 'Credit card issuer name, eg.: Visa, American Express, MasterCard'
+            },
+            'description': 'List of accepted card brands'
+          },
           'installment_options': {
             'type': 'array',
             'maxItems': 30,
