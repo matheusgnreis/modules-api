@@ -160,6 +160,32 @@ const responseSchema = {
       'maximum': 999,
       'description': 'Optional maximum number of installments without tax'
     },
+    'discount_option': {
+      'type': 'object',
+      'required': [ 'value' ],
+      'additionalProperties': false,
+      'properties': {
+        'label': {
+          'type': 'string',
+          'maxLength': 50,
+          'description': 'Name of payment method that handle the discount'
+        },
+        'type': {
+          'type': 'string',
+          'enum': [ 'percentage', 'fixed' ],
+          'default': 'percentage',
+          'description': 'Discount type'
+        },
+        'value': {
+          'type': 'number',
+          'multipleOf': 0.0001,
+          'minimum': -99999999,
+          'maximum': 99999999,
+          'description': 'Discount value, percentage or fixed'
+        }
+      },
+      'description': 'Default discount option by payment method'
+    },
     'payment_gateways': {
       'type': 'array',
       'maxItems': 30,
@@ -243,6 +269,33 @@ const responseSchema = {
               }
             },
             'description': 'Payment method object'
+          },
+          'discount': {
+            'type': 'object',
+            'required': [ 'value' ],
+            'additionalProperties': false,
+            'properties': {
+              'apply_at': {
+                'type': 'string',
+                'enum': [ 'total', 'subtotal', 'freight' ],
+                'default': 'subtotal',
+                'description': 'In which value the discount will be applied at checkout'
+              },
+              'type': {
+                'type': 'string',
+                'enum': [ 'percentage', 'fixed' ],
+                'default': 'percentage',
+                'description': 'Discount type'
+              },
+              'value': {
+                'type': 'number',
+                'multipleOf': 0.0001,
+                'minimum': -99999999,
+                'maximum': 99999999,
+                'description': 'Discount value, percentage or fixed'
+              }
+            },
+            'description': 'Discount to be applied by payment method'
           },
           'card_companies': {
             'type': 'array',
