@@ -7,7 +7,6 @@ const modName = 'list_payments'
 const schema = {
   'description': 'Triggered when listing payments, must return available methods',
   'type': 'object',
-  'required': [ 'items', 'amount' ],
   'additionalProperties': false,
   'properties': {
     'items': {
@@ -155,9 +154,14 @@ const responseSchema = {
   'required': [ 'payment_gateways' ],
   'additionalProperties': false,
   'properties': {
+    'interest_free_installments': {
+      'type': 'integer',
+      'minimum': 2,
+      'maximum': 999,
+      'description': 'Optional maximum number of installments without tax'
+    },
     'payment_gateways': {
       'type': 'array',
-      'minItems': 1,
       'maxItems': 30,
       'items': {
         'type': 'object',

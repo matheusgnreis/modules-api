@@ -7,7 +7,6 @@ const modName = 'calculate_shipping'
 const schema = {
   'description': 'Triggered to calculate shipping options, must return calculated values and times',
   'type': 'object',
-  'required': [ 'to' ],
   'additionalProperties': false,
   'definitions': {
     'address': {
