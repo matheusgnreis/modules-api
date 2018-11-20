@@ -896,5 +896,4 @@ const responseSchema = {
   }
 }
 
-// also exports schema to use in checkout endpoint
-module.exports = Object.assign({ schema }, httpVerbs(modName, schema, responseSchema))
+module.exports = httpVerbs(modName, schema, responseSchema)

@@ -8,8 +8,6 @@
 const Ajv = require('ajv')
 const { validateOptions, errorHandling } = require('./../lib/Ajv.js')
 
-const schemaTransaction = require('./../lib/Ajv.js').schema
-
 const endpoint = '@checkout'
 const schema = {
   '$schema': 'http://json-schema.org/draft-06/schema#',
