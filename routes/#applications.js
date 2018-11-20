@@ -5,40 +5,18 @@ const logger = require('console-files')
 
 // JSON Schema validation with AJV
 // based on http://json-schema.org/
-const Ajv = require('ajv') // version >= 2.0.0
-const localize = require('ajv-i18n')
-// option `i18n` is required for this package to work
-const ajv = Ajv({ allErrors: true })
-// https://github.com/epoberezkin/ajv-i18n
-const validateOptions = {
-  allErrors: true,
-  removeAdditional: true,
-  multipleOfPrecision: 5,
-  useDefaults: true
-}
+const Ajv = require('ajv')
+const { validateOptions, errorHandling } = require('./../lib/Ajv.js')
 
 // REST clients
 const Api = require('./../lib/Api.js')
 const Modules = require('./../lib/Modules.js')
 
-function ajvErrorHandling (errors, respond, modName) {
-  let moreInfo = '/' + modName + '/schema.json'
-  let devMsg = 'Bad-formatted JSON body (POST) or URL query params (GET), details in user_message'
-  let usrMsg = {
-    'en_us': ajv.errorsText(errors, { separator: '\n' })
-  }
-  // translate
-  localize['pt-BR'](errors)
-  usrMsg.pt_br = ajv.errorsText(errors, { separator: '\n' })
-
-  respond({}, null, 400, 'MOD901', devMsg, usrMsg, moreInfo)
-}
-
 function runModule (obj, respond, storeId, modName, validate, responseValidate, appId) {
   // ajv
   let valid = validate(obj)
   if (!valid) {
-    ajvErrorHandling(validate.errors, respond, modName)
+    errorHandling(validate.errors, respond, modName)
   } else {
     // list module packages
     let endpoint = 'applications.json' +
