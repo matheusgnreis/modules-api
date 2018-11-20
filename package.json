@@ -13,6 +13,7 @@
     "rest-auto-router": "3.x",
     "ajv": "5.x",
     "ajv-i18n": "2.x",
+    "console-files": "2.x",
     "axios": "0.x"
   }
 }

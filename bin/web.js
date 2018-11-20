@@ -1,7 +1,7 @@
 'use strict'
 
 // log on files
-const logger = require('./../lib/Logger.js')
+const logger = require('console-files')
 // https://www.npmjs.com/package/rest-auto-router
 const restAutoRouter = require('rest-auto-router')
 

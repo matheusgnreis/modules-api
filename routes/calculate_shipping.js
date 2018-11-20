@@ -1,7 +1,7 @@
 'use strict'
 
 // import common verbs (methods) functions
-const httpVerbs = require('./#modules.js')
+const httpVerbs = require('./#applications.js')
 const modName = 'calculate_shipping'
 
 const schema = {

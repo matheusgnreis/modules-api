@@ -1,7 +1,7 @@
 'use strict'
 
 // log on files
-const logger = require('./../lib/Logger.js')
+const logger = require('console-files')
 
 // JSON Schema validation with AJV
 // based on http://json-schema.org/
