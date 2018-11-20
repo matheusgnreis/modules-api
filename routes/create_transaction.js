@@ -896,5 +896,4 @@ const responseSchema = {
   }
 }
 
-exports.schema = schema
 module.exports = httpVerbs(modName, schema, responseSchema)
