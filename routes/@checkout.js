@@ -184,8 +184,356 @@ const schema = {
     'transaction': {
       'type': 'object',
       'additionalProperties': false,
-      'required': [ 'to' ],
+      'required': [ 'buyer', 'payment_method' ],
       'properties': {
+        'type': {
+          'type': 'string',
+          'enum': [ 'payment', 'recurrence' ],
+          'default': 'payment',
+          'description': 'Transaction type'
+        },
+        'payment_method': {
+          'type': 'object',
+          'required': [ 'code' ],
+          'additionalProperties': false,
+          'properties': {
+            'code': {
+              'type': 'string',
+              'enum': [
+                'credit_card',
+                'banking_billet',
+                'online_debit',
+                'account_deposit',
+                'debit_card',
+                'balance_on_intermediary',
+                'loyalty_points',
+                'other'
+              ],
+              'description': 'Standardized payment method code'
+            },
+            'name': {
+              'type': 'string',
+              'maxLength': 200,
+              'description': 'Short description for payment method'
+            }
+          },
+          'description': 'Chosen payment method object'
+        },
+        'buyer': {
+          'type': 'object',
+          'additionalProperties': false,
+          'required': [ 'customer_id', 'email', 'fullname', 'birth_date', 'phone', 'registry_type', 'doc_number' ],
+          'properties': {
+            'customer_id': {
+              'type': 'string',
+              'pattern': '^[a-f0-9]{24}$',
+              'description': 'Customer ID in the store'
+            },
+            'email': {
+              'type': 'string',
+              'maxLength': 200,
+              'format': 'email',
+              'description': 'Buyer email address'
+            },
+            'fullname': {
+              'type': 'string',
+              'maxLength': 255,
+              'description': 'Customer full name or company corporate name'
+            },
+            'gender': {
+              'type': 'string',
+              'enum': [ 'f', 'm', 'x' ],
+              'description': 'Customer gender, female, male or third gender (X)'
+            },
+            'birth_date': {
+              'type': 'object',
+              'additionalProperties': false,
+              'properties': {
+                'day': {
+                  'type': 'integer',
+                  'min': 1,
+                  'max': 31,
+                  'description': 'Day of birth'
+                },
+                'month': {
+                  'type': 'integer',
+                  'min': 1,
+                  'max': 12,
+                  'description': 'Number of month of birth'
+                },
+                'year': {
+                  'type': 'integer',
+                  'min': 1800,
+                  'max': 2200,
+                  'description': 'Year of birth'
+                }
+              },
+              'description': 'Date of customer birth'
+            },
+            'phone': {
+              'type': 'object',
+              'additionalProperties': false,
+              'required': [ 'number' ],
+              'properties': {
+                'country_code': {
+                  'type': 'integer',
+                  'min': 1,
+                  'max': 999,
+                  'description': 'Country calling code (without +), defined by standards E.123 and E.164'
+                },
+                'number': {
+                  'type': 'string',
+                  'maxLength': 19,
+                  'pattern': '^[0-9]+$',
+                  'description': 'The actual phone number, digits only'
+                },
+                'type': {
+                  'type': 'string',
+                  'enum': [ 'home', 'personal', 'work', 'other' ],
+                  'description': 'The type of phone'
+                }
+              },
+              'description': 'Buyer contact phone'
+            },
+            'registry_type': {
+              'type': 'string',
+              'enum': [ 'p', 'j' ],
+              'description': 'Physical or juridical (company) person'
+            },
+            'doc_country': {
+              'type': 'string',
+              'minLength': 2,
+              'maxLength': 2,
+              'pattern': '^[A-Z]+$',
+              'description': 'Country of document origin, an ISO 3166-2 code'
+            },
+            'doc_number': {
+              'type': 'string',
+              'maxLength': 19,
+              'pattern': '^[0-9]+$',
+              'description': 'Responsible person or organization document number (only numbers)'
+            },
+            'inscription_type': {
+              'type': 'string',
+              'enum': [ 'State', 'Municipal' ],
+              'description': 'Municipal or state registration if exists'
+            },
+            'inscription_number': {
+              'type': 'string',
+              'maxLength': 50,
+              'description': 'Municipal or state registration number (with characters) if exists'
+            }
+          },
+          'description': 'Order buyer info'
+        },
+        'payer': {
+          'type': 'object',
+          'additionalProperties': false,
+          'properties': {
+            'fullname': {
+              'type': 'string',
+              'maxLength': 255,
+              'description': 'Payer full name or company corporate name'
+            },
+            'birth_date': {
+              'type': 'object',
+              'additionalProperties': false,
+              'properties': {
+                'day': {
+                  'type': 'integer',
+                  'min': 1,
+                  'max': 31,
+                  'description': 'Day of birth'
+                },
+                'month': {
+                  'type': 'integer',
+                  'min': 1,
+                  'max': 12,
+                  'description': 'Number of month of birth'
+                },
+                'year': {
+                  'type': 'integer',
+                  'min': 1800,
+                  'max': 2200,
+                  'description': 'Year of birth'
+                }
+              },
+              'description': 'Date of payer birth'
+            },
+            'phone': {
+              'type': 'object',
+              'additionalProperties': false,
+              'required': [ 'number' ],
+              'properties': {
+                'country_code': {
+                  'type': 'integer',
+                  'min': 1,
+                  'max': 999,
+                  'description': 'Country calling code (without +), defined by standards E.123 and E.164'
+                },
+                'number': {
+                  'type': 'string',
+                  'maxLength': 19,
+                  'pattern': '^[0-9]+$',
+                  'description': 'The actual phone number, digits only'
+                },
+                'type': {
+                  'type': 'string',
+                  'enum': [ 'home', 'personal', 'work', 'other' ],
+                  'description': 'The type of phone'
+                }
+              },
+              'description': 'Payer contact phone'
+            },
+            'registry_type': {
+              'type': 'string',
+              'enum': [ 'p', 'j' ],
+              'description': 'Physical or juridical (company) person'
+            },
+            'doc_country': {
+              'type': 'string',
+              'minLength': 2,
+              'maxLength': 2,
+              'pattern': '^[A-Z]+$',
+              'description': 'Country of document origin, an ISO 3166-2 code'
+            },
+            'doc_number': {
+              'type': 'string',
+              'maxLength': 19,
+              'pattern': '^[0-9]+$',
+              'description': 'Responsible person or organization document number (only numbers)'
+            }
+          },
+          'description': 'Transation payer info'
+        },
+        'intermediator_buyer_id': {
+          'type': 'string',
+          'maxLength': 255,
+          'description': 'ID of customer account in the intermediator'
+        },
+        'billing_address': {
+          '$ref': '#/definitions/address',
+          'description': 'The mailing address associated with the payment method'
+        },
+        'credit_card': {
+          'type': 'object',
+          'additionalProperties': false,
+          'properties': {
+            'holder_name': {
+              'type': 'string',
+              'maxLength': 100,
+              'description': 'Full name of the holder, as it is on the credit card'
+            },
+            'bin': {
+              'type': 'integer',
+              'min': 1,
+              'max': 9999999,
+              'description': 'Issuer identification number (IIN), known as bank identification number (BIN)'
+            },
+            'company': {
+              'type': 'string',
+              'maxLength': 100,
+              'description': 'Credit card issuer name, eg.: Visa, American Express, MasterCard'
+            },
+            'last_digits': {
+              'type': 'string',
+              'maxLength': 4,
+              'pattern': '^[0-9]+$',
+              'description': 'Last digits (up to 4) of credit card number'
+            },
+            'token': {
+              'type': 'string',
+              'maxLength': 255,
+              'description': 'Unique credit card token'
+            },
+            'cvv': {
+              'type': 'integer',
+              'min': 99,
+              'max': 99999,
+              'description': 'Credit card CVV number (Card Verification Value)'
+            },
+            'hash': {
+              'type': 'string',
+              'maxLength': 2000,
+              'description': 'Credit card encrypted hash'
+            },
+            'save': {
+              'type': 'boolean',
+              'default': true,
+              'description': 'Whether the hashed credit card should be saved for further use'
+            }
+          },
+          'description': 'Credit card data, if payment will be done with credit card'
+        },
+        'installments_number': {
+          'type': 'integer',
+          'minimum': 1,
+          'maximum': 199,
+          'description': 'Number of installments chosen'
+        },
+        'utm': {
+          'type': 'object',
+          'additionalProperties': false,
+          'properties': {
+            'source': {
+              'type': 'string',
+              'maxLength': 100,
+              'description': 'Parameter "utm_source", the referrer: (e.g. google, newsletter)'
+            },
+            'medium': {
+              'type': 'string',
+              'maxLength': 100,
+              'description': 'Parameter "utm_medium", the marketing medium: (e.g. cpc, banner, email)'
+            },
+            'campaign': {
+              'type': 'string',
+              'maxLength': 200,
+              'description': 'Parameter "utm_campaign", the product, promo code, or slogan (e.g. spring_sale)'
+            },
+            'term': {
+              'type': 'string',
+              'maxLength': 100,
+              'description': 'Parameter "utm_term", identifies the paid keywords'
+            },
+            'content': {
+              'type': 'string',
+              'maxLength': 255,
+              'description': 'Parameter "utm_content", used to differentiate ads'
+            }
+          },
+          'description': 'UTM campaign HTTP parameters'
+        },
+        'affiliate_code': {
+          'type': 'string',
+          'maxLength': 200,
+          'description': 'Code to identify the affiliate that referred the customer'
+        },
+        'browser_ip': {
+          'type': 'string',
+          'maxLength': 30,
+          'format': 'ipv4',
+          'description': 'IP address of the browser used by the customer when placing the order'
+        },
+        'channel_id': {
+          'type': 'integer',
+          'min': 10000,
+          'max': 4294967295,
+          'description': 'Channel unique identificator'
+        },
+        'channel_type': {
+          'type': 'string',
+          'maxLength': 20,
+          'enum': [ 'ecommerce', 'mobile', 'pdv', 'button', 'facebook', 'chatbot' ],
+          'default': 'ecommerce',
+          'description': 'Channel type or source'
+        },
+        'domain': {
+          'type': 'string',
+          'minLength': 4,
+          'maxLength': 100,
+          'pattern': '^[0-9a-z-.]+$',
+          'description': 'Store domain name (numbers and lowercase letters, eg.: www.myshop.sample)'
+        }
       },
       'description': 'Payment options to create transaction'
     },
