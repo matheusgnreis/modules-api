@@ -12,7 +12,7 @@ const EcomIo = require('ecomplus-sdk')
 // handle other modules endpoints directly
 const calculateShipping = require('./calculate_shipping').POST
 const listPayments = require('./list_payments').POST
-const createTransaction = require('./create_Transaction').POST
+const createTransaction = require('./create_transaction').POST
 
 // abstraction to calculate shipping and create transaction
 const simulateRequest = (checkoutBody, checkoutRespond, label, storeId, callback) => {
