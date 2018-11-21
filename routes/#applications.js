@@ -7,6 +7,7 @@ const logger = require('console-files')
 // based on http://json-schema.org/
 const Ajv = require('ajv')
 const { validateOptions, errorHandling } = require('./../lib/Ajv.js')
+const ajv = Ajv({ allErrors: true })
 
 // REST clients
 const Api = require('./../lib/Api.js')
@@ -95,6 +96,13 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
               } else if (typeof response === 'object' && response !== null) {
                 // validate response object
                 result.validated = responseValidate(response)
+                if (!result.validated) {
+                  result.response_errors = ajv.errorsText(responseValidate.errors, {
+                    separator: '\n'
+                  })
+                } else {
+                  result.response_errors = null
+                }
               }
               results.push(result)
 
