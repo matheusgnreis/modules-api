@@ -7,7 +7,7 @@ const logger = require('console-files')
 const Api = require('./../lib/Api')
 const { objectId } = require('./../lib/Utils')
 // public API methods
-const EcomIo = require('ecomplus-sdk-js')
+const EcomIo = require('ecomplus-sdk')
 
 // handle other modules endpoints directly
 const calculateShipping = require('./calculate_shipping').POST
