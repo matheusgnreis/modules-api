@@ -5,8 +5,11 @@
 
 // JSON Schema validation with AJV
 // based on http://json-schema.org/
-// const Ajv = require('ajv')
-// const { validateOptions, errorHandling } = require('./../lib/Ajv.js')
+const Ajv = require('ajv')
+const { validateOptions, errorHandling } = require('./../lib/Ajv.js')
+
+// handle checkout
+const checkout = require('./#checkout.js')
 
 const endpoint = '@checkout'
 const schema = {
@@ -146,6 +149,142 @@ const schema = {
             'minimum': 0,
             'maximum': 9999999,
             'description': 'Item quantity in cart'
+          },
+          'picture': {
+            'type': 'object',
+            'additionalProperties': false,
+            'patternProperties': {
+              '^small|normal|big|zoom|custom$': {
+                'type': 'object',
+                'required': [ 'url' ],
+                'additionalProperties': false,
+                'properties': {
+                  'url': {
+                    'type': 'string',
+                    'maxLength': 255,
+                    'format': 'uri',
+                    'description': 'Image link'
+                  },
+                  'size': {
+                    'type': 'string',
+                    'maxLength': 11,
+                    'pattern': '^[1-9]([0-9]+)?x[1-9]([0-9]+)?$',
+                    'description': 'Image size (width x height) in px, such as 100x50 (100px width, 50px height)'
+                  },
+                  'alt': {
+                    'type': 'string',
+                    'maxLength': 255,
+                    'description': 'Alternative text, HTML alt tag (important for SEO)'
+                  }
+                },
+                'description': 'Image size variation'
+              }
+            },
+            'description': 'Product or variation picture for this cart item'
+          },
+          'customizations': {
+            'type': 'array',
+            'maxItems': 100,
+            'items': {
+              'type': 'object',
+              'required': [ '_id', 'option' ],
+              'additionalProperties': false,
+              'properties': {
+                '_id': {
+                  'type': 'string',
+                  'pattern': '^[a-f0-9]{24}$',
+                  'description': 'Customization field ID'
+                },
+                'label': {
+                  'type': 'string',
+                  'maxLength': 70,
+                  'description': 'Title for this customization field, can be the grid title'
+                },
+                'option': {
+                  'type': 'object',
+                  'required': [ 'text' ],
+                  'additionalProperties': false,
+                  'properties': {
+                    'option_id': {
+                      'type': 'string',
+                      'pattern': '^[a-z0-9_]{2,30}$',
+                      'description': 'Identify option if it was predefined (not custom value created by customer)'
+                    },
+                    'text': {
+                      'type': 'string',
+                      'maxLength': 70,
+                      'description': 'Option text value displayed for the client'
+                    },
+                    'colors': {
+                      'type': 'array',
+                      'maxItems': 6,
+                      'items': {
+                        'type': 'string',
+                        'pattern': '^#[a-f0-9]{6}$',
+                        'description': 'RGB code with #'
+                      },
+                      'description': 'Option color palette (if the field involves colors), starting by main color'
+                    }
+                  },
+                  'description': 'Option chosen or created by customer'
+                },
+                'attachment': {
+                  'type': 'string',
+                  'maxLength': 255,
+                  'format': 'uri',
+                  'description': 'URL of file attached by customer to this field'
+                },
+                'add_to_price': {
+                  'type': 'object',
+                  'required': [ 'addition' ],
+                  'additionalProperties': false,
+                  'properties': {
+                    'type': {
+                      'type': 'string',
+                      'enum': [ 'percentage', 'fixed' ],
+                      'default': 'percentage',
+                      'description': 'Type of price addition'
+                    },
+                    'addition': {
+                      'type': 'number',
+                      'multipleOf': 0.0001,
+                      'minimum': -99999999,
+                      'maximum': 99999999,
+                      'description': 'Additional value, could be negative'
+                    }
+                  },
+                  'description': 'Price alteration due to this customization'
+                }
+              },
+              'description': 'Customization field'
+            },
+            'description': 'Item customization fields'
+          },
+          'gift_wrap': {
+            'type': 'object',
+            'required': [ 'label' ],
+            'additionalProperties': false,
+            'properties': {
+              'tag': {
+                'type': 'string',
+                'maxLength': 20,
+                'pattern': '^[a-z0-9_]+$',
+                'description': 'Tag to identify object, use only lowercase letters, digits and underscore'
+              },
+              'label': {
+                'type': 'string',
+                'maxLength': 70,
+                'description': 'Title describing this gift wrap'
+              },
+              'add_to_price': {
+                'type': 'number',
+                'multipleOf': 0.0001,
+                'minimum': 0,
+                'maximum': 99999999,
+                'description': 'Additional value due to this gift wrap'
+              }
+            },
+            'description': 'Gift wrap chosen by customer'
           }
         }
       }
@@ -153,8 +292,14 @@ const schema = {
     'shipping': {
       'type': 'object',
       'additionalProperties': false,
-      'required': [ 'to' ],
+      'required': [ 'app_id', 'to' ],
       'properties': {
+        'app_id': {
+          'type': 'integer',
+          'minimum': 1000,
+          'maximum': 16777215,
+          'description': 'ID of application chosen for shipping'
+        },
         'from': {
           '$ref': '#/definitions/address',
           'description': 'Sender\'s address'
@@ -184,8 +329,14 @@ const schema = {
     'transaction': {
       'type': 'object',
       'additionalProperties': false,
-      'required': [ 'buyer', 'payment_method' ],
+      'required': [ 'app_id', 'buyer', 'payment_method' ],
       'properties': {
+        'app_id': {
+          'type': 'integer',
+          'minimum': 1000,
+          'maximum': 16777215,
+          'description': 'ID of application chosen for transaction'
+        },
         'type': {
           'type': 'string',
           'enum': [ 'payment', 'recurrence' ],
@@ -545,6 +696,9 @@ const schema = {
   }
 }
 
+// validate request body
+const validate = Ajv(validateOptions).compile(schema)
+
 const GET = (id, meta, body, respond) => {
   if (id === 'schema') {
     // return JSON Schema
@@ -556,6 +710,15 @@ const GET = (id, meta, body, respond) => {
 }
 
 const POST = (id, meta, body, respond, storeId) => {
+  // ajv
+  let valid = validate(body)
+  if (!valid) {
+    errorHandling(validate.errors, respond, endpoint)
+  } else {
+    // request body validated
+    // handle checkout
+    checkout(body, respond, storeId)
+  }
 }
 
 module.exports = { GET, POST }

@@ -23,7 +23,7 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
       '?status=active' +
       '&type=external' +
       '&modules.' + modName + '.enabled=true' +
-      '&fields=app_id,version,data,hidden_data,modules.' + modName
+      '&fields=_id,app_id,version,data,hidden_data,modules.' + modName
     if (appId) {
       endpoint += '&app_id=' + appId
     }
@@ -69,13 +69,17 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
 
             // send POST request
             Modules(url, reqBody, storeId, bigTimeout, (err, response) => {
+              // mount result object
               let result = {
+                _id: pkg._id,
                 app_id: pkg.app_id,
-                response,
+                version: pkg.version,
                 validated: false,
                 error: false,
-                error_message: null
+                error_message: null,
+                response
               }
+
               if (err) {
                 result.error = true
                 if (err.message) {

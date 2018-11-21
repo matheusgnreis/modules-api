@@ -14,6 +14,7 @@
     "ajv": "5.x",
     "ajv-i18n": "2.x",
     "console-files": "2.x",
-    "axios": "0.x"
+    "axios": "0.x",
+    "ecomplus-sdk-js": "1.x"
   }
 }
