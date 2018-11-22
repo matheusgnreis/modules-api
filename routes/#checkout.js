@@ -160,8 +160,8 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
       itemsDone++
       if (itemsDone === itemsTodo) {
-        logger.log('all items done')
-        logger.log(JSON.stringify(items, null, 2))
+        // logger.log('all items done')
+        // logger.log(JSON.stringify(items, null, 2))
         // all items done
         if (items.length) {
           // count subtotal value
@@ -179,15 +179,14 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
           // start mounting order body
           // https://developers.e-com.plus/docs/api/#/store/orders/orders
-          logger.log(JSON.stringify(items, null, 2))
           let customer = checkoutBody.customer
           let orderBody = {
-            items,
-            amount,
+            items: items,
             buyers: [
               // received customer info
               customer
-            ]
+            ],
+            amount
           }
 
           const createOrder = () => {
