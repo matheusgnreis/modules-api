@@ -153,6 +153,8 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
           handle gift wrap and customizations before final price
           */
           item.final_price = item.price
+          // random object ID for item
+          item._id = objectId()
         }
       }
 
