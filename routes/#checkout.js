@@ -245,7 +245,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                       ...checkoutBody.transaction,
                       to: checkoutBody.shipping.to
                     }
-                    logger.log(transactionBody)
+                    // logger.log(transactionBody)
                     // finally pass to create transaction
                     simulateRequest(transactionBody, checkoutRespond, 'transaction', storeId, results => {
                       // logger.log(results)
