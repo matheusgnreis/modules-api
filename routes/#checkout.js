@@ -237,6 +237,8 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                 // get order number from public order info
                 let callback = (err, { number }) => {
                   if (!err) {
+                    logger.log('transaction')
+                    logger.log(number)
                     checkoutBody.order_number = number
 
                     // finally pass to create transaction
