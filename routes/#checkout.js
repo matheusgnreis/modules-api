@@ -252,7 +252,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                         if (response && (transaction = response.transaction)) {
                           // add transaction to order body
                           // POST on transactions subresource
-                          let endpoint = 'orders/' + orderId + '.json'
+                          let endpoint = 'orders/' + orderId + '/transactions.json'
 
                           Api(endpoint, 'POST', transaction, storeId, errorCallback, body => {
                             // everithing done
