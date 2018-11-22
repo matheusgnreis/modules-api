@@ -90,11 +90,13 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
               }
 
               if (err) {
+                logger.error(err)
                 result.error = true
                 if (err.message) {
                   result.error_message = err.message
                 }
               } else if (typeof response === 'object' && response !== null) {
+                logger.log(response)
                 // validate response object
                 result.validated = responseValidate(response)
                 if (!result.validated) {
