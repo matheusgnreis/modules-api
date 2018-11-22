@@ -14,8 +14,7 @@ const createTransaction = require('./create_transaction').POST
 
 // abstraction to calculate shipping and create transaction
 const simulateRequest = (checkoutBody, checkoutRespond, label, storeId, callback) => {
-  logger.log(label)
-  logger.log(checkoutBody)
+  // logger.log(label)
   // select module to handle by label param
   let moduleHandler, moduleBody
   switch (label) {
@@ -316,63 +315,10 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                       Object.assign({ _id: objectId() }, shippingApp, shippingLine)
                     ]
                     orderBody.shipping_method_label = shippingService.label || ''
-                    break
+                    listPayments()
+                    return
                   }
                 }
-
-                // simulate requets to list payments endpoint
-                simulateRequest(checkoutBody, checkoutRespond, 'payment', storeId, results => {
-                  let result = getModuleResult(results)
-                  if (result) {
-                    // treat list payments response
-                    let response = result.response
-                    if (response && response.payment_gateways) {
-                      // check chosen payment method code
-                      let paymentMethodCode
-                      if (checkoutBody.transaction.payment_method) {
-                        paymentMethodCode = checkoutBody.transaction.payment_method.code
-                      }
-
-                      for (let i = 0; i < response.payment_gateways.length; i++) {
-                        let paymentGateway = response.payment_gateways[i]
-                        let paymentMethod = paymentGateway.payment_method
-                        if (!paymentMethodCode || (paymentMethod && paymentMethod.code === paymentMethodCode)) {
-                          let discount = paymentGateway.discount
-                          let maxDiscount
-
-                          // handle discount by payment method
-                          if (discount && discount.apply_at && (maxDiscount = amount[discount.apply_at])) {
-                            // update amount discount and total
-                            if (discount.type === 'percentual') {
-                              amount.discount = maxDiscount * discount.value / 100
-                            } else {
-                              amount.discount = discount.value
-                            }
-                            if (amount.discount > maxDiscount) {
-                              amount.discount = maxDiscount
-                            }
-                            amount.total -= amount.discount
-                          }
-
-                          // add to order body
-                          orderBody.payment_method_label = paymentGateway.label || ''
-                          // new order
-                          createOrder()
-                          break
-                        }
-                      }
-                    }
-                  }
-
-                  // problem with list payments response object
-                  let usrMsg = {
-                    en_us: 'Payment method not available, please choose another',
-                    pt_br: 'Forma de pagamento indisponível, por favor escolha outra'
-                  }
-                  let devMsg = 'Any valid payment gateway from /list_payments module'
-                  checkoutRespond({}, null, 400, 'CKT902', devMsg, usrMsg)
-                })
-                return
               }
             }
 
@@ -384,6 +330,61 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
             let devMsg = 'Any valid shipping service from /calculate_shipping module'
             checkoutRespond({}, null, 400, 'CKT901', devMsg, usrMsg)
           })
+
+          const listPayments = () => {
+            // simulate requets to list payments endpoint
+            simulateRequest(checkoutBody, checkoutRespond, 'payment', storeId, results => {
+              let result = getModuleResult(results)
+              if (result) {
+                // treat list payments response
+                let response = result.response
+                if (response && response.payment_gateways) {
+                  // check chosen payment method code
+                  let paymentMethodCode
+                  if (checkoutBody.transaction.payment_method) {
+                    paymentMethodCode = checkoutBody.transaction.payment_method.code
+                  }
+
+                  for (let i = 0; i < response.payment_gateways.length; i++) {
+                    let paymentGateway = response.payment_gateways[i]
+                    let paymentMethod = paymentGateway.payment_method
+                    if (!paymentMethodCode || (paymentMethod && paymentMethod.code === paymentMethodCode)) {
+                      let discount = paymentGateway.discount
+                      let maxDiscount
+
+                      // handle discount by payment method
+                      if (discount && discount.apply_at && (maxDiscount = amount[discount.apply_at])) {
+                        // update amount discount and total
+                        if (discount.type === 'percentual') {
+                          amount.discount = maxDiscount * discount.value / 100
+                        } else {
+                          amount.discount = discount.value
+                        }
+                        if (amount.discount > maxDiscount) {
+                          amount.discount = maxDiscount
+                        }
+                        amount.total -= amount.discount
+                      }
+
+                      // add to order body
+                      orderBody.payment_method_label = paymentGateway.label || ''
+                      // new order
+                      createOrder()
+                      return
+                    }
+                  }
+                }
+              }
+
+              // problem with list payments response object
+              let usrMsg = {
+                en_us: 'Payment method not available, please choose another',
+                pt_br: 'Forma de pagamento indisponível, por favor escolha outra'
+              }
+              let devMsg = 'Any valid payment gateway from /list_payments module'
+              checkoutRespond({}, null, 400, 'CKT902', devMsg, usrMsg)
+            })
+          }
         } else {
           // no valid items
           let devMsg = 'Cannot handle checkout, any valid cart item'
