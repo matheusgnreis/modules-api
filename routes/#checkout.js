@@ -281,6 +281,9 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
             }
 
             if (customer._id) {
+              if (!checkoutBody.transaction.buyer.customer_id) {
+                checkoutBody.transaction.buyer.customer_id = customer._id
+              }
               newOrder()
             } else {
               // must create customer first
