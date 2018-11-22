@@ -169,6 +169,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
           items.forEach(item => {
             subtotal += (item.final_price * item.quantity)
           })
+          subtotal = Math.round(subtotal * 100) / 100
           let amount = {
             total: subtotal,
             subtotal
@@ -178,6 +179,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
           // start mounting order body
           // https://developers.e-com.plus/docs/api/#/store/orders/orders
+          logger.log(JSON.stringify(items, null, 2))
           let customer = checkoutBody.customer
           let orderBody = {
             items,
