@@ -164,10 +164,23 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
         // logger.log(JSON.stringify(items, null, 2))
         // all items done
         if (items.length) {
+          // start mounting order body
+          // https://developers.e-com.plus/docs/api/#/store/orders/orders
+          let customer = checkoutBody.customer
+          let orderBody = {
+            buyers: [
+              // received customer info
+              customer
+            ],
+            items: []
+          }
+
           // count subtotal value
           let subtotal = 0
           items.forEach(item => {
             subtotal += (item.final_price * item.quantity)
+            // pass each item to prevent object overwrite
+            orderBody.items.push(Object.assign({}, item))
           })
           subtotal = Math.round(subtotal * 100) / 100
           let amount = {
@@ -176,18 +189,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
           }
           // also save to checkout body object
           checkoutBody.amount = amount
-
-          // start mounting order body
-          // https://developers.e-com.plus/docs/api/#/store/orders/orders
-          let customer = checkoutBody.customer
-          let orderBody = {
-            items: items.slice(),
-            buyers: [
-              // received customer info
-              customer
-            ],
-            amount
-          }
+          orderBody.amount = amount
 
           const createOrder = () => {
             let errorCallback = (err, statusCode, devMsg) => {
