@@ -260,11 +260,11 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
                           Api(endpoint, 'POST', body, storeId, errorCallback, body => {
                             // everithing done
-                            // add transaction on order body object and respond
-                            orderBody.transactions = [
-                              Object.assign(response.transaction, body._id)
-                            ]
-                            checkoutRespond(orderBody)
+                            // merge transaction on order body object and respond
+                            checkoutRespond({
+                              order: orderBody,
+                              transaction
+                            })
                           })
                           return
                         }
