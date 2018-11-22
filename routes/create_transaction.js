@@ -183,10 +183,6 @@ const schema = {
       },
       'description': 'Products composing the cart'
     },
-    'to': {
-      '$ref': '#/definitions/address',
-      'description': 'Shipping address (recipient)'
-    },
     'currency_id': {
       'type': 'string',
       'pattern': '^[A-Z]{3}$',
@@ -477,6 +473,10 @@ const schema = {
     'billing_address': {
       '$ref': '#/definitions/address',
       'description': 'The mailing address associated with the payment method'
+    },
+    'to': {
+      '$ref': '#/definitions/address',
+      'description': 'Shipping address (recipient)'
     },
     'credit_card': {
       'type': 'object',
