@@ -243,8 +243,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                     const transactionBody = {
                       ...checkoutBody,
                       ...checkoutBody.transaction,
-                      to: checkoutBody.shipping.to,
-                      shipping_address: checkoutBody.shipping.to
+                      to: { ...checkoutBody.shipping.to }
                     }
                     // logger.log(transactionBody)
                     // finally pass to create transaction

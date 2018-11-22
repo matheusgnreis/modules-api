@@ -474,10 +474,6 @@ const schema = {
       '$ref': '#/definitions/address',
       'description': 'The mailing address associated with the payment method'
     },
-    'shipping_address': {
-      '$ref': '#/definitions/address',
-      'description': 'The mailing address associated with the payment method'
-    },
     'to': {
       '$ref': '#/definitions/address',
       'description': 'Shipping address (recipient)'
