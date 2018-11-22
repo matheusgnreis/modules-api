@@ -112,6 +112,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
             body = Object.assign(product, variation)
           }
         }
+        logger.log(body._id)
 
         if (!body || body.min_quantity > item.quantity) {
           // cannot handle current item
@@ -152,6 +153,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
       itemsDone++
       if (itemsDone === itemsTodo) {
+        logger.log('all items done')
         // all items done
         if (items.length) {
           // count subtotal value
