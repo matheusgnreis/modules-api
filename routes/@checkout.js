@@ -699,7 +699,7 @@ const schema = {
       'required': [ 'main_email', 'name' ],
       'properties': {
         '_id': {
-          'type': 'string',
+          'type': [ 'null', 'string' ],
           'pattern': '^[a-f0-9]{24}$',
           'description': 'Customer ID'
         },
