@@ -15,6 +15,7 @@ const createTransaction = require('./create_transaction').POST
 // abstraction to calculate shipping and create transaction
 const simulateRequest = (checkoutBody, checkoutRespond, label, storeId, callback) => {
   logger.log(label)
+  logger.log(checkoutBody)
   // select module to handle by label param
   let moduleHandler, moduleBody
   switch (label) {
@@ -158,7 +159,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
       itemsDone++
       if (itemsDone === itemsTodo) {
-        logger.log('all items done')
+        // logger.log('all items done')
         // all items done
         if (items.length) {
           // count subtotal value
