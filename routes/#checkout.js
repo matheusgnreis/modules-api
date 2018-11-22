@@ -188,6 +188,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
             ],
             amount
           }
+          logger.log(JSON.stringify(orderBody, null, 2))
 
           const createOrder = () => {
             let errorCallback = (err, statusCode, devMsg) => {
