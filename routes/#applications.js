@@ -16,10 +16,9 @@ const Modules = require('./../lib/Modules.js')
 function runModule (obj, respond, storeId, modName, validate, responseValidate, appId) {
   // ajv
   let valid = validate(obj)
-  if (!valid) {
+  if (true) {
     logger.log(validate.errors)
-    errorHandling(validate.errors, respond, modName)
-  } else {
+    // errorHandling(validate.errors, respond, modName)
     // list module packages
     let endpoint = 'applications.json' +
       '?status=active' +
@@ -132,7 +131,6 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
 
 function post ([ id, meta, body, respond, storeId ], modName, validate, responseValidate) {
   // run module with JSON body as object
-  logger.log(body)
   runModule(body, respond, storeId, modName, validate, responseValidate, meta.query.app_id)
 }
 
