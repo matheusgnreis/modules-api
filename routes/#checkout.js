@@ -181,7 +181,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
           // https://developers.e-com.plus/docs/api/#/store/orders/orders
           let customer = checkoutBody.customer
           let orderBody = {
-            items: items.concat(),
+            items: items.slice(),
             buyers: [
               // received customer info
               customer
