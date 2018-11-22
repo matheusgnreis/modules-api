@@ -132,6 +132,7 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
 
 function post ([ id, meta, body, respond, storeId ], modName, validate, responseValidate) {
   // run module with JSON body as object
+  logger.log(body)
   runModule(body, respond, storeId, modName, validate, responseValidate, meta.query.app_id)
 }
 
