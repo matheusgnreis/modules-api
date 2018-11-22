@@ -201,7 +201,6 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
               // send error response
               if (err) {
                 logger.error(err)
-                logger.log(orderBody)
                 checkoutRespond({}, null, 500, 'CKT701', usrMsg)
               } else {
                 if (typeof statusCode !== 'number') {
@@ -212,39 +211,39 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
             }
 
             const newOrder = () => {
+              const errorCallback = (err, statusCode, devMsg) => {
+                // not successful API call
+                let usrMsg = {
+                  en_us: 'Your order was saved, but we were unable to make the payment, ' +
+                    'please contact us',
+                  pt_br: 'Seu pedido foi salvo, mas não conseguimos efetuar o pagamento, ' +
+                    'por favor entre em contato'
+                }
+                // send error response
+                if (err) {
+                  logger.error(err)
+                  checkoutRespond({}, null, 500, 'CKT703', null, usrMsg)
+                } else {
+                  if (typeof statusCode !== 'number') {
+                    statusCode = 500
+                  }
+                  checkoutRespond({}, null, statusCode, 'CKT704', devMsg, usrMsg)
+                }
+              }
+
               Api('orders.json', 'POST', orderBody, storeId, errorCallback, body => {
                 const orderId = body._id
-                let errorCallback = (err, statusCode, devMsg) => {
-                  // not successful API call
-                  let usrMsg = {
-                    en_us: 'Your order was saved, but we were unable to make the payment, ' +
-                      'please contact us',
-                    pt_br: 'Seu pedido foi salvo, mas não conseguimos efetuar o pagamento, ' +
-                      'por favor entre em contato'
-                  }
-                  // send error response
-                  if (err) {
-                    logger.error(err)
-                    checkoutRespond({}, null, 500, 'CKT703', null, usrMsg)
-                  } else {
-                    if (typeof statusCode !== 'number') {
-                      statusCode = 500
-                    }
-                    checkoutRespond({}, null, statusCode, 'CKT704', devMsg, usrMsg)
-                  }
-                }
-
                 // get order number from public order info
                 let callback = (err, { number }) => {
                   if (!err) {
-                    logger.log('transaction')
-                    logger.log(number)
+                    // logger.log('transaction')
+                    // logger.log(number)
                     checkoutBody.order_number = number
 
-                    logger.log(checkoutBody)
+                    // logger.log(checkoutBody)
                     // finally pass to create transaction
                     simulateRequest(checkoutBody, checkoutRespond, 'transaction', storeId, results => {
-                      logger.log(results)
+                      // logger.log(results)
                       let result = getModuleResult(results)
                       if (result) {
                         // treat transaction response
@@ -253,7 +252,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                         if (response && (transaction = response.transaction)) {
                           // add transaction to order body
                           // POST on transactions subresource
-                          let endpoint = 'orders/' + orderId + '/.json'
+                          let endpoint = 'orders/' + orderId + '.json'
 
                           Api(endpoint, 'POST', transaction, storeId, errorCallback, body => {
                             // everithing done
