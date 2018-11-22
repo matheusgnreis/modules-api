@@ -161,7 +161,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
       itemsDone++
       if (itemsDone === itemsTodo) {
         logger.log('all items done')
-        logger.log(items)
+        logger.log(JSON.stringify(items, null, 2))
         // all items done
         if (items.length) {
           // count subtotal value
