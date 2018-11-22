@@ -6,8 +6,6 @@ const logger = require('console-files')
 // authenticated REST client
 const Api = require('./../lib/Api')
 const { objectId } = require('./../lib/Utils')
-// public API methods
-const EcomIo = require('ecomplus-sdk')
 
 // handle other modules endpoints directly
 const calculateShipping = require('./calculate_shipping').POST
@@ -260,7 +258,8 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
                 // GET public order object with some delay
                 setTimeout(() => {
-                  EcomIo.getOrder(callback, orderId)
+                  let endpoint = 'orders/' + orderId + '.json'
+                  Api(endpoint, 'GET', null, storeId, errorCallback, body => callback(null, body), true)
                 }, 800)
               })
             }
@@ -386,6 +385,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
     }
 
     // GET public product object
-    EcomIo.getProduct(callback, item.product_id)
+    let endpoint = 'products/' + item.product_id + '.json'
+    Api(endpoint, 'GET', null, storeId, err => callback(err), body => callback(null, body), true)
   })
 }
