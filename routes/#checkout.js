@@ -94,6 +94,9 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
   let itemsTodo = items.length
   items.forEach((item, index) => {
     let callback = (err, product) => {
+      logger.log(err)
+      logger.log(product)
+
       if (err || !product.available) {
         // remove cart item
         items.splice(index, 1)
