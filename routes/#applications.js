@@ -16,9 +16,10 @@ const Modules = require('./../lib/Modules.js')
 function runModule (obj, respond, storeId, modName, validate, responseValidate, appId) {
   // ajv
   let valid = validate(obj)
-  if (true) {
+  if (!valid) {
     logger.log(validate.errors)
-    // errorHandling(validate.errors, respond, modName)
+    errorHandling(validate.errors, respond, modName)
+  } else {
     // list module packages
     let endpoint = 'applications.json' +
       '?status=active' +
