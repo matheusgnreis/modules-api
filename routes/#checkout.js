@@ -241,8 +241,10 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                     logger.log(number)
                     checkoutBody.order_number = number
 
+                    logger.log(checkoutBody)
                     // finally pass to create transaction
                     simulateRequest(checkoutBody, checkoutRespond, 'transaction', storeId, results => {
+                      logger.log(results)
                       let result = getModuleResult(results)
                       if (result) {
                         // treat transaction response
