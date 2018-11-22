@@ -240,9 +240,13 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                     // logger.log(number)
                     checkoutBody.order_number = number
 
-                    // logger.log(checkoutBody)
+                    const transactionBody = {
+                      ...checkoutBody,
+                      ...checkoutBody.transaction
+                    }
+                    logger.log(transactionBody)
                     // finally pass to create transaction
-                    simulateRequest(checkoutBody, checkoutRespond, 'transaction', storeId, results => {
+                    simulateRequest(transactionBody, checkoutRespond, 'transaction', storeId, results => {
                       // logger.log(results)
                       let result = getModuleResult(results)
                       if (result) {
