@@ -167,8 +167,9 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
             total: subtotal,
             subtotal
           }
-          // also save to checkout bode object
+          // also save to checkout body object
           checkoutBody.amount = amount
+          checkoutBody.items = items
 
           // start mounting order body
           // https://developers.e-com.plus/docs/api/#/store/orders/orders
