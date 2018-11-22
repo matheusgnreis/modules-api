@@ -17,6 +17,7 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
   // ajv
   let valid = validate(obj)
   if (!valid) {
+    logger.log(validate.errors)
     errorHandling(validate.errors, respond, modName)
   } else {
     // list module packages
