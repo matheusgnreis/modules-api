@@ -9,6 +9,111 @@ const schema = {
   'type': 'object',
   'required': [ 'items', 'amount', 'buyer', 'payment_method', 'order_number' ],
   'additionalProperties': false,
+  'definitions': {
+    'address': {
+      'type': 'object',
+      'additionalProperties': false,
+      'required': [ 'zip' ],
+      'properties': {
+        'zip': {
+          'type': 'string',
+          'maxLength': 30,
+          'description': 'ZIP (CEP, postal...) code'
+        },
+        'street': {
+          'type': 'string',
+          'maxLength': 200,
+          'description': 'Street or public place name'
+        },
+        'number': {
+          'type': 'integer',
+          'min': 1,
+          'max': 9999999,
+          'description': 'House or building street number'
+        },
+        'complement': {
+          'type': 'string',
+          'maxLength': 100,
+          'description': 'Address complement or second line, such as apartment number'
+        },
+        'borough': {
+          'type': 'string',
+          'maxLength': 100,
+          'description': 'Borough name'
+        },
+        'near_to': {
+          'type': 'string',
+          'maxLength': 100,
+          'description': 'Some optional other reference for this address'
+        },
+        'line_address': {
+          'type': 'string',
+          'maxLength': 255,
+          'description': 'Full in line mailing address, should include street, number and borough'
+        },
+        'city': {
+          'type': 'string',
+          'maxLength': 100,
+          'description': 'City name'
+        },
+        'country': {
+          'type': 'string',
+          'maxLength': 50,
+          'description': 'Country name'
+        },
+        'country_code': {
+          'type': 'string',
+          'minLength': 2,
+          'maxLength': 2,
+          'pattern': '^[A-Z]+$',
+          'description': 'An ISO 3166-2 country code'
+        },
+        'province': {
+          'type': 'string',
+          'maxLength': 100,
+          'description': 'Province or state name'
+        },
+        'province_code': {
+          'type': 'string',
+          'minLength': 2,
+          'maxLength': 2,
+          'pattern': '^[A-Z]+$',
+          'description': 'The two-letter code for the province or state'
+        },
+        'name': {
+          'type': 'string',
+          'maxLength': 70,
+          'description': 'The name of recipient, generally is the customer\'s name'
+        },
+        'last_name': {
+          'type': 'string',
+          'maxLength': 70,
+          'description': 'The recipient\'s last name'
+        },
+        'phone': {
+          'type': 'object',
+          'additionalProperties': false,
+          'required': [ 'number' ],
+          'properties': {
+            'country_code': {
+              'type': 'integer',
+              'min': 1,
+              'max': 999,
+              'description': 'Country calling code (without +), defined by standards E.123 and E.164'
+            },
+            'number': {
+              'type': 'string',
+              'maxLength': 19,
+              'pattern': '^[0-9]+$',
+              'description': 'The actual phone number, digits only'
+            }
+          },
+          'description': 'Customer phone number for this mailing address'
+        }
+      },
+      'description': 'Address object'
+    }
+  },
   'properties': {
     'items': {
       'type': 'array',
@@ -77,6 +182,10 @@ const schema = {
         'description': 'One of the cart items'
       },
       'description': 'Products composing the cart'
+    },
+    'to': {
+      '$ref': '#/definitions/address',
+      'description': 'Shipping address (recipient)'
     },
     'currency_id': {
       'type': 'string',
@@ -366,66 +475,7 @@ const schema = {
       'description': 'ID of customer account in the intermediator'
     },
     'billing_address': {
-      'type': 'object',
-      'additionalProperties': false,
-      'required': [ 'zip' ],
-      'properties': {
-        'zip': {
-          'type': 'string',
-          'maxLength': 30,
-          'description': 'ZIP (CEP, postal...) code'
-        },
-        'street': {
-          'type': 'string',
-          'maxLength': 200,
-          'description': 'Street or public place name'
-        },
-        'number': {
-          'type': 'integer',
-          'min': 1,
-          'max': 9999999,
-          'description': 'House or building street number'
-        },
-        'complement': {
-          'type': 'string',
-          'maxLength': 100,
-          'description': 'Address complement or second line, such as apartment number'
-        },
-        'borough': {
-          'type': 'string',
-          'maxLength': 100,
-          'description': 'Borough name'
-        },
-        'city': {
-          'type': 'string',
-          'maxLength': 100,
-          'description': 'City name'
-        },
-        'country': {
-          'type': 'string',
-          'maxLength': 50,
-          'description': 'Country name'
-        },
-        'country_code': {
-          'type': 'string',
-          'minLength': 2,
-          'maxLength': 2,
-          'pattern': '^[A-Z]+$',
-          'description': 'An ISO 3166-2 country code'
-        },
-        'province': {
-          'type': 'string',
-          'maxLength': 100,
-          'description': 'Province or state name'
-        },
-        'province_code': {
-          'type': 'string',
-          'minLength': 2,
-          'maxLength': 2,
-          'pattern': '^[A-Z]+$',
-          'description': 'The two-letter code for the province or state'
-        }
-      },
+      '$ref': '#/definitions/address',
       'description': 'The mailing address associated with the payment method'
     },
     'credit_card': {
