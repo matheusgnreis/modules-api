@@ -15,7 +15,6 @@ const createTransaction = require('./create_transaction').POST
 // abstraction to calculate shipping and create transaction
 const simulateRequest = (checkoutBody, checkoutRespond, label, storeId, callback) => {
   logger.log(label)
-  logger.log(JSON.stringify(checkoutBody, null, 2))
   // select module to handle by label param
   let moduleHandler, moduleBody
   switch (label) {
@@ -92,14 +91,15 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
   let items = checkoutBody.items
   let itemsDone = 0
   let itemsTodo = items.length
-  items.forEach((item, index) => {
+  for (let i = 0; i < items.length; i++) {
+    let item = items[i]
     let callback = (err, product) => {
-      logger.log(err)
-      logger.log(product)
+      // logger.log(err)
+      // logger.log(product)
 
       if (err || !product.available) {
         // remove cart item
-        items.splice(index, 1)
+        items.splice(i, 1)
       } else {
         let body
 
@@ -122,7 +122,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
         if (!body || body.min_quantity > item.quantity) {
           // cannot handle current item
           // invalid variation or quantity lower then minimum
-          items.splice(index, 1)
+          items.splice(i, 1)
         } else {
           // check quantity
           if (body.quantity < item.quantity) {
@@ -172,7 +172,6 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
           }
           // also save to checkout body object
           checkoutBody.amount = amount
-          checkoutBody.items = items
 
           // start mounting order body
           // https://developers.e-com.plus/docs/api/#/store/orders/orders
@@ -395,5 +394,5 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
     // GET public product object
     let endpoint = 'products/' + item.product_id + '.json'
     Api(endpoint, 'GET', null, storeId, err => callback(err), body => callback(null, body), true)
-  })
+  }
 }
