@@ -242,6 +242,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
                     const transactionBody = {
                       ...checkoutBody,
+                      ...checkoutBody.shipping,
                       ...checkoutBody.transaction
                     }
                     // logger.log(transactionBody)
