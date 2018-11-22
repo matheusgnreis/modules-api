@@ -170,12 +170,13 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
           // start mounting order body
           // https://developers.e-com.plus/docs/api/#/store/orders/orders
+          let customer = checkoutBody.customer
           let orderBody = {
             items,
             amount,
             buyers: [
-              // new object id for buyer and merge received buyer info
-              Object.assign({ _id: objectId() }, checkoutBody.buyer)
+              // received customer info
+              customer
             ]
           }
 
@@ -198,69 +199,82 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
               }
             }
 
-            Api('orders.json', 'POST', orderBody, storeId, errorCallback, body => {
-              const orderId = body._id
-              let errorCallback = (err, statusCode, devMsg) => {
-                // not successful API call
-                let usrMsg = {
-                  en_us: 'Your order was saved, but we were unable to make the payment, ' +
-                    'please contact us',
-                  pt_br: 'Seu pedido foi salvo, mas não conseguimos efetuar o pagamento, ' +
-                    'por favor entre em contato'
-                }
-                // send error response
-                if (err) {
-                  logger.error(err)
-                  checkoutRespond({}, null, 500, 'CKT703', null, usrMsg)
-                } else {
-                  if (typeof statusCode !== 'number') {
-                    statusCode = 500
+            const newOrder = () => {
+              Api('orders.json', 'POST', orderBody, storeId, errorCallback, body => {
+                const orderId = body._id
+                let errorCallback = (err, statusCode, devMsg) => {
+                  // not successful API call
+                  let usrMsg = {
+                    en_us: 'Your order was saved, but we were unable to make the payment, ' +
+                      'please contact us',
+                    pt_br: 'Seu pedido foi salvo, mas não conseguimos efetuar o pagamento, ' +
+                      'por favor entre em contato'
                   }
-                  checkoutRespond({}, null, statusCode, 'CKT704', devMsg, usrMsg)
-                }
-              }
-
-              // get order number from public order info
-              let callback = (err, { number }) => {
-                if (!err) {
-                  checkoutBody.order_number = number
-
-                  // finally pass to create transaction
-                  simulateRequest(checkoutBody, checkoutRespond, 'transaction', storeId, results => {
-                    let result = getModuleResult(results)
-                    if (result) {
-                      // treat transaction response
-                      let response = result.response
-                      let transaction
-                      if (response && (transaction = response.transaction)) {
-                        // add transaction to order body
-                        // POST on transactions subresource
-                        let endpoint = 'orders/' + orderId + '/.json'
-
-                        Api(endpoint, 'POST', transaction, storeId, errorCallback, body => {
-                          // everithing done
-                          // add transaction on order body object and respond
-                          orderBody.transactions = [
-                            Object.assign(response.transaction, body._id)
-                          ]
-                          checkoutRespond(orderBody)
-                        })
-                        return
-                      }
-
-                      errorCallback(null, null, 'No valid transaction object from /create_transaction')
+                  // send error response
+                  if (err) {
+                    logger.error(err)
+                    checkoutRespond({}, null, 500, 'CKT703', null, usrMsg)
+                  } else {
+                    if (typeof statusCode !== 'number') {
+                      statusCode = 500
                     }
-                  })
-                } else {
-                  errorCallback(null, null, 'Cannot GET the public order data')
+                    checkoutRespond({}, null, statusCode, 'CKT704', devMsg, usrMsg)
+                  }
                 }
-              }
 
-              // GET public order object with some delay
-              setTimeout(() => {
-                EcomIo.getOrder(callback, orderId)
-              }, 800)
-            })
+                // get order number from public order info
+                let callback = (err, { number }) => {
+                  if (!err) {
+                    checkoutBody.order_number = number
+
+                    // finally pass to create transaction
+                    simulateRequest(checkoutBody, checkoutRespond, 'transaction', storeId, results => {
+                      let result = getModuleResult(results)
+                      if (result) {
+                        // treat transaction response
+                        let response = result.response
+                        let transaction
+                        if (response && (transaction = response.transaction)) {
+                          // add transaction to order body
+                          // POST on transactions subresource
+                          let endpoint = 'orders/' + orderId + '/.json'
+
+                          Api(endpoint, 'POST', transaction, storeId, errorCallback, body => {
+                            // everithing done
+                            // add transaction on order body object and respond
+                            orderBody.transactions = [
+                              Object.assign(response.transaction, body._id)
+                            ]
+                            checkoutRespond(orderBody)
+                          })
+                          return
+                        }
+
+                        errorCallback(null, null, 'No valid transaction object from /create_transaction')
+                      }
+                    })
+                  } else {
+                    errorCallback(null, null, 'Cannot GET the public order data')
+                  }
+                }
+
+                // GET public order object with some delay
+                setTimeout(() => {
+                  EcomIo.getOrder(callback, orderId)
+                }, 800)
+              })
+            }
+
+            if (customer._id) {
+              newOrder()
+            } else {
+              // must create customer first
+              Api('customers.json', 'POST', customer, storeId, errorCallback, body => {
+                // add customer ID to order and transaction
+                customer._id = checkoutBody.transaction.buyer.customer_id = body._id
+                newOrder()
+              })
+            }
           }
 
           // simulate requets to calculate shipping endpoint
