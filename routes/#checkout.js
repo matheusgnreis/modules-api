@@ -181,14 +181,13 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
           // https://developers.e-com.plus/docs/api/#/store/orders/orders
           let customer = checkoutBody.customer
           let orderBody = {
-            items: items,
+            items: { ...items },
             buyers: [
               // received customer info
               customer
             ],
             amount
           }
-          logger.log(JSON.stringify(orderBody, null, 2))
 
           const createOrder = () => {
             let errorCallback = (err, statusCode, devMsg) => {
