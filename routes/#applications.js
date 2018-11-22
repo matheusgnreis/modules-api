@@ -60,8 +60,8 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
             module: modName,
             params: obj
           }
-          logger.log(modName)
-          logger.log(num)
+          // logger.log(modName)
+          // logger.log(num)
 
           for (var i = 0; i < num; i++) {
             // ok, proceed to modules

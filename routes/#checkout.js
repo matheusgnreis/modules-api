@@ -253,8 +253,12 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                           // add transaction to order body
                           // POST on transactions subresource
                           let endpoint = 'orders/' + orderId + '/transactions.json'
+                          const body = {
+                            ...checkoutBody.transaction,
+                            ...transaction
+                          }
 
-                          Api(endpoint, 'POST', transaction, storeId, errorCallback, body => {
+                          Api(endpoint, 'POST', body, storeId, errorCallback, body => {
                             // everithing done
                             // add transaction on order body object and respond
                             orderBody.transactions = [
