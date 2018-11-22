@@ -14,7 +14,6 @@ const createTransaction = require('./create_transaction').POST
 
 // abstraction to calculate shipping and create transaction
 const simulateRequest = (checkoutBody, checkoutRespond, label, storeId, callback) => {
-  logger.log(checkoutBody)
   // select module to handle by label param
   let moduleHandler, moduleBody
   switch (label) {
@@ -41,7 +40,8 @@ const simulateRequest = (checkoutBody, checkoutRespond, label, storeId, callback
 
   // mount request body with received checkout body object
   let reqBody = {
-    items: checkoutBody.items
+    items: checkoutBody.items,
+    ...checkoutBody
   }
   // additional data
   if (checkoutBody.amount) {
