@@ -117,7 +117,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
             body = Object.assign(product, variation)
           }
         }
-        logger.log(body._id)
+        // logger.log(body._id)
 
         if (!body || body.min_quantity > item.quantity) {
           // cannot handle current item
