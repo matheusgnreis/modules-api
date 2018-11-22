@@ -95,7 +95,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
   for (let i = 0; i < items.length; i++) {
     let item = items[i]
     let callback = (err, product) => {
-      logger.log(err)
+      // logger.log(err)
       // logger.log(product)
 
       if (err || !product.available) {
