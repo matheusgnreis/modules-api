@@ -198,6 +198,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
               // send error response
               if (err) {
                 logger.error(err)
+                logger.log(orderBody)
                 checkoutRespond({}, null, 500, 'CKT701', usrMsg)
               } else {
                 if (typeof statusCode !== 'number') {
