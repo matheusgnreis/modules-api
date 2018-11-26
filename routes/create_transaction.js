@@ -884,6 +884,7 @@ const responseSchema = {
                 'pending',
                 'under_analysis',
                 'authorized',
+                'unauthorized',
                 'paid',
                 'in_dispute',
                 'refunded',
