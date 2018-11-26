@@ -3,8 +3,14 @@
 // log on files
 const logger = require('console-files')
 
+// checkout API parser libs
+const fixItems = require('./../lib/Checkout/FixItems')
+const getCustomerId = require('./../lib/Checkout/GetCustomerId')
+const newOrder = require('./../lib/Checkout/NewOrder')
+const saveTransaction = require('./../lib/Checkout/SaveTransaction')
+
 // authenticated REST client
-const Api = require('./../lib/Api')
+// const Api = require('./../lib/Api')
 const { objectId } = require('./../lib/Utils')
 
 // handle other modules endpoints directly
@@ -37,22 +43,11 @@ const simulateRequest = (checkoutBody, checkoutRespond, label, storeId, callback
       app_id: moduleBody.app_id
     }
   }
-
   // mount request body with received checkout body object
   let reqBody = {
-    items: checkoutBody.items,
-    ...checkoutBody
+    ...checkoutBody,
+    ...moduleBody
   }
-  // additional data
-  if (checkoutBody.amount) {
-    reqBody.amount = checkoutBody.amount
-    reqBody.subtotal = checkoutBody.amount.subtotal
-  }
-  if (checkoutBody.order_number) {
-    reqBody.order_number = checkoutBody.order_number
-  }
-  Object.assign(reqBody, moduleBody)
-
   // handle response such as REST Auto Router
   // https://www.npmjs.com/package/rest-auto-router#callback-params
   let reqRespond = (obj, meta, statusCode, errorCode, devMsg) => {
@@ -88,335 +83,239 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
   // valid body
   // handle checkout with shipping and transaction options
   // get each cart item first
-  let items = checkoutBody.items
-  let itemsDone = 0
-  let itemsTodo = items.length
-  for (let i = 0; i < items.length; i++) {
-    let item = items[i]
-    let callback = (err, product) => {
-      // logger.log(err)
-      // logger.log(product)
-
-      if (err || !product.available) {
-        // remove cart item
-        items.splice(i, 1)
-      } else {
-        let body
-
-        // check variation if any
-        if (!item.variation_id) {
-          body = product
-        } else {
-          // find respective variation
-          let variation
-          if (product.variations) {
-            variation = product.variations.find(body => body._id === item.variation_id)
-          }
-          if (variation) {
-            // merge product body with variation object
-            body = Object.assign(product, variation)
-          }
-        }
-        // logger.log(body._id)
-
-        if (!body || body.min_quantity > item.quantity) {
-          // cannot handle current item
-          // invalid variation or quantity lower then minimum
-          items.splice(i, 1)
-        } else {
-          // check quantity
-          if (body.quantity < item.quantity) {
-            // reduce to max available quantity
-            item.quantity = body.quantity
-          }
-
-          // extend item properties with body
-          ;[
-            'sku',
-            'name',
-            'currency_id',
-            'currency_symbol',
-            'price',
-            'dimensions',
-            'weight'
-          ].forEach(prop => {
-            if (body.hasOwnProperty(prop)) {
-              item[prop] = body[prop]
-            }
-          })
-          // price is required
-          if (!item.hasOwnProperty('price')) {
-            item.price = 0
-          }
-          /*
-          @TODO
-          handle gift wrap and customizations before final price
-          */
-          item.final_price = item.price
-          // random object ID for item
-          item._id = objectId()
-        }
+  fixItems(checkoutBody.items, storeId, items => {
+    // all items done
+    if (items.length) {
+      checkoutBody.items = items
+      // start mounting order body
+      // https://developers.e-com.plus/docs/api/#/store/orders/orders
+      let customer = checkoutBody.customer
+      let orderBody = {
+        buyers: [
+          // received customer info
+          customer
+        ],
+        items: []
       }
 
-      itemsDone++
-      if (itemsDone === itemsTodo) {
-        // logger.log('all items done')
-        // logger.log(JSON.stringify(items, null, 2))
-        // all items done
-        if (items.length) {
-          // start mounting order body
-          // https://developers.e-com.plus/docs/api/#/store/orders/orders
-          let customer = checkoutBody.customer
-          let orderBody = {
-            buyers: [
-              // received customer info
-              customer
-            ],
-            items: []
+      // count subtotal value
+      let subtotal = 0
+      items.forEach(item => {
+        subtotal += (item.final_price * item.quantity)
+        // pass each item to prevent object overwrite
+        orderBody.items.push(Object.assign({}, item))
+      })
+      subtotal = Math.round(subtotal * 100) / 100
+      let amount = {
+        total: subtotal,
+        subtotal,
+        discount: 0,
+        freight: 0
+      }
+      let fixTotal = () => {
+        amount.total = amount.subtotal + amount.freight - amount.discount
+      }
+      // also save amount to checkout and order body objects
+      checkoutBody.subtotal = subtotal
+      checkoutBody.amount = amount
+      orderBody.amount = amount
+
+      const createOrder = () => {
+        // start creating new order to API
+        getCustomerId(customer, storeId, customerId => {
+          // add customer ID to order and transaction
+          customer._id = checkoutBody.transaction.buyer.customer_id = customerId
+
+          // handle new order
+          const errorCallback = (err, statusCode, devMsg) => {
+            // not successful API call
+            let usrMsg = {
+              en_us: 'There was a problem saving your order, please try again later',
+              pt_br: 'Houve um problema ao salvar o pedido, por favor tente novamente mais tarde'
+            }
+            // send error response
+            if (err) {
+              logger.error(err)
+              checkoutRespond({}, null, 500, 'CKT701', usrMsg)
+            } else {
+              if (typeof statusCode !== 'number') {
+                statusCode = 400
+              }
+              checkoutRespond({}, null, statusCode, 'CKT702', devMsg, usrMsg)
+            }
           }
 
-          // count subtotal value
-          let subtotal = 0
-          items.forEach(item => {
-            subtotal += (item.final_price * item.quantity)
-            // pass each item to prevent object overwrite
-            orderBody.items.push(Object.assign({}, item))
-          })
-          subtotal = Math.round(subtotal * 100) / 100
-          let amount = {
-            total: subtotal,
-            subtotal
-          }
-          // also save to checkout body object
-          checkoutBody.amount = amount
-          orderBody.amount = amount
+          newOrder(orderBody, storeId, errorCallback, order => {
+            const orderId = order._id
+            const orderNumber = order.number
 
-          const createOrder = () => {
-            let errorCallback = (err, statusCode, devMsg) => {
+            const errorCallback = (err, statusCode, devMsg) => {
               // not successful API call
               let usrMsg = {
-                en_us: 'There was a problem saving your order, please try again later',
-                pt_br: 'Houve um problema ao salvar o pedido, por favor tente novamente mais tarde'
+                en_us: 'Your order was saved, but we were unable to make the payment, ' +
+                  'please contact us',
+                pt_br: 'Seu pedido foi salvo, mas não conseguimos efetuar o pagamento, ' +
+                  'por favor entre em contato'
               }
               // send error response
               if (err) {
                 logger.error(err)
-                checkoutRespond({}, null, 500, 'CKT701', usrMsg)
+                checkoutRespond({}, null, 500, 'CKT703', null, usrMsg)
               } else {
                 if (typeof statusCode !== 'number') {
-                  statusCode = 400
+                  statusCode = 500
                 }
-                checkoutRespond({}, null, statusCode, 'CKT702', devMsg, usrMsg)
+                checkoutRespond({}, null, statusCode, 'CKT704', devMsg, usrMsg)
               }
             }
 
-            const newOrder = () => {
-              const errorCallback = (err, statusCode, devMsg) => {
-                // not successful API call
-                let usrMsg = {
-                  en_us: 'Your order was saved, but we were unable to make the payment, ' +
-                    'please contact us',
-                  pt_br: 'Seu pedido foi salvo, mas não conseguimos efetuar o pagamento, ' +
-                    'por favor entre em contato'
-                }
-                // send error response
-                if (err) {
-                  logger.error(err)
-                  checkoutRespond({}, null, 500, 'CKT703', null, usrMsg)
-                } else {
-                  if (typeof statusCode !== 'number') {
-                    statusCode = 500
-                  }
-                  checkoutRespond({}, null, statusCode, 'CKT704', devMsg, usrMsg)
-                }
-              }
-
-              Api('orders.json', 'POST', orderBody, storeId, errorCallback, body => {
-                const orderId = body._id
-                // get order number from public order info
-                let callback = (err, { number }) => {
-                  if (!err) {
-                    // logger.log('transaction')
-                    // logger.log(number)
-                    checkoutBody.order_number = number
-
-                    const transactionBody = {
-                      ...checkoutBody,
-                      ...checkoutBody.transaction,
-                      to: { ...checkoutBody.shipping.to }
-                    }
-                    // logger.log(transactionBody)
-                    // finally pass to create transaction
-                    simulateRequest(transactionBody, checkoutRespond, 'transaction', storeId, results => {
-                      // logger.log(results)
-                      let result = getModuleResult(results)
-                      if (result) {
-                        // treat transaction response
-                        let response = result.response
-                        let transaction
-                        if (response && (transaction = response.transaction)) {
-                          // add transaction to order body
-                          // POST on transactions subresource
-                          let endpoint = 'orders/' + orderId + '/transactions.json'
-                          const body = {
-                            ...checkoutBody.transaction,
-                            ...transaction
-                          }
-
-                          Api(endpoint, 'POST', body, storeId, errorCallback, body => {
-                            // everithing done
-                            // merge transaction on order body object and respond
-                            checkoutRespond({
-                              order: orderBody,
-                              transaction
-                            })
-                          })
-                          return
-                        }
-
-                        errorCallback(null, null, 'No valid transaction object from /create_transaction')
-                      }
-                    })
-                  } else {
-                    errorCallback(null, null, 'Cannot GET the public order data')
-                  }
-                }
-
-                // GET public order object with some delay
-                setTimeout(() => {
-                  let endpoint = 'orders/' + orderId + '.json'
-                  Api(endpoint, 'GET', null, storeId, errorCallback, body => callback(null, body), true)
-                }, 800)
-              })
+            // logger.log('transaction')
+            // logger.log(number)
+            checkoutBody.order_number = orderNumber
+            // merge objects to create transaction request body
+            const transactionBody = {
+              ...checkoutBody,
+              // also need shipping address
+              // send from shipping object if undefined on transaction object
+              to: { ...checkoutBody.shipping.to },
+              ...checkoutBody.transaction
             }
 
-            if (customer._id) {
-              if (!checkoutBody.transaction.buyer.customer_id) {
-                checkoutBody.transaction.buyer.customer_id = customer._id
-              }
-              newOrder()
-            } else {
-              // must create customer first
-              Api('customers.json', 'POST', customer, storeId, errorCallback, body => {
-                // add customer ID to order and transaction
-                customer._id = checkoutBody.transaction.buyer.customer_id = body._id
-                newOrder()
-              })
-            }
-          }
-
-          // simulate requets to calculate shipping endpoint
-          simulateRequest(checkoutBody, checkoutRespond, 'shipping', storeId, results => {
-            let result = getModuleResult(results)
-            if (result) {
-              // treat calculate shipping response
-              let response = result.response
-              if (response && response.shipping_services) {
-                // check chosen shipping code
-                let shippingCode = checkoutBody.shipping.service_code
-
-                for (let i = 0; i < response.shipping_services.length; i++) {
-                  let shippingService = response.shipping_services[i]
-                  let shippingLine = shippingService.shipping_line
-                  if (shippingLine && (!shippingCode || shippingCode === shippingService.service_code)) {
-                    // update amount freight and total
-                    let freight = (shippingLine.total_price || shippingLine.price || 0)
-                    amount.freight = freight
-                    amount.total = subtotal + freight
-
-                    // app info
-                    let shippingApp = {
-                      app: Object.assign({ _id: result._id }, shippingService)
-                    }
-                    // remove shipping line property
-                    delete shippingApp.app.shipping_line
-
-                    // add to order body
-                    orderBody.shipping_lines = [
-                      // generate new object id and compose shipping line object
-                      Object.assign({ _id: objectId() }, shippingApp, shippingLine)
-                    ]
-                    orderBody.shipping_method_label = shippingService.label || ''
-                    listPayments()
-                    return
-                  }
-                }
-              }
-            }
-
-            // problem with shipping response object
-            let usrMsg = {
-              en_us: 'Shipping method not available, please choose another',
-              pt_br: 'Forma de envio indisponível, por favor escolha outra'
-            }
-            let devMsg = 'Any valid shipping service from /calculate_shipping module'
-            checkoutRespond({}, null, 400, 'CKT901', devMsg, usrMsg)
-          })
-
-          const listPayments = () => {
-            // simulate requets to list payments endpoint
-            simulateRequest(checkoutBody, checkoutRespond, 'payment', storeId, results => {
+            // logger.log(transactionBody)
+            // finally pass to create transaction
+            simulateRequest(transactionBody, checkoutRespond, 'transaction', storeId, results => {
+              // logger.log(results)
               let result = getModuleResult(results)
               if (result) {
-                // treat list payments response
+                // treat transaction response
                 let response = result.response
-                if (response && response.payment_gateways) {
-                  // check chosen payment method code
-                  let paymentMethodCode
-                  if (checkoutBody.transaction.payment_method) {
-                    paymentMethodCode = checkoutBody.transaction.payment_method.code
-                  }
+                let transaction
+                if (response && (transaction = response.transaction)) {
+                  // merge transaction on order body object and respond
+                  checkoutRespond({
+                    order: orderBody,
+                    transaction
+                  })
 
-                  for (let i = 0; i < response.payment_gateways.length; i++) {
-                    let paymentGateway = response.payment_gateways[i]
-                    let paymentMethod = paymentGateway.payment_method
-                    if (!paymentMethodCode || (paymentMethod && paymentMethod.code === paymentMethodCode)) {
-                      let discount = paymentGateway.discount
-                      let maxDiscount
-
-                      // handle discount by payment method
-                      if (discount && discount.apply_at && (maxDiscount = amount[discount.apply_at])) {
-                        // update amount discount and total
-                        if (discount.type === 'percentual') {
-                          amount.discount = maxDiscount * discount.value / 100
-                        } else {
-                          amount.discount = discount.value
-                        }
-                        if (amount.discount > maxDiscount) {
-                          amount.discount = maxDiscount
-                        }
-                        amount.total -= amount.discount
-                      }
-
-                      // add to order body
-                      orderBody.payment_method_label = paymentGateway.label || ''
-                      // new order
-                      createOrder()
-                      return
-                    }
-                  }
+                  // save transaction info on order data
+                  saveTransaction(Object.assign(transactionBody, transaction), orderId, storeId)
+                  return
                 }
               }
 
-              // problem with list payments response object
-              let usrMsg = {
-                en_us: 'Payment method not available, please choose another',
-                pt_br: 'Forma de pagamento indisponível, por favor escolha outra'
-              }
-              let devMsg = 'Any valid payment gateway from /list_payments module'
-              checkoutRespond({}, null, 400, 'CKT902', devMsg, usrMsg)
+              // unexpected response object from create transaction module
+              errorCallback(null, null, 'No valid transaction object from /create_transaction')
             })
-          }
-        } else {
-          // no valid items
-          let devMsg = 'Cannot handle checkout, any valid cart item'
-          checkoutRespond({}, null, 400, 'CKT801', devMsg)
-        }
+          })
+        })
       }
-    }
 
-    // GET public product object
-    let endpoint = 'products/' + item.product_id + '.json'
-    Api(endpoint, 'GET', null, storeId, err => callback(err), body => callback(null, body), true)
-  }
+      // simulate requets to calculate shipping endpoint
+      simulateRequest(checkoutBody, checkoutRespond, 'shipping', storeId, results => {
+        let result = getModuleResult(results)
+        if (result) {
+          // treat calculate shipping response
+          let response = result.response
+          if (response && response.shipping_services) {
+            // check chosen shipping code
+            let shippingCode = checkoutBody.shipping.service_code
+
+            for (let i = 0; i < response.shipping_services.length; i++) {
+              let shippingService = response.shipping_services[i]
+              let shippingLine = shippingService.shipping_line
+              if (shippingLine && (!shippingCode || shippingCode === shippingService.service_code)) {
+                // update amount freight and total
+                let freight = (shippingLine.total_price || shippingLine.price || 0)
+                amount.freight = freight
+                fixTotal()
+
+                // app info
+                let shippingApp = {
+                  app: Object.assign({ _id: result._id }, shippingService)
+                }
+                // remove shipping line property
+                delete shippingApp.app.shipping_line
+
+                // add to order body
+                orderBody.shipping_lines = [
+                  // generate new object id and compose shipping line object
+                  Object.assign({ _id: objectId() }, shippingApp, shippingLine)
+                ]
+                orderBody.shipping_method_label = shippingService.label || ''
+                listPayments()
+                return
+              }
+            }
+          }
+        }
+
+        // problem with shipping response object
+        let usrMsg = {
+          en_us: 'Shipping method not available, please choose another',
+          pt_br: 'Forma de envio indisponível, por favor escolha outra'
+        }
+        let devMsg = 'Any valid shipping service from /calculate_shipping module'
+        checkoutRespond({}, null, 400, 'CKT901', devMsg, usrMsg)
+      })
+
+      const listPayments = () => {
+        // simulate requets to list payments endpoint
+        simulateRequest(checkoutBody, checkoutRespond, 'payment', storeId, results => {
+          let result = getModuleResult(results)
+          if (result) {
+            // treat list payments response
+            let response = result.response
+            if (response && response.payment_gateways) {
+              // check chosen payment method code
+              let paymentMethodCode
+              if (checkoutBody.transaction.payment_method) {
+                paymentMethodCode = checkoutBody.transaction.payment_method.code
+              }
+
+              for (let i = 0; i < response.payment_gateways.length; i++) {
+                let paymentGateway = response.payment_gateways[i]
+                let paymentMethod = paymentGateway.payment_method
+                if (!paymentMethodCode || (paymentMethod && paymentMethod.code === paymentMethodCode)) {
+                  let discount = paymentGateway.discount
+                  let maxDiscount
+
+                  // handle discount by payment method
+                  if (discount && discount.apply_at && (maxDiscount = amount[discount.apply_at])) {
+                    // update amount discount and total
+                    if (discount.type === 'percentual') {
+                      amount.discount = maxDiscount * discount.value / 100
+                    } else {
+                      amount.discount = discount.value
+                    }
+                    if (amount.discount > maxDiscount) {
+                      amount.discount = maxDiscount
+                    }
+                    fixTotal()
+                  }
+
+                  // add to order body
+                  orderBody.payment_method_label = paymentGateway.label || ''
+                  // new order
+                  createOrder()
+                  return
+                }
+              }
+            }
+          }
+
+          // problem with list payments response object
+          let usrMsg = {
+            en_us: 'Payment method not available, please choose another',
+            pt_br: 'Forma de pagamento indisponível, por favor escolha outra'
+          }
+          let devMsg = 'Any valid payment gateway from /list_payments module'
+          checkoutRespond({}, null, 400, 'CKT902', devMsg, usrMsg)
+        })
+      }
+    } else {
+      // no valid items
+      let devMsg = 'Cannot handle checkout, any valid cart item'
+      checkoutRespond({}, null, 400, 'CKT801', devMsg)
+    }
+  })
 }
