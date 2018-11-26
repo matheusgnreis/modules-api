@@ -566,6 +566,10 @@ const schema = {
           '$ref': '#/definitions/address',
           'description': 'The mailing address associated with the payment method'
         },
+        'to': {
+          '$ref': '#/definitions/address',
+          'description': 'Shipping address (recipient)'
+        },
         'credit_card': {
           'type': 'object',
           'additionalProperties': false,
