@@ -92,6 +92,8 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
               }
 
               if (err) {
+                // debug application unexpected response
+                logger.log(JSON.stringify({ pkg, error: err.message }, null, 2))
                 // logger.error(err)
                 result.error = true
                 if (err.message) {
