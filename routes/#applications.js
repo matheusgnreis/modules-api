@@ -92,12 +92,14 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
               }
 
               if (err) {
-                // debug application unexpected response
-                logger.log(JSON.stringify({ pkg, error: err.message }, null, 2))
                 // logger.error(err)
                 result.error = true
-                if (err.message) {
-                  result.error_message = err.message
+                let { message, response } = err
+                if (message) {
+                  result.error_message = message
+                  // debug application unexpected response
+                  let debugApp = { message, url, storeId, pkg, reqBody, response }
+                  logger.log(JSON.stringify(debugApp, null, 2))
                 }
               } else if (typeof response === 'object' && response !== null) {
                 // logger.log(response)
