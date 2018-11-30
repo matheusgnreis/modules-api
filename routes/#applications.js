@@ -98,7 +98,7 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
                 if (message) {
                   result.error_message = message
                   // debug application unexpected response
-                  let debugApp = { message, url, storeId, pkg, reqBody, response }
+                  let debugApp = { message, url, storeId, pkg, reqBody, resBody: response.data }
                   logger.log(JSON.stringify(debugApp, null, 2))
                 }
               } else if (typeof response === 'object' && response !== null) {
