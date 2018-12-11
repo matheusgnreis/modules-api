@@ -17,7 +17,7 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
   // ajv
   let valid = validate(obj)
   if (!valid) {
-    logger.log(validate.errors)
+    // logger.log(validate.errors)
     errorHandling(validate.errors, respond, modName)
   } else {
     // list module packages
@@ -63,7 +63,7 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
           // logger.log(modName)
           // logger.log(num)
 
-          for (var i = 0; i < num; i++) {
+          for (let i = 0; i < num; i++) {
             // ok, proceed to modules
             let pkg = list[i]
             // declare data objects to prevent applications fatal errors
@@ -94,12 +94,9 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
               if (err) {
                 // logger.error(err)
                 result.error = true
-                let { message, response } = err
-                if (message) {
-                  result.error_message = message
-                  // debug application unexpected response
-                  let debugApp = { message, url, storeId, pkg, reqBody, resBody: response.data }
-                  logger.log(JSON.stringify(debugApp, null, 2))
+                result.error_message = err.message
+                if (err.response) {
+                  response = err.response
                 }
               } else if (typeof response === 'object' && response !== null) {
                 // logger.log(response)
@@ -113,6 +110,11 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
                   result.response_errors = null
                 }
               }
+
+              // debug response status code
+              let status = response && response.status ? response.status : 0
+              result.response_status = status
+              logger.log(url + ' ' + status)
               results.push(result)
 
               done++
