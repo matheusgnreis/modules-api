@@ -86,6 +86,7 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
                 app_id: pkg.app_id,
                 version: pkg.version,
                 validated: false,
+                response_errors: null,
                 error: false,
                 error_message: null,
                 response
@@ -95,9 +96,7 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
                 // logger.error(err)
                 result.error = true
                 result.error_message = err.message
-                if (err.response) {
-                  response = err.response
-                }
+                // @TODO: debug app error
               } else if (typeof response === 'object' && response !== null) {
                 // logger.log(response)
                 // validate response object
@@ -106,15 +105,8 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
                   result.response_errors = ajv.errorsText(responseValidate.errors, {
                     separator: '\n'
                   })
-                } else {
-                  result.response_errors = null
                 }
               }
-
-              // debug response status code
-              let status = response && response.status ? response.status : 0
-              result.response_status = status
-              logger.log(url + ' ' + status)
               results.push(result)
 
               done++
