@@ -191,9 +191,12 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                 let response = result.response
                 let transaction
                 if (response && (transaction = response.transaction)) {
-                  // merge transaction on order body object and respond
+                  // merge transaction body with order info and respond
                   checkoutRespond({
-                    order: orderBody,
+                    order: {
+                      _id: orderId,
+                      number: orderNumber
+                    },
                     transaction
                   })
 
