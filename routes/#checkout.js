@@ -201,7 +201,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                   })
 
                   // save transaction info on order data
-                  saveTransaction(Object.assign(transactionBody, transaction), orderId, storeId)
+                  saveTransaction(transaction, orderId, storeId)
                   return
                 }
               }
