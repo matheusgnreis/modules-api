@@ -191,6 +191,19 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                 let response = result.response
                 let transaction
                 if (response && (transaction = response.transaction)) {
+                  // complete transaction object with some request body fields
+                  ;[
+                    'type',
+                    'payment_method',
+                    'payer',
+                    'currency_id',
+                    'currency_symbol'
+                  ].forEach(field => {
+                    if (transactionBody.hasOwnProperty(field) && !transaction.hasOwnProperty(field)) {
+                      transaction[field] = transactionBody[field]
+                    }
+                  })
+
                   // merge transaction body with order info and respond
                   checkoutRespond({
                     order: {
@@ -199,7 +212,6 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                     },
                     transaction
                   })
-
                   // save transaction info on order data
                   saveTransaction(transaction, orderId, storeId)
                   return
