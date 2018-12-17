@@ -297,7 +297,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                   // handle discount by payment method
                   if (discount && discount.apply_at && (maxDiscount = amount[discount.apply_at])) {
                     // update amount discount and total
-                    if (discount.type === 'percentual') {
+                    if (discount.type === 'percentage') {
                       amount.discount = maxDiscount * discount.value / 100
                     } else {
                       amount.discount = discount.value
