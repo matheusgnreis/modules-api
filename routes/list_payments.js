@@ -202,7 +202,7 @@ const responseSchema = {
           'text': {
             'type': 'string',
             'maxLength': 1000,
-            'description': 'Auxiliary text abount the payment method'
+            'description': 'Auxiliary text about the payment method, can contain HTML tags'
           },
           'icon': {
             'type': 'string',
