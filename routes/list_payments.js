@@ -199,6 +199,11 @@ const responseSchema = {
             'maxLength': 50,
             'description': 'Name of payment method shown to customers'
           },
+          'text': {
+            'type': 'string',
+            'maxLength': 1000,
+            'description': 'Auxiliary text abount the payment method'
+          },
           'icon': {
             'type': 'string',
             'maxLength': 255,
