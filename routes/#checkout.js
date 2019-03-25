@@ -214,8 +214,8 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                       'intermediator',
                       'payment_url'
                     ].forEach(field => {
-                      if (transactionBody.hasOwnProperty(field)) {
-                        transaction.app[field] = transactionBody[field]
+                      if (checkoutBody.transaction.hasOwnProperty(field)) {
+                        transaction.app[field] = checkoutBody.transaction[field]
                       }
                     })
                     // logger.log(transaction.app)

@@ -370,6 +370,49 @@ const schema = {
           },
           'description': 'Chosen payment method object'
         },
+        'label': {
+          'type': 'string',
+          'maxLength': 50,
+          'description': 'Name of payment method shown to customers'
+        },
+        'icon': {
+          'type': 'string',
+          'maxLength': 255,
+          'format': 'uri',
+          'description': 'Payment icon image URI'
+        },
+        'intermediator': {
+          'type': 'object',
+          'additionalProperties': false,
+          'required': [ 'code' ],
+          'properties': {
+            'name': {
+              'type': 'string',
+              'maxLength': 255,
+              'description': 'Name of payment intermediator'
+            },
+            'link': {
+              'type': 'string',
+              'maxLength': 255,
+              'format': 'uri',
+              'description': 'URI to intermediator website'
+            },
+            'code': {
+              'type': 'string',
+              'minLength': 6,
+              'maxLength': 70,
+              'pattern': '^[a-z0-9_]+$',
+              'description': 'Gateway name standardized as identification code'
+            }
+          },
+          'description': 'Payment intermediator'
+        },
+        'payment_url': {
+          'type': 'string',
+          'maxLength': 255,
+          'format': 'uri',
+          'description': 'Base URI to payments'
+        },
         'buyer': {
           'type': 'object',
           'additionalProperties': false,
