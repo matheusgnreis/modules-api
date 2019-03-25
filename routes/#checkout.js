@@ -206,7 +206,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
                   // setup transaction app object
                   if (!transaction.app) {
-                    transaction.app = { _id: transaction._id }
+                    transaction.app = { _id: result._id }
                     // complete app object with some request body fields
                     ;[
                       'label',
@@ -214,11 +214,11 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                       'intermediator',
                       'payment_url'
                     ].forEach(field => {
-                      if (checkoutBody.transaction.hasOwnProperty(field)) {
-                        transaction.app[field] = checkoutBody.transaction[field]
+                      if (transactionBody.hasOwnProperty(field)) {
+                        transaction.app[field] = transactionBody[field]
                       }
                     })
-                    logger.log(transaction.app)
+                    // logger.log(transaction.app)
                   }
 
                   // merge transaction body with order info and respond
