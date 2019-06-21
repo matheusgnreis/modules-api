@@ -75,7 +75,7 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
               params,
               application
             }
-            logger.log(body)
+            // logger.log(body)
             let url = application.modules[modName].endpoint
             // handle request with big timeout if app ID was specified
             let bigTimeout = !!(appId)
