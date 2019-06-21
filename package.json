@@ -15,5 +15,16 @@
     "ajv-i18n": "2.x",
     "console-files": "2.x",
     "axios": "0.x"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^8.0.0",
+    "@commitlint/config-conventional": "^8.0.0",
+    "husky": "^2.4.1",
+    "standard": "^12.0.1"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }
