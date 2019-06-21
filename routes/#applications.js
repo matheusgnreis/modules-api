@@ -66,6 +66,8 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
           for (let i = 0; i < num; i++) {
             // ok, proceed to modules
             let pkg = list[i]
+            // debug pkg object
+            logger.log(pkg)
             // declare data objects to prevent applications fatal errors
             if (!pkg.hasOwnProperty('hidden_data')) {
               pkg.hidden_data = {}
@@ -74,6 +76,7 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
               pkg.data = {}
             }
             reqBody.application = pkg
+
             let url = pkg.modules[modName].endpoint
             // handle request with big timeout if app ID was specified
             let bigTimeout = !!(appId)
