@@ -77,6 +77,8 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
             let url = pkg.modules[modName].endpoint
             // handle request with big timeout if app ID was specified
             let bigTimeout = !!(appId)
+            // count request->response time
+            let reqStartTime = Date.now()
 
             // send POST request
             Modules(url, reqBody, storeId, bigTimeout, (err, response) => {
@@ -84,6 +86,7 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
               let result = {
                 _id: pkg._id,
                 app_id: pkg.app_id,
+                took: Date.now() - reqStartTime,
                 version: pkg.version,
                 validated: false,
                 response_errors: null,
