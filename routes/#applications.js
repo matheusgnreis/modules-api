@@ -22,7 +22,7 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
   } else {
     // list module packages
     let endpoint = 'applications.json' +
-      '?status=active' +
+      '?state=active' +
       '&type=external' +
       '&modules.' + modName + '.enabled=true' +
       '&fields=_id,app_id,version,data,hidden_data,modules.' + modName
