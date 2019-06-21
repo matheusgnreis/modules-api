@@ -145,7 +145,7 @@ const schema = {
           },
           'quantity': {
             'type': 'number',
-            'multipleOf': 0.0001,
+            // 'multipleOf': 0.0001,
             'minimum': 0,
             'maximum': 9999999,
             'description': 'Item quantity in cart'
@@ -247,7 +247,7 @@ const schema = {
                     },
                     'addition': {
                       'type': 'number',
-                      'multipleOf': 0.0001,
+                      // 'multipleOf': 0.0001,
                       'minimum': -99999999,
                       'maximum': 99999999,
                       'description': 'Additional value, could be negative'
@@ -278,7 +278,7 @@ const schema = {
               },
               'add_to_price': {
                 'type': 'number',
-                'multipleOf': 0.0001,
+                // 'multipleOf': 0.0001,
                 'minimum': 0,
                 'maximum': 99999999,
                 'description': 'Additional value due to this gift wrap'

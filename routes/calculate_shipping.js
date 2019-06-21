@@ -146,7 +146,7 @@ const schema = {
           },
           'quantity': {
             'type': 'number',
-            'multipleOf': 0.0001,
+            // 'multipleOf': 0.0001,
             'minimum': 0,
             'maximum': 9999999,
             'description': 'Item quantity in cart'
@@ -165,14 +165,14 @@ const schema = {
           },
           'price': {
             'type': 'number',
-            'multipleOf': 0.00001,
+            // 'multipleOf': 0.00001,
             'minimum': 0,
             'maximum': 999999999,
             'description': 'Product sale price specifically for this cart'
           },
           'final_price': {
             'type': 'number',
-            'multipleOf': 0.00001,
+            // 'multipleOf': 0.00001,
             'minimum': 0,
             'maximum': 999999999,
             'description': 'Final item price including additions due to customizations and gift wrap'
@@ -188,7 +188,7 @@ const schema = {
                 'properties': {
                   'value': {
                     'type': 'number',
-                    'multipleOf': 0.001,
+                    // 'multipleOf': 0.001,
                     'minimum': 0,
                     'maximum': 999999,
                     'description': 'Size in specified unit'
@@ -212,7 +212,7 @@ const schema = {
             'properties': {
               'value': {
                 'type': 'number',
-                'multipleOf': 0.001,
+                // 'multipleOf': 0.001,
                 'minimum': 0,
                 'maximum': 999999,
                 'description': 'Size in specified unit'
@@ -233,7 +233,7 @@ const schema = {
     },
     'subtotal': {
       'type': 'number',
-      'multipleOf': 0.00001,
+      // 'multipleOf': 0.00001,
       'minimum': 0,
       'maximum': 9999999999,
       'description': 'The sum of all items prices'
@@ -281,7 +281,7 @@ const responseSchema = {
   'properties': {
     'free_shipping_from_value': {
       'type': 'number',
-      'multipleOf': 0.00001,
+      // 'multipleOf': 0.00001,
       'minimum': 0,
       'maximum': 9999999999,
       'description': 'Optional minimum cart subtotal to earn free shipping with some shipping service'
@@ -359,7 +359,7 @@ const responseSchema = {
                         'properties': {
                           'value': {
                             'type': 'number',
-                            'multipleOf': 0.001,
+                            // 'multipleOf': 0.001,
                             'minimum': 0,
                             'maximum': 999999,
                             'description': 'Size in specified unit'
@@ -383,7 +383,7 @@ const responseSchema = {
                     'properties': {
                       'value': {
                         'type': 'number',
-                        'multipleOf': 0.001,
+                        // 'multipleOf': 0.001,
                         'minimum': 0,
                         'maximum': 999999,
                         'description': 'Size in specified unit'
@@ -402,21 +402,21 @@ const responseSchema = {
               },
               'price': {
                 'type': 'number',
-                'multipleOf': 0.00001,
+                // 'multipleOf': 0.00001,
                 'minimum': 0,
                 'maximum': 9999999999,
                 'description': 'Freight cost for this shipping line, without additionals'
               },
               'declared_value': {
                 'type': 'number',
-                'multipleOf': 0.00001,
+                // 'multipleOf': 0.00001,
                 'minimum': 0,
                 'maximum': 9999999999,
                 'description': 'The package value declared to carrier, generally the sum of all items prices'
               },
               'declared_value_price': {
                 'type': 'number',
-                'multipleOf': 0.00001,
+                // 'multipleOf': 0.00001,
                 'minimum': 0,
                 'maximum': 999999,
                 'description': 'Cost for the "declared value" additional service'
@@ -428,7 +428,7 @@ const responseSchema = {
               },
               'own_hand_price': {
                 'type': 'number',
-                'multipleOf': 0.00001,
+                // 'multipleOf': 0.00001,
                 'minimum': 0,
                 'maximum': 999999,
                 'description': 'Cost for the "own hand" additional service'
@@ -440,7 +440,7 @@ const responseSchema = {
               },
               'receipt_price': {
                 'type': 'number',
-                'multipleOf': 0.00001,
+                // 'multipleOf': 0.00001,
                 'minimum': 0,
                 'maximum': 999999,
                 'description': 'Cost for the "acknowledgment of receipt" additional service'
@@ -466,7 +466,7 @@ const responseSchema = {
                     },
                     'price': {
                       'type': 'number',
-                      'multipleOf': 0.00001,
+                      // 'multipleOf': 0.00001,
                       'minimum': 0,
                       'maximum': 999999,
                       'description': 'Cost for this additional service'
@@ -497,14 +497,14 @@ const responseSchema = {
                     },
                     'price': {
                       'type': 'number',
-                      'multipleOf': 0.00001,
+                      // 'multipleOf': 0.00001,
                       'minimum': 0,
                       'maximum': 999999999,
                       'description': 'Tax value applied'
                     },
                     'rate': {
                       'type': 'number',
-                      'multipleOf': 0.0001,
+                      // 'multipleOf': 0.0001,
                       'minimum': 0,
                       'maximum': 100,
                       'description': 'Tax rate as a function of package value'
@@ -516,14 +516,14 @@ const responseSchema = {
               },
               'discount': {
                 'type': 'number',
-                'multipleOf': 0.0001,
+                // 'multipleOf': 0.0001,
                 'minimum': -999999999,
                 'maximum': 999999999,
                 'description': 'Discount on shipping price, negative if value was additionated (not discounted)'
               },
               'total_price': {
                 'type': 'number',
-                'multipleOf': 0.00001,
+                // 'multipleOf': 0.00001,
                 'minimum': 0,
                 'maximum': 9999999999,
                 'description': 'Total cost for this shipping line, with additionals and taxes'

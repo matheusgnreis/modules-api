@@ -147,7 +147,7 @@ const schema = {
           },
           'quantity': {
             'type': 'number',
-            'multipleOf': 0.0001,
+            // 'multipleOf': 0.0001,
             'minimum': 0,
             'maximum': 9999999,
             'description': 'Item quantity in cart'
@@ -166,14 +166,14 @@ const schema = {
           },
           'price': {
             'type': 'number',
-            'multipleOf': 0.00001,
+            // 'multipleOf': 0.00001,
             'minimum': 0,
             'maximum': 999999999,
             'description': 'Product sale price specifically for this cart'
           },
           'final_price': {
             'type': 'number',
-            'multipleOf': 0.00001,
+            // 'multipleOf': 0.00001,
             'minimum': 0,
             'maximum': 999999999,
             'description': 'Final item price including additions due to customizations and gift wrap'
@@ -202,42 +202,42 @@ const schema = {
       'properties': {
         'total': {
           'type': 'number',
-          'multipleOf': 0.00001,
+          // 'multipleOf': 0.00001,
           'minimum': 0,
           'maximum': 9999999999,
           'description': 'Order total amount'
         },
         'subtotal': {
           'type': 'number',
-          'multipleOf': 0.00001,
+          // 'multipleOf': 0.00001,
           'minimum': 0,
           'maximum': 9999999999,
           'description': 'The sum of all items prices'
         },
         'freight': {
           'type': 'number',
-          'multipleOf': 0.00001,
+          // 'multipleOf': 0.00001,
           'minimum': 0,
           'maximum': 9999999999,
           'description': 'Order freight cost'
         },
         'discount': {
           'type': 'number',
-          'multipleOf': 0.00001,
+          // 'multipleOf': 0.00001,
           'minimum': 0,
           'maximum': 9999999999,
           'description': 'Applied discount value'
         },
         'tax': {
           'type': 'number',
-          'multipleOf': 0.00001,
+          // 'multipleOf': 0.00001,
           'minimum': 0,
           'maximum': 9999999999,
           'description': 'The sum of all the taxes applied to the order'
         },
         'extra': {
           'type': 'number',
-          'multipleOf': 0.00001,
+          // 'multipleOf': 0.00001,
           'minimum': 0,
           'maximum': 9999999999,
           'description': 'Sum of optional extra costs applied'
@@ -788,14 +788,14 @@ const responseSchema = {
         },
         'discount': {
           'type': 'number',
-          'multipleOf': 0.0001,
+          // 'multipleOf': 0.0001,
           'minimum': -999999999,
           'maximum': 999999999,
           'description': 'Discount by payment method, negative if value was additionated (not discounted)'
         },
         'amount': {
           'type': 'number',
-          'multipleOf': 0.00001,
+          // 'multipleOf': 0.00001,
           'minimum': 0,
           'maximum': 9999999999,
           'description': 'Transaction amount, disregarding installment rates'
@@ -813,7 +813,7 @@ const responseSchema = {
             },
             'value': {
               'type': 'number',
-              'multipleOf': 0.00001,
+              // 'multipleOf': 0.00001,
               'minimum': 0,
               'maximum': 9999999999,
               'description': 'Installment value'
@@ -825,7 +825,7 @@ const responseSchema = {
             },
             'total': {
               'type': 'number',
-              'multipleOf': 0.00001,
+              // 'multipleOf': 0.00001,
               'minimum': 0,
               'maximum': 9999999999,
               'description': 'Total value, sum of all plots'
@@ -839,28 +839,28 @@ const responseSchema = {
           'properties': {
             'installment': {
               'type': 'number',
-              'multipleOf': 0.00001,
+              // 'multipleOf': 0.00001,
               'minimum': 0,
               'maximum': 99999999,
               'description': 'Installment fee'
             },
             'operational': {
               'type': 'number',
-              'multipleOf': 0.00001,
+              // 'multipleOf': 0.00001,
               'minimum': 0,
               'maximum': 99999999,
               'description': 'Operation fee'
             },
             'intermediation': {
               'type': 'number',
-              'multipleOf': 0.00001,
+              // 'multipleOf': 0.00001,
               'minimum': 0,
               'maximum': 99999999,
               'description': 'Intermediation fee, if transaction have an intermediary'
             },
             'other': {
               'type': 'number',
-              'multipleOf': 0.00001,
+              // 'multipleOf': 0.00001,
               'minimum': 0,
               'maximum': 99999999,
               'description': 'Sum of other transaction rates'

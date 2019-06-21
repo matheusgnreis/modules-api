@@ -41,7 +41,7 @@ const schema = {
           },
           'quantity': {
             'type': 'number',
-            'multipleOf': 0.0001,
+            // 'multipleOf': 0.0001,
             'minimum': 0,
             'maximum': 9999999,
             'description': 'Item quantity in cart'
@@ -60,14 +60,14 @@ const schema = {
           },
           'price': {
             'type': 'number',
-            'multipleOf': 0.00001,
+            // 'multipleOf': 0.00001,
             'minimum': 0,
             'maximum': 999999999,
             'description': 'Product sale price specifically for this cart'
           },
           'final_price': {
             'type': 'number',
-            'multipleOf': 0.00001,
+            // 'multipleOf': 0.00001,
             'minimum': 0,
             'maximum': 999999999,
             'description': 'Final item price including additions due to customizations and gift wrap'
@@ -96,42 +96,42 @@ const schema = {
       'properties': {
         'total': {
           'type': 'number',
-          'multipleOf': 0.00001,
+          // 'multipleOf': 0.00001,
           'minimum': 0,
           'maximum': 9999999999,
           'description': 'Order total amount'
         },
         'subtotal': {
           'type': 'number',
-          'multipleOf': 0.00001,
+          // 'multipleOf': 0.00001,
           'minimum': 0,
           'maximum': 9999999999,
           'description': 'The sum of all items prices'
         },
         'freight': {
           'type': 'number',
-          'multipleOf': 0.00001,
+          // 'multipleOf': 0.00001,
           'minimum': 0,
           'maximum': 9999999999,
           'description': 'Order freight cost'
         },
         'discount': {
           'type': 'number',
-          'multipleOf': 0.00001,
+          // 'multipleOf': 0.00001,
           'minimum': 0,
           'maximum': 9999999999,
           'description': 'Applied discount value'
         },
         'tax': {
           'type': 'number',
-          'multipleOf': 0.00001,
+          // 'multipleOf': 0.00001,
           'minimum': 0,
           'maximum': 9999999999,
           'description': 'The sum of all the taxes applied to the order'
         },
         'extra': {
           'type': 'number',
-          'multipleOf': 0.00001,
+          // 'multipleOf': 0.00001,
           'minimum': 0,
           'maximum': 9999999999,
           'description': 'Sum of optional extra costs applied'
@@ -178,7 +178,7 @@ const responseSchema = {
         },
         'value': {
           'type': 'number',
-          'multipleOf': 0.0001,
+          // 'multipleOf': 0.0001,
           'minimum': -99999999,
           'maximum': 99999999,
           'description': 'Discount value, percentage or fixed'
@@ -294,7 +294,7 @@ const responseSchema = {
               },
               'value': {
                 'type': 'number',
-                'multipleOf': 0.0001,
+                // 'multipleOf': 0.0001,
                 'minimum': -99999999,
                 'maximum': 99999999,
                 'description': 'Discount value, percentage or fixed'
@@ -328,7 +328,7 @@ const responseSchema = {
                 },
                 'value': {
                   'type': 'number',
-                  'multipleOf': 0.00001,
+                  // 'multipleOf': 0.00001,
                   'minimum': 0,
                   'maximum': 999999999,
                   'description': 'Installment value'
