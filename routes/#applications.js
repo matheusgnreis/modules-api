@@ -13,9 +13,9 @@ const ajv = Ajv({ allErrors: true })
 const Api = require('./../lib/Api.js')
 const Modules = require('./../lib/Modules.js')
 
-function runModule (obj, respond, storeId, modName, validate, responseValidate, appId) {
+function runModule (params, respond, storeId, modName, validate, responseValidate, appId) {
   // ajv
-  let valid = validate(obj)
+  let valid = validate(params)
   if (!valid) {
     // logger.log(validate.errors)
     errorHandling(validate.errors, respond, modName)
@@ -55,42 +55,40 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
         if (num > 0) {
           // count packages done
           let done = 0
-          // body to POST to package PHP file
-          let reqBody = {
-            module: modName,
-            params: obj
-          }
           // logger.log(modName)
           // logger.log(num)
 
           for (let i = 0; i < num; i++) {
             // ok, proceed to modules
-            let pkg = list[i]
-            // debug pkg object
-            logger.log(pkg)
+            const application = list[i]
             // declare data objects to prevent applications fatal errors
-            if (!pkg.hasOwnProperty('hidden_data')) {
-              pkg.hidden_data = {}
+            if (!application.hasOwnProperty('hidden_data')) {
+              application.hidden_data = {}
             }
-            if (!pkg.hasOwnProperty('data')) {
-              pkg.data = {}
+            if (!application.hasOwnProperty('data')) {
+              application.data = {}
             }
-            reqBody.application = pkg
 
-            let url = pkg.modules[modName].endpoint
+            // mount request body to POST to module endpoint
+            const body = {
+              module: modName,
+              params,
+              application
+            }
+            let url = application.modules[modName].endpoint
             // handle request with big timeout if app ID was specified
             let bigTimeout = !!(appId)
             // count request->response time
             let reqStartTime = Date.now()
 
             // send POST request
-            Modules(url, reqBody, storeId, bigTimeout, (err, response) => {
+            Modules(url, body, storeId, bigTimeout, (err, response) => {
               // mount result object
               let result = {
-                _id: pkg._id,
-                app_id: pkg.app_id,
+                _id: application._id,
+                app_id: application.app_id,
                 took: Date.now() - reqStartTime,
-                version: pkg.version,
+                version: application.version,
                 validated: false,
                 response_errors: null,
                 error: false,
@@ -118,14 +116,14 @@ function runModule (obj, respond, storeId, modName, validate, responseValidate, 
               done++
               if (done === num) {
                 // all done
-                // obj as response 'meta'
-                respond(results, obj)
+                // params obj as response 'meta'
+                respond(results, params)
               }
             })
           }
         } else {
           // no packages
-          respond(results, obj)
+          respond(results, params)
         }
       }
     }
