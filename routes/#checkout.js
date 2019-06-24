@@ -171,10 +171,11 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
             // logger.log('transaction')
             // logger.log(number)
-            checkoutBody.order_number = orderNumber
             // merge objects to create transaction request body
             const transactionBody = {
               ...checkoutBody,
+              order_id: orderId,
+              order_number: orderNumber,
               // also need shipping address
               // send from shipping object if undefined on transaction object
               to: { ...checkoutBody.shipping.to },
