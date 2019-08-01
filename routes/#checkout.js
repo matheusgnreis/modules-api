@@ -267,7 +267,14 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
               let shippingLine = shippingService.shipping_line
               if (shippingLine && (!shippingCode || shippingCode === shippingService.service_code)) {
                 // update amount freight and total
-                let freight = (shippingLine.total_price || shippingLine.price || 0)
+                let freight = typeof shippingLine.total_price === 'number'
+                  ? shippingLine.total_price
+                  : typeof shippingLine.price === 'number'
+                    ? shippingLine.price
+                    : 0
+                if (isNaN(freight) || freight < 0) {
+                  freight = 0
+                }
                 amount.freight = freight
                 fixTotal()
 
