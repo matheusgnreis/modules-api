@@ -65,14 +65,23 @@ const simulateRequest = (checkoutBody, checkoutRespond, label, storeId, callback
 }
 
 // filter modules response
-const getModuleResult = results => {
+const getModuleResult = (results, checkProp) => {
   // results array returned from module
   // see ./#applications.js
   if (Array.isArray(results)) {
     for (let i = 0; i < results.length; i++) {
-      if (results[i].validated) {
+      const result = results[i]
+      if (result.validated) {
+        if (checkProp) {
+          // validate one property from response object
+          const responseProp = result.response[checkProp]
+          if (!responseProp || (Array.isArray(responseProp) && !responseProp.length)) {
+            // try next module result
+            continue
+          }
+        }
         // use it
-        return results[i]
+        return result
       }
     }
   }
@@ -186,7 +195,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
             // finally pass to create transaction
             simulateRequest(transactionBody, checkoutRespond, 'transaction', storeId, results => {
               // logger.log(results)
-              let result = getModuleResult(results)
+              let result = getModuleResult(results, 'transaction')
               if (result) {
                 // treat transaction response
                 let response = result.response
@@ -245,7 +254,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
       // simulate requets to calculate shipping endpoint
       simulateRequest(checkoutBody, checkoutRespond, 'shipping', storeId, results => {
-        let result = getModuleResult(results)
+        let result = getModuleResult(results, 'shipping_services')
         if (result) {
           // treat calculate shipping response
           let response = result.response
@@ -294,7 +303,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
       const listPayments = () => {
         // simulate requets to list payments endpoint
         simulateRequest(checkoutBody, checkoutRespond, 'payment', storeId, results => {
-          let result = getModuleResult(results)
+          let result = getModuleResult(results, 'payment_gateways')
           if (result) {
             // treat list payments response
             let response = result.response
