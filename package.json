@@ -4,7 +4,8 @@
   "description": "E-Com Plus Mods API Node.js App",
   "main": "main.js",
   "scripts": {
-    "test": "node ./main.js"
+    "test": "node ./main.js",
+    "release": "standard-version"
   },
   "author": "E-Com Club",
   "license": "GPL-3.0",
@@ -17,9 +18,9 @@
     "axios": "0.x"
   },
   "devDependencies": {
-    "@commitlint/cli": "^8.0.0",
-    "@commitlint/config-conventional": "^8.0.0",
-    "husky": "^2.4.1",
+    "@commitlint/cli": "^8.1.0",
+    "@commitlint/config-conventional": "^8.1.0",
+    "husky": "^2.7.0",
     "standard": "^12.0.1"
   },
   "husky": {
