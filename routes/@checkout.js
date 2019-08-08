@@ -1,7 +1,7 @@
 'use strict'
 
 // log on files
-// const logger = require('console-files')
+const logger = require('console-files')
 
 // JSON Schema validation with AJV
 // based on http://json-schema.org/
@@ -916,6 +916,7 @@ const GET = (id, meta, body, respond) => {
 }
 
 const POST = (id, meta, body, respond, storeId) => {
+  logger.log(JSON.stringify(body, null, 2))
   // ajv
   let valid = validate(body)
   if (!valid) {
