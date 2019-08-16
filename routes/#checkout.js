@@ -208,7 +208,8 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                     'payment_method',
                     'payer',
                     'currency_id',
-                    'currency_symbol'
+                    'currency_symbol',
+                    'status' // Getting the status and add to payment_history. 
                   ].forEach(field => {
                     if (transactionBody.hasOwnProperty(field) && !transaction.hasOwnProperty(field)) {
                       transaction[field] = transactionBody[field]
