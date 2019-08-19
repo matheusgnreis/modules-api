@@ -29,8 +29,8 @@ proxy passing the requests to configured TCP port.
 [List installments with client JS SDK](https://github.com/ecomclub/modules-api/issues/6)
 
 Docs:
-[Developers](developers.e-com.plus)
-[API Modules](https://github.com/ecomclub/modules-api/tree/master/docs)
+- [Developers](developers.e-com.plus)
+- [API Modules](https://github.com/ecomclub/modules-api/tree/master/docs)
 
 
 - [ ] Second test:
