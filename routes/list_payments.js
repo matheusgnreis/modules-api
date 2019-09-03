@@ -160,6 +160,12 @@ const responseSchema = {
       'maximum': 999,
       'description': 'Optional maximum number of installments without tax'
     },
+    'installment_min_value': {
+      'type': 'integer',
+      'minimum': 1,
+      'maximum': 999999999,
+      'description': 'Optional default minimum installment value'
+    },
     'discount_option': {
       'type': 'object',
       'required': [ 'value' ],
@@ -185,6 +191,12 @@ const responseSchema = {
         }
       },
       'description': 'Default discount option by payment method'
+    },
+    'discount_min_amount': {
+      'type': 'integer',
+      'minimum': 1,
+      'maximum': 999999999,
+      'description': 'Minimum amount to apply payment method discounts'
     },
     'payment_gateways': {
       'type': 'array',
