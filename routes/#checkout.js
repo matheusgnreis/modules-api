@@ -232,6 +232,12 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                     // logger.log(transaction.app)
                   }
 
+                  // check for transaction status
+                  if (!transaction.status) {
+                    transaction.status = {
+                      current: 'pending'
+                    }
+                  }
                   // merge transaction body with order info and respond
                   checkoutRespond({
                     order: {
@@ -242,6 +248,15 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                   })
                   // save transaction info on order data
                   saveTransaction(transaction, orderId, storeId)
+
+                  // add entry to payments history
+                  setTimeout(() => {
+                    const body = {
+                      status: transaction.status.current,
+                      flags: ['checkout']
+                    }
+                    Api('orders/' + orderId + '/payments_history.json', 'POST', body, storeId)
+                  }, 400)
                   return
                 }
               }
@@ -250,12 +265,13 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
               errorCallback(null, null, 'No valid transaction object from /create_transaction')
 
               // cancel the created order
-              const endpoint = 'orders/' + orderId + '.json'
-              const body = {
-                status: 'cancelled',
-                staff_notes: 'Error trying to create transaction'
-              }
-              Api(endpoint, 'PATCH', body, storeId)
+              setTimeout(() => {
+                const body = {
+                  status: 'cancelled',
+                  staff_notes: 'Error trying to create transaction'
+                }
+                Api('orders/' + orderId + '.json', 'PATCH', body, storeId)
+              }, 400)
             })
           })
         })
