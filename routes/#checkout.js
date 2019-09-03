@@ -10,7 +10,7 @@ const newOrder = require('./../lib/Checkout/NewOrder')
 const saveTransaction = require('./../lib/Checkout/SaveTransaction')
 
 // authenticated REST client
-// const Api = require('./../lib/Api')
+const Api = require('./../lib/Api')
 const { objectId } = require('./../lib/Utils')
 
 // handle other modules endpoints directly
@@ -248,6 +248,14 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
               // unexpected response object from create transaction module
               errorCallback(null, null, 'No valid transaction object from /create_transaction')
+
+              // cancel the created order
+              const endpoint = 'orders/' + orderId + '.json'
+              const body = {
+                status: 'cancelled',
+                staff_notes: 'Error trying to create transaction'
+              }
+              Api(endpoint, 'PATCH', body, storeId)
             })
           })
         })
