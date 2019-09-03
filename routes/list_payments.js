@@ -154,23 +154,46 @@ const responseSchema = {
   'required': [ 'payment_gateways' ],
   'additionalProperties': false,
   'properties': {
-    'interest_free_installments': {
-      'type': 'integer',
-      'minimum': 2,
-      'maximum': 999,
-      'description': 'Optional maximum number of installments without tax'
-    },
-    'installment_min_value': {
-      'type': 'integer',
-      'minimum': 1,
-      'maximum': 999999999,
-      'description': 'Optional default minimum installment value'
+    'installments_option': {
+      'type': 'object',
+      'required': [ 'max_number' ],
+      'additionalProperties': false,
+      'properties': {
+        'min_installment': {
+          'type': 'number',
+          // 'multipleOf': 0.0001,
+          'minimum': -99999999,
+          'maximum': 99999999,
+          'description': 'Minimum installment value'
+        },
+        'max_number': {
+          'type': 'integer',
+          'minimum': 2,
+          'maximum': 999,
+          'description': 'Maximum number of installments'
+        },
+        'monthly_interest': {
+          'type': 'number',
+          // 'multipleOf': 0.0001,
+          'minimum': 0,
+          'maximum': 9999,
+          'default': 0,
+          'description': 'Monthly tax applied, 0 means interest free'
+        }
+      },
+      'description': 'Optional default installments option'
     },
     'discount_option': {
       'type': 'object',
       'required': [ 'value' ],
       'additionalProperties': false,
       'properties': {
+        'min_amount': {
+          'type': 'integer',
+          'minimum': 1,
+          'maximum': 999999999,
+          'description': 'Minimum amount to apply the discount'
+        },
         'label': {
           'type': 'string',
           'maxLength': 50,
@@ -190,13 +213,7 @@ const responseSchema = {
           'description': 'Discount value, percentage or fixed'
         }
       },
-      'description': 'Default discount option by payment method'
-    },
-    'discount_min_amount': {
-      'type': 'integer',
-      'minimum': 1,
-      'maximum': 999999999,
-      'description': 'Minimum amount to apply payment method discounts'
+      'description': 'Optional default discount option by payment method'
     },
     'payment_gateways': {
       'type': 'array',
@@ -420,6 +437,12 @@ const responseSchema = {
         'description': 'Payment option (gateway)'
       },
       'description': 'Payment gateway options list'
+    },
+    'interest_free_installments': {
+      'type': 'integer',
+      'minimum': 2,
+      'maximum': 999,
+      'description': '[DEPRECATED] => use `installments_option` instead'
     }
   }
 }
