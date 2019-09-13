@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.1](https://github.com/ecomclub/modules-api/compare/v0.10.0...v0.10.1) (2019-09-13)
+
+
+### Bug Fixes
+
+* **checkout-history:** add date time to created payment history ([4c4ca0f](https://github.com/ecomclub/modules-api/commit/4c4ca0f))
+
 ## [0.10.0](https://github.com/ecomclub/modules-api/compare/v0.9.2...v0.10.0) (2019-09-03)
 
 
