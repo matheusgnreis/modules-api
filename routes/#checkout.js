@@ -253,6 +253,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                   setTimeout(() => {
                     const body = {
                       status: transaction.status.current,
+                      date_time: new Date().toISOString(),
                       flags: ['checkout']
                     }
                     Api('orders/' + orderId + '/payments_history.json', 'POST', body, storeId)
