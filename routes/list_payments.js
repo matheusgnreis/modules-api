@@ -399,6 +399,11 @@ const responseSchema = {
                 'maxLength': 1000,
                 'description': 'Append HTML to render payment iframe/components on checkout'
               },
+              'transaction_promise': {
+                'type': 'string',
+                'maxLength': 50,
+                'description': 'Checkout promise variable (on `window`) resolved with transaction-like object'
+              },
               'cc_hash': {
                 'type': 'object',
                 'required': [ 'function' ],
