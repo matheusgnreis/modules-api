@@ -391,8 +391,13 @@ const responseSchema = {
               },
               'onload_expression': {
                 'type': 'string',
-                'maxLength': 2000,
+                'maxLength': 3000,
                 'description': 'JS expression to run (with `eval`) after script load'
+              },
+              'container_html': {
+                'type': 'string',
+                'maxLength': 1000,
+                'description': 'Append HTML to render payment iframe/components on checkout'
               },
               'cc_hash': {
                 'type': 'object',
