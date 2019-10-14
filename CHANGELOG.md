@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.2](https://github.com/ecomclub/modules-api/compare/v0.10.1...v0.10.2) (2019-10-14)
+
+
+### Features
+
+* **list-payments:** update schema, add js_client.container_html ([cf9f6ee](https://github.com/ecomclub/modules-api/commit/cf9f6ee))
+
 ### [0.10.1](https://github.com/ecomclub/modules-api/compare/v0.10.0...v0.10.1) (2019-09-13)
 
 
