@@ -669,6 +669,11 @@ const schema = {
           'maximum': 199,
           'description': 'Number of installments chosen'
         },
+        'open_payment_id': {
+          'type': 'string',
+          'maxLength': 255,
+          'description': 'Payment or order ID if pre committed on gateway (authorization/capture)'
+        },
         'utm': {
           'type': 'object',
           'additionalProperties': false,

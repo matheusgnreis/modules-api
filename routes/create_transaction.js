@@ -545,6 +545,11 @@ const schema = {
       'max': 999999999,
       'description': 'Number of created order'
     },
+    'open_payment_id': {
+      'type': 'string',
+      'maxLength': 255,
+      'description': 'Payment or order ID if pre committed on gateway (authorization/capture)'
+    },
     'utm': {
       'type': 'object',
       'additionalProperties': false,
