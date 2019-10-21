@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.4](https://github.com/ecomclub/modules-api/compare/v0.10.3...v0.10.4) (2019-10-21)
+
+
+### Features
+
+* **transaction:** add 'open_payment_id' to create transaction schema ([4993b5a](https://github.com/ecomclub/modules-api/commit/4993b5a))
+
 ### [0.10.3](https://github.com/ecomclub/modules-api/compare/v0.10.2...v0.10.3) (2019-10-14)
 
 
