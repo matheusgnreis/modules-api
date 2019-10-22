@@ -143,6 +143,290 @@ const schema = {
       'type': 'string',
       'pattern': '^[a-z]{2}(_[a-z]{2})?$',
       'description': 'Language two letters code, sometimes with region, eg.: pt_br, fr, en_us'
+    },
+    'domain': {
+      'type': 'string',
+      'minLength': 4,
+      'maxLength': 100,
+      'pattern': '^[0-9a-z-.]+$',
+      'description': 'Store domain name (numbers and lowercase letters, eg.: www.myshop.sample)'
+    },
+    'customer': {
+      'type': 'object',
+      'additionalProperties': false,
+      'required': [ 'main_email', 'name' ],
+      'properties': {
+        '_id': {
+          'type': [ 'null', 'string' ],
+          'pattern': '^[a-f0-9]{24}$',
+          'description': 'Customer ID'
+        },
+        'locale': {
+          'type': 'string',
+          'pattern': '^[a-z]{2}(_[a-z]{2})?$',
+          'description': 'Customer language two letter code, sometimes with region, eg.: pt_br, fr, en_us'
+        },
+        'main_email': {
+          'type': 'string',
+          'maxLength': 200,
+          'format': 'email',
+          'description': 'Customer main email address'
+        },
+        'emails': {
+          'type': 'array',
+          'maxItems': 20,
+          'items': {
+            'type': 'object',
+            'additionalProperties': false,
+            'required': [ 'address' ],
+            'properties': {
+              'address': {
+                'type': 'string',
+                'maxLength': 200,
+                'format': 'email',
+                'description': 'The actual email address'
+              },
+              'type': {
+                'type': 'string',
+                'enum': [ 'work', 'home', 'other' ],
+                'description': 'The type of email'
+              },
+              'verified': {
+                'type': 'boolean',
+                'default': false,
+                'description': 'States whether or not the email address has been verified'
+              }
+            },
+            'description': 'Email object'
+          },
+          'description': 'List of customer email addresses'
+        },
+        'display_name': {
+          'type': 'string',
+          'maxLength': 50,
+          'description': 'The name of this Customer, suitable for display'
+        },
+        'name': {
+          'type': 'object',
+          'additionalProperties': false,
+          'properties': {
+            'family_name': {
+              'type': 'string',
+              'maxLength': 70,
+              'description': 'The family name of this user, or "last name"'
+            },
+            'given_name': {
+              'type': 'string',
+              'maxLength': 70,
+              'description': 'The "first name" of this user'
+            },
+            'middle_name': {
+              'type': 'string',
+              'maxLength': 255,
+              'description': 'The middle name(s) of this user'
+            }
+          },
+          'description': 'Customer name object'
+        },
+        'gender': {
+          'type': 'string',
+          'enum': [ 'f', 'm', 'x' ],
+          'description': 'Customer gender, female, male or third gender (X)'
+        },
+        'photos': {
+          'type': 'array',
+          'uniqueItems': true,
+          'maxItems': 20,
+          'items': {
+            'type': 'string',
+            'maxLength': 255,
+            'description': 'Image URL'
+          },
+          'description': 'User profile pictures'
+        },
+        'phones': {
+          'type': 'array',
+          'maxItems': 20,
+          'items': {
+            'type': 'object',
+            'additionalProperties': false,
+            'required': [ 'number' ],
+            'properties': {
+              'country_code': {
+                'type': 'integer',
+                'min': 1,
+                'max': 999,
+                'description': 'Country calling code (without +), defined by standards E.123 and E.164'
+              },
+              'number': {
+                'type': 'string',
+                'maxLength': 19,
+                'pattern': '^[0-9]+$',
+                'description': 'The actual phone number, digits only'
+              },
+              'type': {
+                'type': 'string',
+                'enum': [ 'home', 'personal', 'work', 'other' ],
+                'description': 'The type of phone'
+              }
+            },
+            'description': 'Phone object'
+          },
+          'description': 'List of customer phone numbers'
+        },
+        'registry_type': {
+          'type': 'string',
+          'enum': [ 'p', 'j' ],
+          'description': 'Physical or juridical (company) person'
+        },
+        'doc_country': {
+          'type': 'string',
+          'minLength': 2,
+          'maxLength': 2,
+          'pattern': '^[A-Z]+$',
+          'description': 'Country of document origin, an ISO 3166-2 code'
+        },
+        'doc_number': {
+          'type': 'string',
+          'maxLength': 19,
+          'pattern': '^[0-9]+$',
+          'description': 'Responsible person or organization document number (only numbers)'
+        },
+        'inscription_type': {
+          'type': 'string',
+          'enum': [ 'State', 'Municipal' ],
+          'description': 'Municipal or state registration if exists'
+        },
+        'inscription_number': {
+          'type': 'string',
+          'maxLength': 50,
+          'description': 'Municipal or state registration number (with characters) if exists'
+        },
+        'corporate_name': {
+          'type': 'string',
+          'maxLength': 255,
+          'description': 'Registered company name or responsible fullname'
+        },
+        'addresses': {
+          'type': 'array',
+          'maxItems': 40,
+          'items': {
+            'type': 'object',
+            'additionalProperties': false,
+            'required': [ '_id', 'zip' ],
+            'properties': {
+              '_id': {
+                'type': 'string',
+                'pattern': '^[a-f0-9]{24}$',
+                'description': 'Unique ID (ObjectID)'
+              },
+              'zip': {
+                'type': 'string',
+                'maxLength': 30,
+                'description': 'ZIP (CEP, postal...) code'
+              },
+              'street': {
+                'type': 'string',
+                'maxLength': 200,
+                'description': 'Street or public place name'
+              },
+              'number': {
+                'type': 'integer',
+                'min': 1,
+                'max': 9999999,
+                'description': 'House or building street number'
+              },
+              'complement': {
+                'type': 'string',
+                'maxLength': 100,
+                'description': 'Address complement or second line, such as apartment number'
+              },
+              'borough': {
+                'type': 'string',
+                'maxLength': 100,
+                'description': 'Borough name'
+              },
+              'near_to': {
+                'type': 'string',
+                'maxLength': 100,
+                'description': 'Some optional other reference for this address'
+              },
+              'line_address': {
+                'type': 'string',
+                'maxLength': 255,
+                'description': 'Full in line mailing address, should include street, number and borough'
+              },
+              'city': {
+                'type': 'string',
+                'maxLength': 100,
+                'description': 'City name'
+              },
+              'country': {
+                'type': 'string',
+                'maxLength': 50,
+                'description': 'Country name'
+              },
+              'country_code': {
+                'type': 'string',
+                'minLength': 2,
+                'maxLength': 2,
+                'pattern': '^[A-Z]+$',
+                'description': 'An ISO 3166-2 country code'
+              },
+              'province': {
+                'type': 'string',
+                'maxLength': 100,
+                'description': 'Province or state name'
+              },
+              'province_code': {
+                'type': 'string',
+                'minLength': 2,
+                'maxLength': 2,
+                'pattern': '^[A-Z]+$',
+                'description': 'The two-letter code for the province or state'
+              },
+              'name': {
+                'type': 'string',
+                'maxLength': 70,
+                'description': 'The name of recipient, generally is the customer\'s name'
+              },
+              'last_name': {
+                'type': 'string',
+                'maxLength': 70,
+                'description': 'The recipient\'s last name'
+              },
+              'phone': {
+                'type': 'object',
+                'additionalProperties': false,
+                'required': [ 'number' ],
+                'properties': {
+                  'country_code': {
+                    'type': 'integer',
+                    'min': 1,
+                    'max': 999,
+                    'description': 'Country calling code (without +), defined by standards E.123 and E.164'
+                  },
+                  'number': {
+                    'type': 'string',
+                    'maxLength': 19,
+                    'pattern': '^[0-9]+$',
+                    'description': 'The actual phone number, digits only'
+                  }
+                },
+                'description': 'Customer phone number for this mailing address'
+              },
+              'default': {
+                'type': 'boolean',
+                'default': false,
+                'description': 'Indicates whether this address is the default address for the customer'
+              }
+            },
+            'description': 'Address object'
+          },
+          'description': 'List of customer addresses'
+        }
+      },
+      'description': 'Customer object'
     }
   }
 }
