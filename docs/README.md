@@ -2,7 +2,7 @@
 
 ## List endpoints
 
-https://apx-mods.e-com.plus/api/v1/
+[https://apx-mods.e-com.plus/api/v1/](https://apx-mods.e-com.plus/api/v1/)
 
 ## Modules JSON Schema reference
 
