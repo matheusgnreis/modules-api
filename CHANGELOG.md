@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.6](https://github.com/ecomclub/modules-api/compare/v0.10.5...v0.10.6) (2019-11-18)
+
+
+### Bug Fixes
+
+* **apply-discount:** remove customer main email (private) by default ([5a44d83](https://github.com/ecomclub/modules-api/commit/5a44d83))
+* **page-loaded:** fix schemas for page loaded module ([9218e50](https://github.com/ecomclub/modules-api/commit/9218e50))
+
+
+### Features
+
+* **apply-discount:** add apply discount module with schemas ([8a5ad70](https://github.com/ecomclub/modules-api/commit/8a5ad70))
+
 ### [0.10.5](https://github.com/ecomclub/modules-api/compare/v0.10.4...v0.10.5) (2019-10-22)
 
 
