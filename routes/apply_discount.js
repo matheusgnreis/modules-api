@@ -233,42 +233,49 @@ const responseSchema = {
   'type': 'object',
   'additionalProperties': false,
   'properties': {
-    'extra_discount': {
+    'discount_rule': {
       'type': 'object',
-      'required': [ 'value' ],
+      'required': [ 'extra_discount' ],
       'additionalProperties': false,
       'properties': {
-        'title': {
+        'label': {
           'type': 'string',
           'maxLength': 100,
-          'description': 'Title for the discount rule, can be the coupon or campaign name'
+          'description': 'Name of the discount rule, can be the coupon or campaign name'
         },
         'description': {
           'type': 'string',
-          'maxLength': 255,
-          'description': 'Short text description for the discount rule'
+          'maxLength': 1000,
+          'description': 'Additional text description for the discount rule'
         },
-        'apply_at': {
-          'type': 'string',
-          'enum': [ 'total', 'subtotal', 'freight' ],
-          'default': 'subtotal',
-          'description': 'In which value the discount will be applied at checkout'
-        },
-        'type': {
-          'type': 'string',
-          'enum': [ 'percentage', 'fixed' ],
-          'default': 'percentage',
-          'description': 'Discount type'
-        },
-        'value': {
-          'type': 'number',
-          // 'multipleOf': 0.0001,
-          'minimum': -99999999,
-          'maximum': 99999999,
-          'description': 'Discount value, percentage or fixed'
+        'extra_discount': {
+          'type': 'object',
+          'required': [ 'value' ],
+          'additionalProperties': false,
+          'properties': {
+            'value': {
+              'type': 'number',
+              // 'multipleOf': 0.00001,
+              'minimum': 1,
+              'maximum': 9999999999,
+              'description': 'Extra discount value'
+            },
+            'flags': {
+              'type': 'array',
+              'uniqueItems': true,
+              'maxItems': 10,
+              'items': {
+                'type': 'string',
+                'maxLength': 20,
+                'description': 'Flag title'
+              },
+              'description': 'Flags to associate additional info'
+            }
+          },
+          'description': 'Extra discount to apply on checkout'
         }
       },
-      'description': 'Discount available for current shopping cart or coupon'
+      'description': 'Matched discount rule for current UTM campaign or coupon'
     },
     'invalid_coupon_message': {
       'type': 'string',
