@@ -216,12 +216,6 @@ const schema = {
           'pattern': '^[a-f0-9]{24}$',
           'description': 'Customer ID'
         },
-        'main_email': {
-          'type': 'string',
-          'maxLength': 200,
-          'format': 'email',
-          'description': 'Customer main email address'
-        },
         'display_name': {
           'type': 'string',
           'maxLength': 50,
