@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.11.0](https://github.com/ecomclub/modules-api/compare/v0.10.6...v0.11.0) (2019-11-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* **apply-discount:** schema changed for apply_discount module
+
+### Bug Fixes
+
+* **apply-discount:** fix module response schema ([e1a1c1a](https://github.com/ecomclub/modules-api/commit/e1a1c1a))
+
+
+### Features
+
+* **checkout:** applying extra discount on checkout endpoint ([31ddec8](https://github.com/ecomclub/modules-api/commit/31ddec8))
+
 ### [0.10.6](https://github.com/ecomclub/modules-api/compare/v0.10.5...v0.10.6) (2019-11-18)
 
 
