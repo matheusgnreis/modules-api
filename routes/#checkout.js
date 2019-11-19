@@ -16,6 +16,7 @@ const { objectId } = require('./../lib/Utils')
 // handle other modules endpoints directly
 const calculateShipping = require('./calculate_shipping').POST
 const listPayments = require('./list_payments').POST
+const applyDiscount = require('./apply_discount').POST
 const createTransaction = require('./create_transaction').POST
 
 // abstraction to calculate shipping and create transaction
@@ -31,37 +32,47 @@ const simulateRequest = (checkoutBody, checkoutRespond, label, storeId, callback
       moduleHandler = listPayments
       moduleBody = checkoutBody.transaction
       break
+    case 'discount':
+      moduleHandler = applyDiscount
+      moduleBody = checkoutBody.discount
+      break
     case 'transaction':
       moduleHandler = createTransaction
       moduleBody = checkoutBody.transaction
   }
 
-  // mask request objects
-  let reqId = null
-  let reqMeta = {
-    query: {
-      app_id: moduleBody.app_id
+  if (moduleBody && moduleBody.app_id) {
+    // mask request objects
+    let reqId = null
+    let reqMeta = {
+      query: {
+        app_id: moduleBody.app_id
+      }
     }
-  }
-  // mount request body with received checkout body object
-  let reqBody = {
-    ...checkoutBody,
-    ...moduleBody
-  }
-  // handle response such as REST Auto Router
-  // https://www.npmjs.com/package/rest-auto-router#callback-params
-  let reqRespond = (obj, meta, statusCode, errorCode, devMsg) => {
-    if (obj && !errorCode && typeof callback === 'function') {
-      // OK
-      callback(obj)
-    } else {
-      // pass the response
-      checkoutRespond(obj, meta, statusCode, errorCode, devMsg)
+    // mount request body with received checkout body object
+    let reqBody = {
+      ...checkoutBody,
+      ...moduleBody
     }
-  }
+    // handle response such as REST Auto Router
+    // https://www.npmjs.com/package/rest-auto-router#callback-params
+    let reqRespond = (obj, meta, statusCode, errorCode, devMsg) => {
+      if (obj && !errorCode && typeof callback === 'function') {
+        // OK
+        callback(obj)
+      } else {
+        // pass the response
+        devMsg = `Error on '${label}': ${devMsg} (${errorCode})`
+        checkoutRespond(obj || {}, null, statusCode || 400, 'CKT900', devMsg)
+      }
+    }
 
-  // simulate request to module endpoint
-  moduleHandler(reqId, reqMeta, reqBody, reqRespond, storeId)
+    // simulate request to module endpoint
+    moduleHandler(reqId, reqMeta, reqBody, reqRespond, storeId)
+  } else {
+    // ignore
+    callback()
+  }
 }
 
 // filter modules response
@@ -367,11 +378,39 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                     }
                     fixTotal()
                   }
-
                   // add to order body
                   orderBody.payment_method_label = paymentGateway.label || ''
-                  // new order
-                  createOrder()
+
+                  // simulate requets to apply discount endpoint
+                  simulateRequest(checkoutBody, checkoutRespond, 'discount', storeId, results => {
+                    let result = getModuleResult(results)
+                    if (result) {
+                      // treat apply discount response
+                      let response = result.response
+                      if (response && response.discount_rule) {
+                        // check discount value
+                        const discountRule = response.discount_rule
+                        const extraDiscount = discountRule.extra_discount
+
+                        if (extraDiscount && extraDiscount.value) {
+                          // update amount and save extra discount to order body
+                          amount.discount += extraDiscount.value
+                          orderBody.extra_discount = {
+                            ...checkoutBody.discount,
+                            ...extraDiscount,
+                            // app info
+                            app: {
+                              ...discountRule,
+                              _id: result._id
+                            }
+                          }
+                        }
+                      }
+                    }
+
+                    // finally start creating new order
+                    createOrder()
+                  })
                   return
                 }
               }

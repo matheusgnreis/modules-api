@@ -740,6 +740,25 @@ const schema = {
       },
       'description': 'Payment options to create transaction'
     },
+    'discount': {
+      'type': 'object',
+      'required': [ 'app_id' ],
+      'additionalProperties': false,
+      'properties': {
+        'app_id': {
+          'type': 'integer',
+          'minimum': 1000,
+          'maximum': 16777215,
+          'description': 'ID of application chosen for extra discount'
+        },
+        'discount_coupon': {
+          'type': 'string',
+          'maxLength': 255,
+          'description': 'Text of discount coupon applied by customer'
+        }
+      },
+      'description': 'Extra discount to apply by coupon or UTM campaign'
+    },
     'lang': {
       'type': 'string',
       'pattern': '^[a-z]{2}(_[a-z]{2})?$',
