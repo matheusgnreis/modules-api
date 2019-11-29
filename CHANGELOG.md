@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.11.1](https://github.com/ecomclub/modules-api/compare/v0.11.0...v0.11.1) (2019-11-29)
+
+
+### Features
+
+* **checkout:** mark internal requests with 'is_checkout_confirmation' ([023536c](https://github.com/ecomclub/modules-api/commit/023536c))
+
 ## [0.11.0](https://github.com/ecomclub/modules-api/compare/v0.10.6...v0.11.0) (2019-11-19)
 
 
