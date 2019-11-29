@@ -52,7 +52,8 @@ const simulateRequest = (checkoutBody, checkoutRespond, label, storeId, callback
     // mount request body with received checkout body object
     let reqBody = {
       ...checkoutBody,
-      ...moduleBody
+      ...moduleBody,
+      is_checkout_confirmation: true
     }
     // handle response such as REST Auto Router
     // https://www.npmjs.com/package/rest-auto-router#callback-params

@@ -265,6 +265,11 @@ const schema = {
       'type': 'string',
       'pattern': '^[a-z]{2}(_[a-z]{2})?$',
       'description': 'Language two letters code, sometimes with region, eg.: pt_br, fr, en_us'
+    },
+    'is_checkout_confirmation': {
+      'type': 'boolean',
+      'default': false,
+      'description': 'Whether shipping were already chosen and is just being confirmed to complete checkout'
     }
   }
 }

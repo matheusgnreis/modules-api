@@ -427,6 +427,11 @@ const schema = {
         }
       },
       'description': 'Customer object'
+    },
+    'is_checkout_confirmation': {
+      'type': 'boolean',
+      'default': false,
+      'description': 'Whether payment were already chosen and is just being confirmed to complete checkout'
     }
   }
 }
