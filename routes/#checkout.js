@@ -135,6 +135,9 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
       }
       let fixTotal = () => {
         amount.total = amount.subtotal + amount.freight - amount.discount
+        if (amount.total < 0) {
+          amount.total = 0
+        }
       }
       // also save amount to checkout and order body objects
       checkoutBody.subtotal = subtotal
@@ -396,6 +399,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                         if (extraDiscount && extraDiscount.value) {
                           // update amount and save extra discount to order body
                           amount.discount += extraDiscount.value
+                          fixTotal()
                           orderBody.extra_discount = {
                             ...checkoutBody.discount,
                             ...extraDiscount,
