@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.11.3](https://github.com/ecomclub/modules-api/compare/v0.11.2...v0.11.3) (2019-12-05)
+
+
+### Bug Fixes
+
+* **checkout:** apply discount (extra discount) before list payments ([41d3d29](https://github.com/ecomclub/modules-api/commit/41d3d29))
+
 ### [0.11.2](https://github.com/ecomclub/modules-api/compare/v0.11.1...v0.11.2) (2019-12-05)
 
 
