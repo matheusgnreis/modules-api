@@ -57,14 +57,14 @@ const simulateRequest = (checkoutBody, checkoutRespond, label, storeId, callback
     }
     // handle response such as REST Auto Router
     // https://www.npmjs.com/package/rest-auto-router#callback-params
-    let reqRespond = (obj, meta, statusCode, errorCode, devMsg) => {
+    let reqRespond = (obj, meta, statusCode, errorCode, devMsg, usrMsg) => {
       if (obj && !errorCode && typeof callback === 'function') {
         // OK
         callback(obj)
       } else {
         // pass the response
         devMsg = `Error on '${label}': ${devMsg} (${errorCode})`
-        checkoutRespond(obj || {}, null, statusCode || 400, 'CKT900', devMsg)
+        checkoutRespond(obj || {}, null, statusCode || 400, 'CKT900', devMsg, usrMsg)
       }
     }
 
