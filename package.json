@@ -15,7 +15,8 @@
     "ajv": "5.x",
     "ajv-i18n": "2.x",
     "console-files": "2.x",
-    "axios": "0.x"
+    "axios": "0.x",
+    "lodash.clonedeep": "4.x"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.2.0",
