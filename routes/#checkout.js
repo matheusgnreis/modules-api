@@ -1,5 +1,7 @@
 'use strict'
 
+// deep objects clone util
+const cloneDeep = require('lodash.clonedeep')
 // log on files
 const logger = require('console-files')
 
@@ -50,11 +52,11 @@ const simulateRequest = (checkoutBody, checkoutRespond, label, storeId, callback
       }
     }
     // mount request body with received checkout body object
-    let reqBody = {
+    let reqBody = cloneDeep({
       ...checkoutBody,
       ...moduleBody,
       is_checkout_confirmation: true
-    }
+    })
     // handle response such as REST Auto Router
     // https://www.npmjs.com/package/rest-auto-router#callback-params
     let reqRespond = (obj, meta, statusCode, errorCode, devMsg, usrMsg) => {
