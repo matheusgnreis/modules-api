@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.11.5](https://github.com/ecomclub/modules-api/compare/v0.11.4...v0.11.5) (2019-12-05)
+
+
+### Bug Fixes
+
+* **debug-requests:** check response object before getting data prop ([56f8f9b](https://github.com/ecomclub/modules-api/commit/56f8f9b))
+
 ### [0.11.4](https://github.com/ecomclub/modules-api/compare/v0.11.3...v0.11.4) (2019-12-05)
 
 
