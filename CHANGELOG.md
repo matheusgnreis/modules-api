@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.11.4](https://github.com/ecomclub/modules-api/compare/v0.11.3...v0.11.4) (2019-12-05)
+
+
+### Bug Fixes
+
+* **checkout:** try to bypass internal request error usr msg ([56c88b1](https://github.com/ecomclub/modules-api/commit/56c88b1))
+* **checkout:** uso deep clone to preserve original req body ([c7f455e](https://github.com/ecomclub/modules-api/commit/c7f455e))
+
 ### [0.11.3](https://github.com/ecomclub/modules-api/compare/v0.11.2...v0.11.3) (2019-12-05)
 
 
