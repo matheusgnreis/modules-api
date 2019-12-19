@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.11.7](https://github.com/ecomclub/modules-api/compare/v0.11.6...v0.11.7) (2019-12-19)
+
+
+### Bug Fixes
+
+* **checkout:** apply payment method adding to amount discount ([c266081](https://github.com/ecomclub/modules-api/commit/c266081))
+* **checkout:** apply payment method discount only is < extra discount ([c3de424](https://github.com/ecomclub/modules-api/commit/c3de424))
+
 ### [0.11.6](https://github.com/ecomclub/modules-api/compare/v0.11.5...v0.11.6) (2019-12-05)
 
 ### [0.11.5](https://github.com/ecomclub/modules-api/compare/v0.11.4...v0.11.5) (2019-12-05)
