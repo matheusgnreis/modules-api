@@ -140,11 +140,11 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
         if (amount.total < 0) {
           amount.total = 0
         }
+        // also save amount to checkout and order body objects
+        checkoutBody.amount = amount
+        orderBody.amount = amount
       }
-      // also save amount to checkout and order body objects
       checkoutBody.subtotal = subtotal
-      checkoutBody.amount = amount
-      orderBody.amount = amount
 
       const createOrder = () => {
         // start creating new order to API
