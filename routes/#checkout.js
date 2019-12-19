@@ -409,18 +409,18 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
                   // handle discount by payment method
                   if (discount && discount.apply_at && (maxDiscount = amount[discount.apply_at])) {
-                    if (amount.discount < discount) {
-                      // update amount discount and total
-                      if (discount.type === 'percentage') {
-                        amount.discount = maxDiscount * discount.value / 100
-                      } else {
-                        amount.discount = discount.value
+                    // update amount discount and total
+                    let discountValue
+                    if (discount.type === 'percentage') {
+                      discountValue = maxDiscount * discount.value / 100
+                    } else {
+                      discountValue = discount.value
+                      if (discountValue > maxDiscount) {
+                        discountValue = maxDiscount
                       }
-                      if (amount.discount > maxDiscount) {
-                        amount.discount = maxDiscount
-                      }
-                      fixTotal()
                     }
+                    amount.discount += discountValue
+                    fixTotal()
                   }
                   // add to order body
                   orderBody.payment_method_label = paymentGateway.label || ''
