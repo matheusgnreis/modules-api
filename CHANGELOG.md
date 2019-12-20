@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.11.12](https://github.com/ecomclub/modules-api/compare/v0.11.11...v0.11.12) (2019-12-20)
+
+
+### Bug Fixes
+
+* **checkout:** set transaction status.updated_at ([85cca14](https://github.com/ecomclub/modules-api/commit/85cca14))
+
 ### [0.11.11](https://github.com/ecomclub/modules-api/compare/v0.11.10...v0.11.11) (2019-12-20)
 
 
