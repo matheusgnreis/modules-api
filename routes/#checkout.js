@@ -260,6 +260,9 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                       current: 'pending'
                     }
                   }
+                  const dateTime = new Date().toISOString()
+                  transaction.status.updated_at = dateTime
+
                   // merge transaction body with order info and respond
                   checkoutRespond({
                     order: {
@@ -274,7 +277,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                   // add entry to payments history
                   const paymentEntry = {
                     status: transaction.status.current,
-                    date_time: new Date().toISOString(),
+                    date_time: dateTime,
                     flags: ['checkout']
                   }
                   setTimeout(() => {
