@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.11.10](https://github.com/ecomclub/modules-api/compare/v0.11.9...v0.11.10) (2019-12-20)
+
+
+### Bug Fixes
+
+* **checkout:** ensure amount total decimal fix ([d3baa6c](https://github.com/ecomclub/modules-api/commit/d3baa6c))
+
 ### [0.11.9](https://github.com/ecomclub/modules-api/compare/v0.11.8...v0.11.9) (2019-12-20)
 
 
