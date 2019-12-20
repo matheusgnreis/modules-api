@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.11.9](https://github.com/ecomclub/modules-api/compare/v0.11.8...v0.11.9) (2019-12-20)
+
+
+### Bug Fixes
+
+* **checkout:** round all amount fields to 2 digits ([c6e15ea](https://github.com/ecomclub/modules-api/commit/c6e15ea))
+
 ### [0.11.8](https://github.com/ecomclub/modules-api/compare/v0.11.7...v0.11.8) (2019-12-19)
 
 
