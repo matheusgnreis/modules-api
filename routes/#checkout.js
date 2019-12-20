@@ -128,14 +128,18 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
         // pass each item to prevent object overwrite
         orderBody.items.push(Object.assign({}, item))
       })
-      subtotal = Math.round(subtotal * 100) / 100
-      let amount = {
-        total: subtotal,
+      const amount = {
         subtotal,
         discount: 0,
         freight: 0
       }
-      let fixTotal = () => {
+
+      const fixAmount = () => {
+        for (const field in amount) {
+          if (amount[field] > 0) {
+            amount[field] = Math.round(amount[field] * 100) / 100
+          }
+        }
         amount.total = amount.subtotal + amount.freight - amount.discount
         if (amount.total < 0) {
           amount.total = 0
@@ -144,6 +148,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
         checkoutBody.amount = amount
         orderBody.amount = amount
       }
+      fixAmount()
       checkoutBody.subtotal = subtotal
 
       const createOrder = () => {
@@ -319,7 +324,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                   freight = 0
                 }
                 amount.freight = freight
-                fixTotal()
+                fixAmount()
 
                 // app info
                 let shippingApp = {
@@ -367,7 +372,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
               if (extraDiscount && extraDiscount.value) {
                 // update amount and save extra discount to order body
                 amount.discount += extraDiscount.value
-                fixTotal()
+                fixAmount()
                 orderBody.extra_discount = {
                   ...checkoutBody.discount,
                   ...extraDiscount,
@@ -420,7 +425,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                       }
                     }
                     amount.discount += discountValue
-                    fixTotal()
+                    fixAmount()
                   }
                   // add to order body
                   orderBody.payment_method_label = paymentGateway.label || ''
