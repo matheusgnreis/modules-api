@@ -272,13 +272,13 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                   saveTransaction(transaction, orderId, storeId)
 
                   // add entry to payments history
+                  const paymentEntry = {
+                    status: transaction.status.current,
+                    date_time: new Date().toISOString(),
+                    flags: ['checkout']
+                  }
                   setTimeout(() => {
-                    const body = {
-                      status: transaction.status.current,
-                      date_time: new Date().toISOString(),
-                      flags: ['checkout']
-                    }
-                    Api('orders/' + orderId + '/payments_history.json', 'POST', body, storeId)
+                    Api('orders/' + orderId + '/payments_history.json', 'POST', paymentEntry, storeId)
                   }, 400)
                   return
                 }
