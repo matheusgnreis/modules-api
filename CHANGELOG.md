@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.11.14](https://github.com/ecomclub/modules-api/compare/v0.11.13...v0.11.14) (2020-01-15)
+
+
+### Bug Fixes
+
+* **list-payments:** add param to check support for 'fetch_when_selected' ([8d6ebac](https://github.com/ecomclub/modules-api/commit/8d6ebac))
+
 ### [0.11.13](https://github.com/ecomclub/modules-api/compare/v0.11.12...v0.11.13) (2020-01-15)
 
 
