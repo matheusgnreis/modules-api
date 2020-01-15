@@ -428,6 +428,33 @@ const schema = {
       },
       'description': 'Customer object'
     },
+    'payment_method': {
+      'type': 'object',
+      'required': [ 'code' ],
+      'additionalProperties': false,
+      'properties': {
+        'code': {
+          'type': 'string',
+          'enum': [
+            'credit_card',
+            'banking_billet',
+            'online_debit',
+            'account_deposit',
+            'debit_card',
+            'balance_on_intermediary',
+            'loyalty_points',
+            'other'
+          ],
+          'description': 'Standardized payment method code'
+        },
+        'name': {
+          'type': 'string',
+          'maxLength': 200,
+          'description': 'Short description for payment method'
+        }
+      },
+      'description': 'Optional payment method selected by customer (if already selected)'
+    },
     'is_checkout_confirmation': {
       'type': 'boolean',
       'default': false,
@@ -731,6 +758,11 @@ const responseSchema = {
               }
             },
             'description': 'Gateway web JS SDK, usually to handle credit cards with encryption'
+          },
+          'fetch_when_selected': {
+            'type': 'boolean',
+            'default': false,
+            'description': 'Resend list payments request if this payment gateway is selected'
           }
         },
         'description': 'Payment option (gateway)'
