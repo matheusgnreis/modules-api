@@ -455,6 +455,11 @@ const schema = {
       },
       'description': 'Optional payment method selected by customer (if already selected)'
     },
+    'can_fetch_when_selected': {
+      'type': 'boolean',
+      'default': false,
+      'description': 'Whether list payments can be refetched on client when payment selected'
+    },
     'is_checkout_confirmation': {
       'type': 'boolean',
       'default': false,
