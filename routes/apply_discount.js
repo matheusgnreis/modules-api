@@ -209,7 +209,6 @@ const schema = {
     'customer': {
       'type': 'object',
       'additionalProperties': false,
-      'required': [ 'main_email', 'name' ],
       'properties': {
         '_id': {
           'type': [ 'null', 'string' ],
