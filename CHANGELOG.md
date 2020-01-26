@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.11.16](https://github.com/ecomclub/modules-api/compare/v0.11.15...v0.11.16) (2020-01-26)
+
+
+### Features
+
+* **appy-discount:** add 'available_extra_discount' field (utm in shelf) ([50b6aa1](https://github.com/ecomclub/modules-api/commit/50b6aa1))
+
 ### [0.11.15](https://github.com/ecomclub/modules-api/compare/v0.11.14...v0.11.15) (2020-01-23)
 
 
