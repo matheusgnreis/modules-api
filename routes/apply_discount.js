@@ -232,6 +232,38 @@ const responseSchema = {
   'type': 'object',
   'additionalProperties': false,
   'properties': {
+    'available_extra_discount': {
+      'type': 'object',
+      'required': [ 'value' ],
+      'additionalProperties': false,
+      'properties': {
+        'min_amount': {
+          'type': 'integer',
+          'minimum': 1,
+          'maximum': 999999999,
+          'description': 'Minimum amount to apply the discount'
+        },
+        'label': {
+          'type': 'string',
+          'maxLength': 50,
+          'description': 'Name of discount campaign'
+        },
+        'type': {
+          'type': 'string',
+          'enum': [ 'percentage', 'fixed' ],
+          'default': 'percentage',
+          'description': 'Discount type'
+        },
+        'value': {
+          'type': 'number',
+          // 'multipleOf': 0.0001,
+          'minimum': 0,
+          'maximum': 99999999,
+          'description': 'Discount value, percentage or fixed'
+        }
+      },
+      'description': 'Available but not yet applied discount campaign'
+    },
     'discount_rule': {
       'type': 'object',
       'required': [ 'extra_discount' ],
