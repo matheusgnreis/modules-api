@@ -673,69 +673,6 @@ const schema = {
           'type': 'string',
           'maxLength': 255,
           'description': 'Payment or order ID if pre committed on gateway (authorization/capture)'
-        },
-        'utm': {
-          'type': 'object',
-          'additionalProperties': false,
-          'properties': {
-            'source': {
-              'type': 'string',
-              'maxLength': 100,
-              'description': 'Parameter "utm_source", the referrer: (e.g. google, newsletter)'
-            },
-            'medium': {
-              'type': 'string',
-              'maxLength': 100,
-              'description': 'Parameter "utm_medium", the marketing medium: (e.g. cpc, banner, email)'
-            },
-            'campaign': {
-              'type': 'string',
-              'maxLength': 200,
-              'description': 'Parameter "utm_campaign", the product, promo code, or slogan (e.g. spring_sale)'
-            },
-            'term': {
-              'type': 'string',
-              'maxLength': 100,
-              'description': 'Parameter "utm_term", identifies the paid keywords'
-            },
-            'content': {
-              'type': 'string',
-              'maxLength': 255,
-              'description': 'Parameter "utm_content", used to differentiate ads'
-            }
-          },
-          'description': 'UTM campaign HTTP parameters'
-        },
-        'affiliate_code': {
-          'type': 'string',
-          'maxLength': 200,
-          'description': 'Code to identify the affiliate that referred the customer'
-        },
-        'browser_ip': {
-          'type': 'string',
-          'maxLength': 30,
-          'format': 'ipv4',
-          'description': 'IP address of the browser used by the customer when placing the order'
-        },
-        'channel_id': {
-          'type': 'integer',
-          'min': 10000,
-          'max': 4294967295,
-          'description': 'Channel unique identificator'
-        },
-        'channel_type': {
-          'type': 'string',
-          'maxLength': 20,
-          'enum': [ 'ecommerce', 'mobile', 'pdv', 'button', 'facebook', 'chatbot' ],
-          'default': 'ecommerce',
-          'description': 'Channel type or source'
-        },
-        'domain': {
-          'type': 'string',
-          'minLength': 4,
-          'maxLength': 100,
-          'pattern': '^[0-9a-z-.]+$',
-          'description': 'Store domain name (numbers and lowercase letters, eg.: www.myshop.sample)'
         }
       },
       'description': 'Payment options to create transaction'
@@ -763,6 +700,69 @@ const schema = {
       'type': 'string',
       'pattern': '^[a-z]{2}(_[a-z]{2})?$',
       'description': 'Language two letters code, sometimes with region, eg.: pt_br, fr, en_us'
+    },
+    'utm': {
+      'type': 'object',
+      'additionalProperties': false,
+      'properties': {
+        'source': {
+          'type': 'string',
+          'maxLength': 100,
+          'description': 'Parameter "utm_source", the referrer: (e.g. google, newsletter)'
+        },
+        'medium': {
+          'type': 'string',
+          'maxLength': 100,
+          'description': 'Parameter "utm_medium", the marketing medium: (e.g. cpc, banner, email)'
+        },
+        'campaign': {
+          'type': 'string',
+          'maxLength': 200,
+          'description': 'Parameter "utm_campaign", the product, promo code, or slogan (e.g. spring_sale)'
+        },
+        'term': {
+          'type': 'string',
+          'maxLength': 100,
+          'description': 'Parameter "utm_term", identifies the paid keywords'
+        },
+        'content': {
+          'type': 'string',
+          'maxLength': 255,
+          'description': 'Parameter "utm_content", used to differentiate ads'
+        }
+      },
+      'description': 'UTM campaign HTTP parameters'
+    },
+    'affiliate_code': {
+      'type': 'string',
+      'maxLength': 200,
+      'description': 'Code to identify the affiliate that referred the customer'
+    },
+    'browser_ip': {
+      'type': 'string',
+      'maxLength': 30,
+      'format': 'ipv4',
+      'description': 'IP address of the browser used by the customer when placing the order'
+    },
+    'channel_id': {
+      'type': 'integer',
+      'min': 10000,
+      'max': 4294967295,
+      'description': 'Channel unique identificator'
+    },
+    'channel_type': {
+      'type': 'string',
+      'maxLength': 20,
+      'enum': [ 'ecommerce', 'mobile', 'pdv', 'button', 'facebook', 'chatbot' ],
+      'default': 'ecommerce',
+      'description': 'Channel type or source'
+    },
+    'domain': {
+      'type': 'string',
+      'minLength': 4,
+      'maxLength': 100,
+      'pattern': '^[0-9a-z-.]+$',
+      'description': 'Store domain name (numbers and lowercase letters, eg.: www.myshop.sample)'
     },
     'customer': {
       'type': 'object',
