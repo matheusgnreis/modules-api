@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.11.17](https://github.com/ecomclub/modules-api/compare/v0.11.16...v0.11.17) (2020-01-27)
+
+
+### Bug Fixes
+
+* **checkout:** fix checkout schema moving some props from transaction ([9ce7742](https://github.com/ecomclub/modules-api/commit/9ce7742))
+
 ### [0.11.16](https://github.com/ecomclub/modules-api/compare/v0.11.15...v0.11.16) (2020-01-26)
 
 
