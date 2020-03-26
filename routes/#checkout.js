@@ -167,7 +167,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
             // send error response
             if (err) {
               logger.error(err)
-              checkoutRespond({}, null, 500, 'CKT701', usrMsg)
+              checkoutRespond({}, null, 409, 'CKT701', usrMsg)
             } else {
               if (typeof statusCode !== 'number') {
                 statusCode = 400
@@ -191,10 +191,10 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
               // send error response
               if (err) {
                 logger.error(err)
-                checkoutRespond({}, null, 500, 'CKT703', null, usrMsg)
+                checkoutRespond({}, null, 409, 'CKT703', null, usrMsg)
               } else {
                 if (typeof statusCode !== 'number') {
-                  statusCode = 500
+                  statusCode = 409
                 }
                 checkoutRespond({}, null, statusCode, 'CKT704', devMsg, usrMsg)
               }
