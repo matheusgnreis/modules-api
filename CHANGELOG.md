@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.11.20](https://github.com/ecomplus/modules-api/compare/v0.11.19...v0.11.20) (2020-04-05)
+
+
+### Bug Fixes
+
+* **checkout:** trying list of valid results for each module ([94f582e](https://github.com/ecomplus/modules-api/commit/94f582e65e54df84295fbe11e4fbc446d9e9bc24))
+
 ### [0.11.19](https://github.com/ecomplus/modules-api/compare/v0.11.18...v0.11.19) (2020-03-26)
 
 
