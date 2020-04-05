@@ -79,9 +79,10 @@ const simulateRequest = (checkoutBody, checkoutRespond, label, storeId, callback
 }
 
 // filter modules response
-const getModuleResult = (results, checkProp) => {
+const getValidResults = (results, checkProp) => {
   // results array returned from module
   // see ./#applications.js
+  let validResults = []
   if (Array.isArray(results)) {
     for (let i = 0; i < results.length; i++) {
       const result = results[i]
@@ -95,11 +96,11 @@ const getModuleResult = (results, checkProp) => {
           }
         }
         // use it
-        return result
+        validResults.push(result)
       }
     }
   }
-  return null
+  return validResults
 }
 
 module.exports = (checkoutBody, checkoutRespond, storeId) => {
@@ -218,8 +219,9 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
             // finally pass to create transaction
             simulateRequest(transactionBody, checkoutRespond, 'transaction', storeId, results => {
               // logger.log(results)
-              let result = getModuleResult(results, 'transaction')
-              if (result) {
+              const validResults = getValidResults(results, 'transaction')
+              for (let i = 0; i < validResults.length; i++) {
+                let result = validResults[i]
                 // treat transaction response
                 let response = result.response
                 let transaction
@@ -305,8 +307,9 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
       // simulate requets to calculate shipping endpoint
       simulateRequest(checkoutBody, checkoutRespond, 'shipping', storeId, results => {
-        let result = getModuleResult(results, 'shipping_services')
-        if (result) {
+        const validResults = getValidResults(results, 'shipping_services')
+        for (let i = 0; i < validResults.length; i++) {
+          let result = validResults[i]
           // treat calculate shipping response
           let response = result.response
           if (response && response.shipping_services) {
@@ -363,8 +366,9 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
       const applyDiscount = () => {
         // simulate request to apply discount endpoint to get extra discount value
         simulateRequest(checkoutBody, checkoutRespond, 'discount', storeId, results => {
-          let result = getModuleResult(results)
-          if (result) {
+          const validResults = getValidResults(results)
+          for (let i = 0; i < validResults.length; i++) {
+            let result = validResults[i]
             // treat apply discount response
             let response = result.response
             if (response && response.discount_rule) {
@@ -385,6 +389,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                     _id: result._id
                   }
                 }
+                break
               }
             }
           }
@@ -397,8 +402,9 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
       const listPayments = () => {
         // simulate requets to list payments endpoint
         simulateRequest(checkoutBody, checkoutRespond, 'payment', storeId, results => {
-          let result = getModuleResult(results, 'payment_gateways')
-          if (result) {
+          const validResults = getValidResults(results, 'payment_gateways')
+          for (let i = 0; i < validResults.length; i++) {
+            let result = validResults[i]
             // treat list payments response
             let response = result.response
             if (response && response.payment_gateways) {
