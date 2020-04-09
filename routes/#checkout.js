@@ -308,7 +308,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                   errorMessage = firstResult.error_message
                 }
               }
-              errorCallback(null, 409, errorMessage || 'No valid transaction object from /create_transaction')
+              errorCallback(null, null, errorMessage || 'No valid transaction object')
 
               // cancel the created order
               setTimeout(() => {
