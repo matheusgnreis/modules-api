@@ -290,13 +290,34 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
               }
 
               // unexpected response object from create transaction module
-              errorCallback(null, null, 'No valid transaction object from /create_transaction')
+              const firstResult = results && results[0]
+              let errorMessage
+              if (firstResult) {
+                const { response } = firstResult
+                if (response) {
+                  // send devMsg with app response
+                  if (response.message) {
+                    errorMessage = response.message
+                    if (response.error) {
+                      errorMessage += ` (${response.error})`
+                    }
+                  } else {
+                    errorMessage = JSON.stringify(response)
+                  }
+                } else {
+                  errorMessage = firstResult.error_message
+                }
+              }
+              errorCallback(null, 409, errorMessage || 'No valid transaction object from /create_transaction')
 
               // cancel the created order
               setTimeout(() => {
                 const body = {
                   status: 'cancelled',
                   staff_notes: 'Error trying to create transaction'
+                }
+                if (errorMessage) {
+                  body.staff_notes += ` - \`${errorMessage.substring(0, 200)}\``
                 }
                 Api('orders/' + orderId + '.json', 'PATCH', body, storeId)
               }, 400)
