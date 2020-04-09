@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.12.0](https://github.com/ecomplus/modules-api/compare/v0.11.22...v0.12.0) (2020-04-09)
+
+
+### Bug Fixes
+
+* **modules:** add break lines to tmp log, debug with json stringify ([82a48e9](https://github.com/ecomplus/modules-api/commit/82a48e9ecba07bed404e14c4833d2d4ac42630ab))
+* **modules:** stop trying to debug circular response structure ([4acd1ad](https://github.com/ecomplus/modules-api/commit/4acd1add43dd4d42eef235436bc7db6e86b1d2fa))
+
 ### [0.11.22](https://github.com/ecomplus/modules-api/compare/v0.11.21...v0.11.22) (2020-04-09)
 
 
