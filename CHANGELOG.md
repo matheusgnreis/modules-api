@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.11.22](https://github.com/ecomplus/modules-api/compare/v0.11.21...v0.11.22) (2020-04-09)
+
+
+### Features
+
+* **debug:** tmp log file with for current app request and response ([e402be3](https://github.com/ecomplus/modules-api/commit/e402be37740b06650a48963126e118f93b859354))
+
 ### [0.11.21](https://github.com/ecomplus/modules-api/compare/v0.11.20...v0.11.21) (2020-04-09)
 
 
