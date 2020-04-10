@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.1](https://github.com/ecomplus/modules-api/compare/v0.12.0...v0.12.1) (2020-04-10)
+
+
+### Bug Fixes
+
+* **apply-discount:** accepting discount value less than 1 ([12b95dd](https://github.com/ecomplus/modules-api/commit/12b95dd3594b561b5ce9099fd4403b6bcc9d2e97))
+
 ## [0.12.0](https://github.com/ecomplus/modules-api/compare/v0.11.22...v0.12.0) (2020-04-09)
 
 
