@@ -287,7 +287,7 @@ const responseSchema = {
             'value': {
               'type': 'number',
               // 'multipleOf': 0.00001,
-              'minimum': 1,
+              'minimum': 0.01,
               'maximum': 9999999999,
               'description': 'Extra discount value'
             },
