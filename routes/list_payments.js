@@ -743,6 +743,24 @@ const responseSchema = {
                 },
                 'description': 'Function to call for credit card hash generation, must return hash string'
               },
+              'cc_installments': {
+                'type': 'object',
+                'required': [ 'function' ],
+                'additionalProperties': false,
+                'properties': {
+                  'function': {
+                    'type': 'string',
+                    'maxLength': 50,
+                    'description': 'Func name, receives obj with `number` and `amount` (total)'
+                  },
+                  'is_promise': {
+                    'type': 'boolean',
+                    'default': false,
+                    'description': 'If it is a Promise, use for async process'
+                  }
+                },
+                'description': 'Optional function to get `installment_options` array from card number'
+              },
               'cc_brand': {
                 'type': 'object',
                 'required': [ 'function' ],
@@ -759,7 +777,7 @@ const responseSchema = {
                     'description': 'If it is a Promise, use for async process'
                   }
                 },
-                'description': 'Function to call for card validation, must return brand string or false'
+                'description': 'Optional function to call for card validation, returns brand name or false'
               }
             },
             'description': 'Gateway web JS SDK, usually to handle credit cards with encryption'
