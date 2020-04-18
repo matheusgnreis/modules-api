@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.2](https://github.com/ecomplus/modules-api/compare/v0.12.1...v0.12.2) (2020-04-18)
+
+
+### Features
+
+* **list-payments:** add  to js client object ([1694407](https://github.com/ecomplus/modules-api/commit/1694407d0841b22bfe174dcb1c94617d66b56de4))
+
 ### [0.12.1](https://github.com/ecomplus/modules-api/compare/v0.12.0...v0.12.1) (2020-04-10)
 
 
