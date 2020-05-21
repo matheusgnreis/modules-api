@@ -367,8 +367,8 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                 ]
                 orderBody.shipping_method_label = shippingService.label || ''
 
-                // continue to discount step
-                applyDiscount()
+                // proceed to list payments
+                listPayments()
                 return
               }
             }
@@ -383,42 +383,6 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
         let devMsg = 'Any valid shipping service from /calculate_shipping module'
         checkoutRespond({}, null, 400, 'CKT901', devMsg, usrMsg)
       })
-
-      const applyDiscount = () => {
-        // simulate request to apply discount endpoint to get extra discount value
-        simulateRequest(checkoutBody, checkoutRespond, 'discount', storeId, results => {
-          const validResults = getValidResults(results)
-          for (let i = 0; i < validResults.length; i++) {
-            let result = validResults[i]
-            // treat apply discount response
-            let response = result.response
-            if (response && response.discount_rule) {
-              // check discount value
-              const discountRule = response.discount_rule
-              const extraDiscount = discountRule.extra_discount
-
-              if (extraDiscount && extraDiscount.value) {
-                // update amount and save extra discount to order body
-                amount.discount += extraDiscount.value
-                fixAmount()
-                orderBody.extra_discount = {
-                  ...checkoutBody.discount,
-                  ...extraDiscount,
-                  // app info
-                  app: {
-                    ...discountRule,
-                    _id: result._id
-                  }
-                }
-                break
-              }
-            }
-          }
-
-          // proceed to list payments anyway
-          listPayments()
-        })
-      }
 
       const listPayments = () => {
         // simulate requets to list payments endpoint
@@ -460,8 +424,8 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                   // add to order body
                   orderBody.payment_method_label = paymentGateway.label || ''
 
-                  // finally start creating new order
-                  createOrder()
+                  // continue to discount step
+                  applyDiscount()
                   return
                 }
               }
@@ -475,6 +439,42 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
           }
           let devMsg = 'Any valid payment gateway from /list_payments module'
           checkoutRespond({}, null, 400, 'CKT902', devMsg, usrMsg)
+        })
+      }
+
+      const applyDiscount = () => {
+        // simulate request to apply discount endpoint to get extra discount value
+        simulateRequest(checkoutBody, checkoutRespond, 'discount', storeId, results => {
+          const validResults = getValidResults(results)
+          for (let i = 0; i < validResults.length; i++) {
+            let result = validResults[i]
+            // treat apply discount response
+            let response = result.response
+            if (response && response.discount_rule) {
+              // check discount value
+              const discountRule = response.discount_rule
+              const extraDiscount = discountRule.extra_discount
+
+              if (extraDiscount && extraDiscount.value) {
+                // update amount and save extra discount to order body
+                amount.discount += extraDiscount.value
+                fixAmount()
+                orderBody.extra_discount = {
+                  ...checkoutBody.discount,
+                  ...extraDiscount,
+                  // app info
+                  app: {
+                    ...discountRule,
+                    _id: result._id
+                  }
+                }
+                break
+              }
+            }
+          }
+
+          // finally start creating new order
+          createOrder()
         })
       }
     } else {
