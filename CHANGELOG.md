@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.3](https://github.com/ecomplus/modules-api/compare/v0.12.2...v0.12.3) (2020-05-21)
+
+
+### Bug Fixes
+
+* **checkout:** list payments first, then proceed to discounts ([c12597b](https://github.com/ecomplus/modules-api/commit/c12597bf8a16367104093e125fb13413eac6f748))
+
 ### [0.12.2](https://github.com/ecomplus/modules-api/compare/v0.12.1...v0.12.2) (2020-04-18)
 
 
