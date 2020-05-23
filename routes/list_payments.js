@@ -506,7 +506,6 @@ const responseSchema = {
     },
     'discount_option': {
       'type': 'object',
-      'required': [ 'value' ],
       'additionalProperties': false,
       'properties': {
         'min_amount': {
@@ -529,6 +528,7 @@ const responseSchema = {
         'value': {
           'type': 'number',
           // 'multipleOf': 0.0001,
+          'default': 0,
           'minimum': -99999999,
           'maximum': 99999999,
           'description': 'Discount value, percentage or fixed'
@@ -627,7 +627,6 @@ const responseSchema = {
           },
           'discount': {
             'type': 'object',
-            'required': [ 'value' ],
             'additionalProperties': false,
             'properties': {
               'apply_at': {
@@ -645,6 +644,7 @@ const responseSchema = {
               'value': {
                 'type': 'number',
                 // 'multipleOf': 0.0001,
+                'default': 0,
                 'minimum': -99999999,
                 'maximum': 99999999,
                 'description': 'Discount value, percentage or fixed'
