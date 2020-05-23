@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.4](https://github.com/ecomplus/modules-api/compare/v0.12.3...v0.12.4) (2020-05-23)
+
+
+### Bug Fixes
+
+* **list-payments:** prevent error with discount object without value ([022520d](https://github.com/ecomplus/modules-api/commit/022520dcc25bcb4db408c9d1ead05ac3fb7896c3))
+
 ### [0.12.3](https://github.com/ecomplus/modules-api/compare/v0.12.2...v0.12.3) (2020-05-21)
 
 
