@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.9](https://github.com/ecomplus/modules-api/compare/v0.12.8...v0.12.9) (2020-06-05)
+
+
+### Bug Fixes
+
+* **checkout:** stop hard removing order body items by flags ([c965cd9](https://github.com/ecomplus/modules-api/commit/c965cd9eddb84111145d5bcf90fe25688caf831d))
+
 ### [0.12.8](https://github.com/ecomplus/modules-api/compare/v0.12.7...v0.12.8) (2020-06-05)
 
 
