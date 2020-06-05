@@ -492,12 +492,6 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
             }
           }
 
-          // remove invalid freebie items if any
-          orderBody.items = orderBody.items.filter(({ flags }) => {
-            return !Array.isArray(flags) ||
-              !flags.includes('freebie') ||
-              flags.includes('discount-set-free')
-          })
           // finally start creating new order
           createOrder()
         })
