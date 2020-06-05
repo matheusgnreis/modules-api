@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.6](https://github.com/ecomplus/modules-api/compare/v0.12.5...v0.12.6) (2020-06-05)
+
+
+### Bug Fixes
+
+* **checkout:** fix handling freebie items (force final price) ([831e16f](https://github.com/ecomplus/modules-api/commit/831e16f76afd603b14a282944f772ec1194f72f7))
+
 ### [0.12.5](https://github.com/ecomplus/modules-api/compare/v0.12.4...v0.12.5) (2020-06-05)
 
 
