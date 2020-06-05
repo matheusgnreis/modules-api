@@ -479,7 +479,10 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                     if (!item.flags) {
                       item.flags = []
                     }
-                    if (response.freebie_product_ids.includes(item._id) && item.quantity === 1) {
+                    if (
+                      response.freebie_product_ids.includes(item.product_id) &&
+                      item.quantity === 1
+                    ) {
                       item.flags.push('discount-set-free')
                     }
                   })
