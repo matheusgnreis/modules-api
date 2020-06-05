@@ -285,6 +285,17 @@ const schema = {
               }
             },
             'description': 'Gift wrap chosen by customer'
+          },
+          'flags': {
+            'type': 'array',
+            'uniqueItems': true,
+            'maxItems': 10,
+            'items': {
+              'type': 'string',
+              'maxLength': 20,
+              'description': 'Flag title'
+            },
+            'description': 'Flags to associate additional info'
           }
         }
       }
