@@ -312,6 +312,16 @@ const responseSchema = {
       'type': 'string',
       'maxLength': 255,
       'description': 'Short message for curtomer if coupon/campaign tried is invalid'
+    },
+    'freebie_product_ids': {
+      'type': 'array',
+      'maxItems': 3000,
+      'items': {
+        'type': 'string',
+        'pattern': '^[a-f0-9]{24}$',
+        'description': 'Product ID'
+      },
+      'description': 'List of available freebie (gift) products'
     }
   }
 }

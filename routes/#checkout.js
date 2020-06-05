@@ -468,6 +468,16 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                     _id: result._id
                   }
                 }
+
+                if (response.freebie_product_ids) {
+                  // mark items provided for free
+                  orderBody.items.forEach(item => {
+                    if (!item.flags) {
+                      item.flags = []
+                    }
+                    item.flags.push('discount-set-free')
+                  })
+                }
                 break
               }
             }
