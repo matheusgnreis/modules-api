@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.8](https://github.com/ecomplus/modules-api/compare/v0.12.7...v0.12.8) (2020-06-05)
+
+
+### Bug Fixes
+
+* **checkout:** fix checking freebit product ids (match items) ([a779a68](https://github.com/ecomplus/modules-api/commit/a779a68e435ee05d76e18a2fd55e1f9fc777d3d3))
+
 ### [0.12.7](https://github.com/ecomplus/modules-api/compare/v0.12.6...v0.12.7) (2020-06-05)
 
 
