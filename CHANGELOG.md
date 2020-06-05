@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.5](https://github.com/ecomplus/modules-api/compare/v0.12.4...v0.12.5) (2020-06-05)
+
+
+### Features
+
+* **apply-discount:** add optional 'freebie_product_ids' to response ([28d245d](https://github.com/ecomplus/modules-api/commit/28d245df709a98dcc80f9ac7c7d3dbfa6129d445))
+
 ### [0.12.4](https://github.com/ecomplus/modules-api/compare/v0.12.3...v0.12.4) (2020-05-23)
 
 
