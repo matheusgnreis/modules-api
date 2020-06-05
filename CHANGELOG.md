@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.7](https://github.com/ecomplus/modules-api/compare/v0.12.6...v0.12.7) (2020-06-05)
+
+
+### Bug Fixes
+
+* **checkout:** accept items flags on request body ([eb2b2a7](https://github.com/ecomplus/modules-api/commit/eb2b2a7b25016847e6202cf18d859453f61323d5))
+
 ### [0.12.6](https://github.com/ecomplus/modules-api/compare/v0.12.5...v0.12.6) (2020-06-05)
 
 
