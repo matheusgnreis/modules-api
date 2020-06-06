@@ -125,11 +125,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
       // count subtotal value
       let subtotal = 0
       items.forEach(item => {
-        if (!Array.isArray(item.flags) || !item.flags.includes('freebie')) {
-          subtotal += (item.final_price * item.quantity)
-        } else {
-          item.final_price = 0
-        }
+        subtotal += (item.final_price * item.quantity)
         // pass each item to prevent object overwrite
         orderBody.items.push(Object.assign({}, item))
       })
@@ -479,10 +475,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                     if (!item.flags) {
                       item.flags = []
                     }
-                    if (
-                      response.freebie_product_ids.includes(item.product_id) &&
-                      item.quantity === 1
-                    ) {
+                    if (response.freebie_product_ids.includes(item.product_id)) {
                       item.flags.push('discount-set-free')
                     }
                   })
