@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.10](https://github.com/ecomplus/modules-api/compare/v0.12.9...v0.12.10) (2020-06-06)
+
 ### [0.12.9](https://github.com/ecomplus/modules-api/compare/v0.12.8...v0.12.9) (2020-06-05)
 
 
