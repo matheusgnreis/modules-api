@@ -121,6 +121,20 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
         ],
         items: []
       }
+      // bypass some order fields
+      ;[
+        'utm',
+        'affiliate_code',
+        'browser_ip',
+        'channel_id',
+        'channel_type',
+        'domain',
+        'notes'
+      ].forEach(field => {
+        if (checkoutBody[field]) {
+          orderBody[field] = checkoutBody[field]
+        }
+      })
 
       // count subtotal value
       let subtotal = 0
