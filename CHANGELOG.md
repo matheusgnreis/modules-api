@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.12](https://github.com/ecomplus/modules-api/compare/v0.12.11...v0.12.12) (2020-08-03)
+
+
+### Features
+
+* **checkout:** add 'notes' field to entry schema ([897d1cb](https://github.com/ecomplus/modules-api/commit/897d1cb3f82ec9e90b75f6e7379afe6e6987139d))
+
+
+### Bug Fixes
+
+* **checkout:** bypass some order fields ([1688d33](https://github.com/ecomplus/modules-api/commit/1688d3305330503a7a54d0554a57220258941ee5))
+
 ### [0.12.11](https://github.com/ecomplus/modules-api/compare/v0.12.10...v0.12.11) (2020-06-06)
 
 
