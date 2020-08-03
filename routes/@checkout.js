@@ -775,6 +775,11 @@ const schema = {
       'pattern': '^[0-9a-z-.]+$',
       'description': 'Store domain name (numbers and lowercase letters, eg.: www.myshop.sample)'
     },
+    'notes': {
+      'type': 'string',
+      'maxLength': 255,
+      'description': 'Optional notes with additional info about this order'
+    },
     'customer': {
       'type': 'object',
       'additionalProperties': false,
