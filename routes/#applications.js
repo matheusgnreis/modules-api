@@ -26,7 +26,7 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
       '&type=external' +
       '&modules.' + modName + '.enabled=true' +
       '&fields=_id,app_id,version,data,hidden_data,modules.' + modName
-    if (appId) {
+    if (appId && (typeof appId === 'number' || (typeof appId === 'string' && /^\d+$/.test(appId)))) {
       endpoint += '&app_id=' + appId
     }
     let method = 'GET'
