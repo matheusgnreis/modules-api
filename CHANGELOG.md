@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.14](https://github.com/ecomplus/modules-api/compare/v0.12.13...v0.12.14) (2020-08-26)
+
+
+### Features
+
+* **checkout:** set order links if empty (checkout and status) ([73fd896](https://github.com/ecomplus/modules-api/commit/73fd89638892f0988ab0579d6177aa12a61fcdf4))
+
 ### [0.12.13](https://github.com/ecomplus/modules-api/compare/v0.12.12...v0.12.13) (2020-08-12)
 
 
