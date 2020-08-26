@@ -135,6 +135,15 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
           orderBody[field] = checkoutBody[field]
         }
       })
+      if (orderBody.domain) {
+        // consider default Storefront app routes
+        if (!orderBody.checkout_link) {
+          orderBody.checkout_link = `https://${orderBody.domain}/app/#/checkout/(_id)`
+        }
+        if (!orderBody.status_link) {
+          orderBody.status_link = `https://${orderBody.domain}/app/#/order/(_id)`
+        }
+      }
 
       // count subtotal value
       let subtotal = 0
