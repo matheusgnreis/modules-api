@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.15](https://github.com/ecomplus/modules-api/compare/v0.12.14...v0.12.15) (2020-10-26)
+
+
+### Features
+
+* **fix-items:** handling additional prices from customization fields ([ba8786b](https://github.com/ecomplus/modules-api/commit/ba8786b7ed3d01d45a1c88cc55f099268867dea0))
+
 ### [0.12.14](https://github.com/ecomplus/modules-api/compare/v0.12.13...v0.12.14) (2020-08-26)
 
 
