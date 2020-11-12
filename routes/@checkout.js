@@ -260,6 +260,38 @@ const schema = {
             },
             'description': 'Item customization fields'
           },
+          'kit_product': {
+            'type': 'object',
+            'additionalProperties': false,
+            'required': [ '_id' ],
+            'properties': {
+              '_id': {
+                'type': 'string',
+                'pattern': '^[a-f0-9]{24}$',
+                'description': 'Kit product ID'
+              },
+              'name': {
+                'type': 'string',
+                'maxLength': 255,
+                'description': 'Kit product full name'
+              },
+              'pack_quantity': {
+                'type': 'number',
+                // 'multipleOf': 0.0001,
+                'minimum': 0,
+                'maximum': 9999999,
+                'description': 'Total quantity of items to close a kit unit'
+              },
+              'price': {
+                'type': 'number',
+                // 'multipleOf': 0.00001,
+                'minimum': 0,
+                'maximum': 999999999,
+                'description': 'Kit total price'
+              }
+            },
+            'description': 'Parent kit product for this item'
+          },
           'gift_wrap': {
             'type': 'object',
             'required': [ 'label' ],
