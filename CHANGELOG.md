@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.17](https://github.com/ecomplus/modules-api/compare/v0.12.16...v0.12.17) (2020-11-12)
+
+
+### Bug Fixes
+
+* **checkout:** fix setting min packs num for kit ([3b3b06d](https://github.com/ecomplus/modules-api/commit/3b3b06d784daaeb8329cc8f9b818099a036bfd7c))
+
 ### [0.12.16](https://github.com/ecomplus/modules-api/compare/v0.12.15...v0.12.16) (2020-11-12)
 
 
