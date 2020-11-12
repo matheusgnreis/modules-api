@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.16](https://github.com/ecomplus/modules-api/compare/v0.12.15...v0.12.16) (2020-11-12)
+
+
+### Features
+
+* **checkout:** handling kit product from checkout items ([fd50fea](https://github.com/ecomplus/modules-api/commit/fd50fea22c8f2022d6985441b91cf01a74116f75))
+
 ### [0.12.15](https://github.com/ecomplus/modules-api/compare/v0.12.14...v0.12.15) (2020-10-26)
 
 
