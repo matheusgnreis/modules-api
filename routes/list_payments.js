@@ -519,6 +519,12 @@ const responseSchema = {
           'maxLength': 50,
           'description': 'Name of payment method that handle the discount'
         },
+        'apply_at': {
+          'type': 'string',
+          'enum': [ 'total', 'subtotal' ],
+          'default': 'subtotal',
+          'description': 'In which value the discount will be applied at checkout'
+        },
         'type': {
           'type': 'string',
           'enum': [ 'percentage', 'fixed' ],
