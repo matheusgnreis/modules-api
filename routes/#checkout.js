@@ -483,7 +483,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                   return paymentGateway.payment_method.name === paymentMethodName
                 })
               }
-              if (!possibleGateways) {
+              if (!paymentGateway) {
                 paymentGateway = possibleGateways[0]
               }
 
