@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.18](https://github.com/ecomplus/modules-api/compare/v0.12.17...v0.12.18) (2020-12-09)
+
+
+### Features
+
+* **list-payments:** edit response to accept 'discount_option.apply_at' ([9f26a0b](https://github.com/ecomplus/modules-api/commit/9f26a0b59f2b06a3e757045b22d5c57d3f940c1b))
+
+
+### Bug Fixes
+
+* **checkout:** prefer respective method name to select payemnt gateway ([1cbe4b7](https://github.com/ecomplus/modules-api/commit/1cbe4b7e06500a8eb041aa5493c1fc817cffdc13))
+
 ### [0.12.17](https://github.com/ecomplus/modules-api/compare/v0.12.16...v0.12.17) (2020-11-12)
 
 
