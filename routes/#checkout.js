@@ -464,41 +464,54 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
             // treat list payments response
             let response = result.response
             if (response && response.payment_gateways) {
-              // check chosen payment method code
-              let paymentMethodCode
+              // check chosen payment method code and name
+              let paymentMethodCode, paymentMethodName
               if (checkoutBody.transaction.payment_method) {
                 paymentMethodCode = checkoutBody.transaction.payment_method.code
+                paymentMethodName = checkoutBody.transaction.payment_method.name
               }
 
-              for (let i = 0; i < response.payment_gateways.length; i++) {
-                let paymentGateway = response.payment_gateways[i]
+              // filter gateways by method code
+              const possibleGateways = response.payment_gateways.filter(paymentGateway => {
                 let paymentMethod = paymentGateway.payment_method
-                if (!paymentMethodCode || (paymentMethod && paymentMethod.code === paymentMethodCode)) {
-                  let discount = paymentGateway.discount
-                  let maxDiscount
+                return !paymentMethodCode || (paymentMethod && paymentMethod.code === paymentMethodCode)
+              })
+              let paymentGateway
+              if (possibleGateways.length > 1 && paymentMethodName) {
+                // prefer respective method name
+                paymentGateway = possibleGateways.find(paymentGateway => {
+                  return paymentGateway.payment_method.name === paymentMethodName
+                })
+              }
+              if (!possibleGateways) {
+                paymentGateway = possibleGateways[0]
+              }
 
-                  // handle discount by payment method
-                  if (discount && discount.apply_at && (maxDiscount = amount[discount.apply_at])) {
-                    // update amount discount and total
-                    let discountValue
-                    if (discount.type === 'percentage') {
-                      discountValue = maxDiscount * discount.value / 100
-                    } else {
-                      discountValue = discount.value
-                      if (discountValue > maxDiscount) {
-                        discountValue = maxDiscount
-                      }
+              if (paymentGateway) {
+                let discount = paymentGateway.discount
+                let maxDiscount
+
+                // handle discount by payment method
+                if (discount && discount.apply_at && (maxDiscount = amount[discount.apply_at])) {
+                  // update amount discount and total
+                  let discountValue
+                  if (discount.type === 'percentage') {
+                    discountValue = maxDiscount * discount.value / 100
+                  } else {
+                    discountValue = discount.value
+                    if (discountValue > maxDiscount) {
+                      discountValue = maxDiscount
                     }
-                    amount.discount += discountValue
-                    fixAmount()
                   }
-                  // add to order body
-                  orderBody.payment_method_label = paymentGateway.label || ''
-
-                  // finally start creating new order
-                  createOrder()
-                  return
+                  amount.discount += discountValue
+                  fixAmount()
                 }
+                // add to order body
+                orderBody.payment_method_label = paymentGateway.label || ''
+
+                // finally start creating new order
+                createOrder()
+                return
               }
             }
           }
