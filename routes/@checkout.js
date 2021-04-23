@@ -460,6 +460,12 @@ const schema = {
           },
           'description': 'Credit card data, if payment will be done with credit card'
         },
+        'installments_number': {
+          'type': 'integer',
+          'minimum': 1,
+          'maximum': 199,
+          'description': 'Number of installments chosen'
+        },
         'loyalty_points_applied': {
           'type': 'object',
           'additionalProperties': false,
@@ -474,12 +480,6 @@ const schema = {
             }
           },
           'description': 'Customer\'s loyalty points used, program ID as property'
-        },
-        'installments_number': {
-          'type': 'integer',
-          'minimum': 1,
-          'maximum': 199,
-          'description': 'Number of installments chosen'
         },
         'open_payment_id': {
           'type': 'string',

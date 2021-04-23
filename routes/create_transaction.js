@@ -534,6 +534,21 @@ const schema = {
       'maximum': 199,
       'description': 'Number of installments chosen'
     },
+    'loyalty_points_applied': {
+      'type': 'object',
+      'additionalProperties': false,
+      'maxProperties': 30,
+      'patternProperties': {
+        '^[a-z0-9_]{2,30}$': {
+          'type': 'number',
+          // 'multipleOf': 0.00001,
+          'minimum': 0,
+          'maximum': 999999999,
+          'description': 'Number of loyalty points used'
+        }
+      },
+      'description': 'Customer\'s loyalty points used, program ID as property'
+    },
     'order_id': {
       'type': 'string',
       'pattern': '^[a-f0-9]{24}$',
