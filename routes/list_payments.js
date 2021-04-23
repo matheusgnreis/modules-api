@@ -542,6 +542,41 @@ const responseSchema = {
       },
       'description': 'Optional default discount option by payment method'
     },
+    'loyalty_points_programs': {
+      'type': 'object',
+      'additionalProperties': false,
+      'maxProperties': 30,
+      'patternProperties': {
+        '^[a-z0-9_]{2,30}$': {
+          'type': 'object',
+          'required': [ 'point_value' ],
+          'additionalProperties': false,
+          'properties': {
+            'name': {
+              'type': 'string',
+              'maxLength': 50,
+              'description': 'The name of the loyalty points program'
+            },
+            'point_value': {
+              'type': 'number',
+              // 'multipleOf': 0.00001,
+              'minimum': 0,
+              'maximum': 999999999,
+              'description': 'Point unit value in the current currency'
+            },
+            'max_points': {
+              'type': 'number',
+              // 'multipleOf': 0.00001,
+              'minimum': 0,
+              'maximum': 999999999,
+              'description': 'Maximum number of points to apply'
+            }
+          },
+          'description': 'Loyalty points program object'
+        }
+      },
+      'description': 'Available loyalty point programs, program ID as property'
+    },
     'payment_gateways': {
       'type': 'array',
       'maxItems': 30,
