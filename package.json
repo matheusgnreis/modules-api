@@ -11,17 +11,17 @@
   "license": "GPL-3.0",
   "private": true,
   "dependencies": {
-    "rest-auto-router": "3.x",
     "ajv": "5.x",
     "ajv-i18n": "2.x",
+    "axios": "^0.21.1",
     "console-files": "2.x",
-    "axios": "0.x",
-    "lodash.clonedeep": "4.x"
+    "lodash.clonedeep": "4.x",
+    "rest-auto-router": "3.x"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.2.0",
     "@commitlint/config-conventional": "^8.2.0",
-    "debug": "^4.1.1",
+    "debug": "^4.3.1",
     "husky": "^2.7.0",
     "standard": "^12.0.1",
     "standard-version": "^7.0.0"
