@@ -151,6 +151,21 @@ const schema = {
             'maximum': 9999999,
             'description': 'Item quantity in cart'
           },
+          'inventory': {
+            'type': 'object',
+            'additionalProperties': false,
+            'maxProperties': 100,
+            'patternProperties': {
+              '^[a-z0-9_]{2,30}$': {
+                'type': 'number',
+                // 'multipleOf': 0.0001,
+                'minimum': 0,
+                'maximum': 9999999,
+                'description': 'Product quantity available for sale from current warehouse'
+              }
+            },
+            'description': 'Warehouses by code and respective product stock'
+          },
           'currency_id': {
             'type': 'string',
             'pattern': '^[A-Z]{3}$',
@@ -580,6 +595,11 @@ const responseSchema = {
                 'type': 'string',
                 'format': 'date-time',
                 'description': 'When delivery will be made on the ISO 8601 date time representation'
+              },
+              'warehouse_code': {
+                'type': 'string',
+                'pattern': '^[a-z0-9_]{2,30}$',
+                'description': 'For multi DC, set warehouse where the stock will be handled'
               },
               'flags': {
                 'type': 'array',
