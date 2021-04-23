@@ -122,252 +122,6 @@ const schema = {
         }
       },
       'description': 'Address object'
-    }
-  },
-  'properties': {
-    'items': {
-      'type': 'array',
-      'maxItems': 3000,
-      'items': {
-        'type': 'object',
-        'additionalProperties': false,
-        'required': [ 'product_id', 'quantity' ],
-        'properties': {
-          'product_id': {
-            'type': 'string',
-            'pattern': '^[a-f0-9]{24}$',
-            'description': 'Product ID'
-          },
-          'variation_id': {
-            'type': 'string',
-            'pattern': '^[a-f0-9]{24}$',
-            'description': 'ID to specify the variation added to cart, if product has variations'
-          },
-          'quantity': {
-            'type': 'number',
-            // 'multipleOf': 0.0001,
-            'minimum': 0,
-            'maximum': 9999999,
-            'description': 'Item quantity in cart'
-          },
-          'picture': {
-            'type': 'object',
-            'additionalProperties': false,
-            'patternProperties': {
-              '^small|normal|big|zoom|custom$': {
-                'type': 'object',
-                'required': [ 'url' ],
-                'additionalProperties': false,
-                'properties': {
-                  'url': {
-                    'type': 'string',
-                    'maxLength': 255,
-                    'format': 'uri',
-                    'description': 'Image link'
-                  },
-                  'size': {
-                    'type': 'string',
-                    'maxLength': 11,
-                    'pattern': '^[1-9]([0-9]+)?x[1-9]([0-9]+)?$',
-                    'description': 'Image size (width x height) in px, such as 100x50 (100px width, 50px height)'
-                  },
-                  'alt': {
-                    'type': 'string',
-                    'maxLength': 255,
-                    'description': 'Alternative text, HTML alt tag (important for SEO)'
-                  }
-                },
-                'description': 'Image size variation'
-              }
-            },
-            'description': 'Product or variation picture for this cart item'
-          },
-          'customizations': {
-            'type': 'array',
-            'maxItems': 100,
-            'items': {
-              'type': 'object',
-              'required': [ '_id', 'option' ],
-              'additionalProperties': false,
-              'properties': {
-                '_id': {
-                  'type': 'string',
-                  'pattern': '^[a-f0-9]{24}$',
-                  'description': 'Customization field ID'
-                },
-                'label': {
-                  'type': 'string',
-                  'maxLength': 70,
-                  'description': 'Title for this customization field, can be the grid title'
-                },
-                'option': {
-                  'type': 'object',
-                  'required': [ 'text' ],
-                  'additionalProperties': false,
-                  'properties': {
-                    'option_id': {
-                      'type': 'string',
-                      'pattern': '^[a-z0-9_]{2,30}$',
-                      'description': 'Identify option if it was predefined (not custom value created by customer)'
-                    },
-                    'text': {
-                      'type': 'string',
-                      'maxLength': 70,
-                      'description': 'Option text value displayed for the client'
-                    },
-                    'colors': {
-                      'type': 'array',
-                      'maxItems': 6,
-                      'items': {
-                        'type': 'string',
-                        'pattern': '^#[a-f0-9]{6}$',
-                        'description': 'RGB code with #'
-                      },
-                      'description': 'Option color palette (if the field involves colors), starting by main color'
-                    }
-                  },
-                  'description': 'Option chosen or created by customer'
-                },
-                'attachment': {
-                  'type': 'string',
-                  'maxLength': 255,
-                  'format': 'uri',
-                  'description': 'URL of file attached by customer to this field'
-                },
-                'add_to_price': {
-                  'type': 'object',
-                  'required': [ 'addition' ],
-                  'additionalProperties': false,
-                  'properties': {
-                    'type': {
-                      'type': 'string',
-                      'enum': [ 'percentage', 'fixed' ],
-                      'default': 'percentage',
-                      'description': 'Type of price addition'
-                    },
-                    'addition': {
-                      'type': 'number',
-                      // 'multipleOf': 0.0001,
-                      'minimum': -99999999,
-                      'maximum': 99999999,
-                      'description': 'Additional value, could be negative'
-                    }
-                  },
-                  'description': 'Price alteration due to this customization'
-                }
-              },
-              'description': 'Customization field'
-            },
-            'description': 'Item customization fields'
-          },
-          'kit_product': {
-            'type': 'object',
-            'additionalProperties': false,
-            'required': [ '_id' ],
-            'properties': {
-              '_id': {
-                'type': 'string',
-                'pattern': '^[a-f0-9]{24}$',
-                'description': 'Kit product ID'
-              },
-              'name': {
-                'type': 'string',
-                'maxLength': 255,
-                'description': 'Kit product full name'
-              },
-              'pack_quantity': {
-                'type': 'number',
-                // 'multipleOf': 0.0001,
-                'minimum': 0,
-                'maximum': 9999999,
-                'description': 'Total quantity of items to close a kit unit'
-              },
-              'price': {
-                'type': 'number',
-                // 'multipleOf': 0.00001,
-                'minimum': 0,
-                'maximum': 999999999,
-                'description': 'Kit total price'
-              }
-            },
-            'description': 'Parent kit product for this item'
-          },
-          'gift_wrap': {
-            'type': 'object',
-            'required': [ 'label' ],
-            'additionalProperties': false,
-            'properties': {
-              'tag': {
-                'type': 'string',
-                'maxLength': 20,
-                'pattern': '^[a-z0-9_]+$',
-                'description': 'Tag to identify object, use only lowercase letters, digits and underscore'
-              },
-              'label': {
-                'type': 'string',
-                'maxLength': 70,
-                'description': 'Title describing this gift wrap'
-              },
-              'add_to_price': {
-                'type': 'number',
-                // 'multipleOf': 0.0001,
-                'minimum': 0,
-                'maximum': 99999999,
-                'description': 'Additional value due to this gift wrap'
-              }
-            },
-            'description': 'Gift wrap chosen by customer'
-          },
-          'flags': {
-            'type': 'array',
-            'uniqueItems': true,
-            'maxItems': 10,
-            'items': {
-              'type': 'string',
-              'maxLength': 20,
-              'description': 'Flag title'
-            },
-            'description': 'Flags to associate additional info'
-          }
-        }
-      }
-    },
-    'shipping': {
-      'type': 'object',
-      'additionalProperties': false,
-      'required': [ 'app_id', 'to' ],
-      'properties': {
-        'app_id': {
-          'type': 'integer',
-          'minimum': 1000,
-          'maximum': 16777215,
-          'description': 'ID of application chosen for shipping'
-        },
-        'from': {
-          '$ref': '#/definitions/address',
-          'description': 'Sender\'s address'
-        },
-        'to': {
-          '$ref': '#/definitions/address',
-          'description': 'Shipping address (recipient)'
-        },
-        'own_hand': {
-          'type': 'boolean',
-          'default': false,
-          'description': 'Whether the package must be delivered with additional service "own hand"'
-        },
-        'receipt': {
-          'type': 'boolean',
-          'default': false,
-          'description': 'If the package will be delivered with acknowledgment of receipt'
-        },
-        'service_code': {
-          'type': 'string',
-          'maxLength': 70,
-          'description': 'Code of service defined by carrier, if shipping method is already defined'
-        }
-      },
-      'description': 'Shipping options to calculate freight and deadline'
     },
     'transaction': {
       'type': 'object',
@@ -706,6 +460,21 @@ const schema = {
           },
           'description': 'Credit card data, if payment will be done with credit card'
         },
+        'loyalty_points_applied': {
+          'type': 'object',
+          'additionalProperties': false,
+          'maxProperties': 30,
+          'patternProperties': {
+            '^[a-z0-9_]{2,30}$': {
+              'type': 'number',
+              // 'multipleOf': 0.00001,
+              'minimum': 0,
+              'maximum': 999999999,
+              'description': 'Number of loyalty points used'
+            }
+          },
+          'description': 'Customer\'s loyalty points used, program ID as property'
+        },
         'installments_number': {
           'type': 'integer',
           'minimum': 1,
@@ -718,7 +487,283 @@ const schema = {
           'description': 'Payment or order ID if pre committed on gateway (authorization/capture)'
         }
       },
-      'description': 'Payment options to create transaction'
+      'description': 'Transaction options object'
+    }
+  },
+  'properties': {
+    'items': {
+      'type': 'array',
+      'maxItems': 3000,
+      'items': {
+        'type': 'object',
+        'additionalProperties': false,
+        'required': [ 'product_id', 'quantity' ],
+        'properties': {
+          'product_id': {
+            'type': 'string',
+            'pattern': '^[a-f0-9]{24}$',
+            'description': 'Product ID'
+          },
+          'variation_id': {
+            'type': 'string',
+            'pattern': '^[a-f0-9]{24}$',
+            'description': 'ID to specify the variation added to cart, if product has variations'
+          },
+          'quantity': {
+            'type': 'number',
+            // 'multipleOf': 0.0001,
+            'minimum': 0,
+            'maximum': 9999999,
+            'description': 'Item quantity in cart'
+          },
+          'inventory': {
+            'type': 'object',
+            'additionalProperties': false,
+            'maxProperties': 100,
+            'patternProperties': {
+              '^[a-z0-9_]{2,30}$': {
+                'type': 'number',
+                // 'multipleOf': 0.0001,
+                'minimum': 0,
+                'maximum': 9999999,
+                'description': 'Product quantity available for sale from current warehouse'
+              }
+            },
+            'description': 'Warehouses by code and respective product stock'
+          },
+          'picture': {
+            'type': 'object',
+            'additionalProperties': false,
+            'patternProperties': {
+              '^small|normal|big|zoom|custom$': {
+                'type': 'object',
+                'required': [ 'url' ],
+                'additionalProperties': false,
+                'properties': {
+                  'url': {
+                    'type': 'string',
+                    'maxLength': 255,
+                    'format': 'uri',
+                    'description': 'Image link'
+                  },
+                  'size': {
+                    'type': 'string',
+                    'maxLength': 11,
+                    'pattern': '^[1-9]([0-9]+)?x[1-9]([0-9]+)?$',
+                    'description': 'Image size (width x height) in px, such as 100x50 (100px width, 50px height)'
+                  },
+                  'alt': {
+                    'type': 'string',
+                    'maxLength': 255,
+                    'description': 'Alternative text, HTML alt tag (important for SEO)'
+                  }
+                },
+                'description': 'Image size variation'
+              }
+            },
+            'description': 'Product or variation picture for this cart item'
+          },
+          'customizations': {
+            'type': 'array',
+            'maxItems': 100,
+            'items': {
+              'type': 'object',
+              'required': [ '_id', 'option' ],
+              'additionalProperties': false,
+              'properties': {
+                '_id': {
+                  'type': 'string',
+                  'pattern': '^[a-f0-9]{24}$',
+                  'description': 'Customization field ID'
+                },
+                'label': {
+                  'type': 'string',
+                  'maxLength': 70,
+                  'description': 'Title for this customization field, can be the grid title'
+                },
+                'option': {
+                  'type': 'object',
+                  'required': [ 'text' ],
+                  'additionalProperties': false,
+                  'properties': {
+                    'option_id': {
+                      'type': 'string',
+                      'pattern': '^[a-z0-9_]{2,30}$',
+                      'description': 'Identify option if it was predefined (not custom value created by customer)'
+                    },
+                    'text': {
+                      'type': 'string',
+                      'maxLength': 70,
+                      'description': 'Option text value displayed for the client'
+                    },
+                    'colors': {
+                      'type': 'array',
+                      'maxItems': 6,
+                      'items': {
+                        'type': 'string',
+                        'pattern': '^#[a-f0-9]{6}$',
+                        'description': 'RGB code with #'
+                      },
+                      'description': 'Option color palette (if the field involves colors), starting by main color'
+                    }
+                  },
+                  'description': 'Option chosen or created by customer'
+                },
+                'attachment': {
+                  'type': 'string',
+                  'maxLength': 255,
+                  'format': 'uri',
+                  'description': 'URL of file attached by customer to this field'
+                },
+                'add_to_price': {
+                  'type': 'object',
+                  'required': [ 'addition' ],
+                  'additionalProperties': false,
+                  'properties': {
+                    'type': {
+                      'type': 'string',
+                      'enum': [ 'percentage', 'fixed' ],
+                      'default': 'percentage',
+                      'description': 'Type of price addition'
+                    },
+                    'addition': {
+                      'type': 'number',
+                      // 'multipleOf': 0.0001,
+                      'minimum': -99999999,
+                      'maximum': 99999999,
+                      'description': 'Additional value, could be negative'
+                    }
+                  },
+                  'description': 'Price alteration due to this customization'
+                }
+              },
+              'description': 'Customization field'
+            },
+            'description': 'Item customization fields'
+          },
+          'kit_product': {
+            'type': 'object',
+            'additionalProperties': false,
+            'required': [ '_id' ],
+            'properties': {
+              '_id': {
+                'type': 'string',
+                'pattern': '^[a-f0-9]{24}$',
+                'description': 'Kit product ID'
+              },
+              'name': {
+                'type': 'string',
+                'maxLength': 255,
+                'description': 'Kit product full name'
+              },
+              'pack_quantity': {
+                'type': 'number',
+                // 'multipleOf': 0.0001,
+                'minimum': 0,
+                'maximum': 9999999,
+                'description': 'Total quantity of items to close a kit unit'
+              },
+              'price': {
+                'type': 'number',
+                // 'multipleOf': 0.00001,
+                'minimum': 0,
+                'maximum': 999999999,
+                'description': 'Kit total price'
+              }
+            },
+            'description': 'Parent kit product for this item'
+          },
+          'gift_wrap': {
+            'type': 'object',
+            'required': [ 'label' ],
+            'additionalProperties': false,
+            'properties': {
+              'tag': {
+                'type': 'string',
+                'maxLength': 20,
+                'pattern': '^[a-z0-9_]+$',
+                'description': 'Tag to identify object, use only lowercase letters, digits and underscore'
+              },
+              'label': {
+                'type': 'string',
+                'maxLength': 70,
+                'description': 'Title describing this gift wrap'
+              },
+              'add_to_price': {
+                'type': 'number',
+                // 'multipleOf': 0.0001,
+                'minimum': 0,
+                'maximum': 99999999,
+                'description': 'Additional value due to this gift wrap'
+              }
+            },
+            'description': 'Gift wrap chosen by customer'
+          },
+          'flags': {
+            'type': 'array',
+            'uniqueItems': true,
+            'maxItems': 10,
+            'items': {
+              'type': 'string',
+              'maxLength': 20,
+              'description': 'Flag title'
+            },
+            'description': 'Flags to associate additional info'
+          }
+        }
+      }
+    },
+    'shipping': {
+      'type': 'object',
+      'additionalProperties': false,
+      'required': [ 'app_id', 'to' ],
+      'properties': {
+        'app_id': {
+          'type': 'integer',
+          'minimum': 1000,
+          'maximum': 16777215,
+          'description': 'ID of application chosen for shipping'
+        },
+        'from': {
+          '$ref': '#/definitions/address',
+          'description': 'Sender\'s address'
+        },
+        'to': {
+          '$ref': '#/definitions/address',
+          'description': 'Shipping address (recipient)'
+        },
+        'own_hand': {
+          'type': 'boolean',
+          'default': false,
+          'description': 'Whether the package must be delivered with additional service "own hand"'
+        },
+        'receipt': {
+          'type': 'boolean',
+          'default': false,
+          'description': 'If the package will be delivered with acknowledgment of receipt'
+        },
+        'service_code': {
+          'type': 'string',
+          'maxLength': 70,
+          'description': 'Code of service defined by carrier, if shipping method is already defined'
+        }
+      },
+      'description': 'Shipping options to calculate freight and deadline'
+    },
+    'transaction': {
+      'oneOf': [
+        {
+          '$ref': '#/definitions/transaction'
+        },
+        {
+          'type': 'array',
+          'maxItems': 5,
+          'items': {
+            '$ref': '#/definitions/transaction'
+          }
+        }
+      ],
+      'description': 'Payment options to create transaction(s)'
     },
     'discount': {
       'type': 'object',
