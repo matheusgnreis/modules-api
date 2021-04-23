@@ -114,7 +114,9 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
       // start mounting order body
       // https://developers.e-com.plus/docs/api/#/store/orders/orders
       let customer = checkoutBody.customer
+      const dateTime = new Date().toISOString()
       let orderBody = {
+        opened_at: dateTime,
         buyers: [
           // received customer info
           customer
@@ -285,7 +287,6 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                       current: 'pending'
                     }
                   }
-                  const dateTime = new Date().toISOString()
                   transaction.status.updated_at = dateTime
 
                   // merge transaction body with order info and respond
