@@ -637,7 +637,7 @@ const responseSchema = {
               },
               'notes': {
                 'type': 'string',
-                'maxLength': 255,
+                'maxLength': 2000,
                 'description': 'Optional notes with additional info about this shipping line'
               }
             },
