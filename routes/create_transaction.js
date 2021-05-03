@@ -953,7 +953,7 @@ const responseSchema = {
         },
         'notes': {
           'type': 'string',
-          'maxLength': 255,
+          'maxLength': 8000,
           'description': 'Optional notes with additional info about this transaction'
         }
       },
