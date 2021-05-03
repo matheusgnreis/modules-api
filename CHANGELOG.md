@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.20](https://github.com/ecomplus/modules-api/compare/v0.12.19...v0.12.20) (2021-05-03)
+
+
+### Features
+
+* **calculate-shipping:** supporting warehouses for multi cd ([6613dfc](https://github.com/ecomplus/modules-api/commit/6613dfc7cedef3460042e899945ef6c91f88c9db))
+* **checkout:** set order `opened_at` datetime ([3419eb2](https://github.com/ecomplus/modules-api/commit/3419eb2f5ce6821fb7894fdbf1b10440d19ea7f1))
+* **create-transaction:** add `loyalty_points_applied` request param ([d995868](https://github.com/ecomplus/modules-api/commit/d995868d66f789158191a1983ed567d0eb81e892))
+* **list-payments:** optional `loyalty_points_programs` response field ([ef530e1](https://github.com/ecomplus/modules-api/commit/ef530e12af0234bb0b0bec0a2eaf5c3ebd084c57))
+
 ### [0.12.19](https://github.com/ecomplus/modules-api/compare/v0.12.18...v0.12.19) (2020-12-09)
 
 
