@@ -549,7 +549,7 @@ const responseSchema = {
       'patternProperties': {
         '^[a-z0-9_]{2,30}$': {
           'type': 'object',
-          'required': [ 'point_value' ],
+          'required': [ 'ratio' ],
           'additionalProperties': false,
           'properties': {
             'name': {
@@ -557,12 +557,12 @@ const responseSchema = {
               'maxLength': 50,
               'description': 'The name of the loyalty points program'
             },
-            'point_value': {
+            'ratio': {
               'type': 'number',
-              // 'multipleOf': 0.00001,
+              // 'multipleOf': 0.001,
               'minimum': 0,
-              'maximum': 999999999,
-              'description': 'Point unit value in the current currency'
+              'maximum': 9999,
+              'description': 'The ratio of a point when converted to currency'
             },
             'max_points': {
               'type': 'number',
@@ -572,7 +572,7 @@ const responseSchema = {
               'description': 'Maximum number of points to apply'
             }
           },
-          'description': 'Loyalty points program object'
+          'description': 'Available loyalty points program object'
         }
       },
       'description': 'Available loyalty point programs, program ID as property'
