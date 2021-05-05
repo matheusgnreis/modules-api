@@ -547,7 +547,7 @@ const schema = {
           'description': 'Number of loyalty points used'
         }
       },
-      'description': 'Customer\'s loyalty points used, program ID as property'
+      'description': 'Customer\'s loyalty points applied, program ID as property'
     },
     'order_id': {
       'type': 'string',
@@ -795,6 +795,38 @@ const responseSchema = {
             }
           },
           'description': 'Banking billet data, if payment was done with banking billet'
+        },
+        'loyalty_points': {
+          'type': 'object',
+          'required': [ 'program_id', 'points_value' ],
+          'additionalProperties': false,
+          'properties': {
+            'name': {
+              'type': 'string',
+              'maxLength': 50,
+              'description': 'The name of the loyalty points program'
+            },
+            'program_id': {
+              'type': 'string',
+              'pattern': '^[a-z0-9_]{2,30}$',
+              'description': 'Unique identifier, program name using only lowercase, numbers and underscore'
+            },
+            'points_value': {
+              'type': 'number',
+              // 'multipleOf': 0.00001,
+              'minimum': 0,
+              'maximum': 999999999,
+              'description': 'Number of loyalty points applied from customer account'
+            },
+            'ratio': {
+              'type': 'number',
+              // 'multipleOf': 0.001,
+              'minimum': 0,
+              'maximum': 9999,
+              'description': 'The ratio of a point when converted to currency'
+            }
+          },
+          'description': 'If paid with loyalty points, specify how many points and what program was consumed'
         },
         'currency_id': {
           'type': 'string',
