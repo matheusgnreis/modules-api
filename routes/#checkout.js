@@ -337,6 +337,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                       }
                     })
                     isDone = true
+                    break
                   }
                 }
                 if (isDone) {
