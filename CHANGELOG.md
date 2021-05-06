@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.21](https://github.com/ecomplus/modules-api/compare/v0.12.20...v0.12.21) (2021-05-06)
+
+
+### Features
+
+* **checkout:** supporting multiple transactions ([efd45da](https://github.com/ecomplus/modules-api/commit/efd45daf9b9ebdaf7a4155a34b7e96a2647c7fff))
+* **create-transaction:** supporting response with `loyalty_points` object ([e5d4d30](https://github.com/ecomplus/modules-api/commit/e5d4d30861144e54494c64cd782a6952bc2acdd9))
+
+
+### Bug Fixes
+
+* **checkout:** prevent multiple error responses on multiple transactions ([747e0a6](https://github.com/ecomplus/modules-api/commit/747e0a68d03c1f60aedb8df1c2b36829d02b2abf))
+* **checkout:** properly continue loop to next transaction on done ([c0ae96a](https://github.com/ecomplus/modules-api/commit/c0ae96a1a65242be444419449cbd5a32f675c6be))
+* **checkout:** properly continue loop to next transaction on done ([e9ed2c9](https://github.com/ecomplus/modules-api/commit/e9ed2c971275bf9f0680d1f4f745bed8ba8f453b))
+* **list-payments:** use `loyalty_points_programs.$.ratio` to repeat store api schema ([5a01f22](https://github.com/ecomplus/modules-api/commit/5a01f22e90c209fae6a9d0022011c54716a1007c))
+
 ### [0.12.20](https://github.com/ecomplus/modules-api/compare/v0.12.19...v0.12.20) (2021-05-03)
 
 
