@@ -262,6 +262,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
             simulateRequests(transactionBody, checkoutRespond, 'transaction', storeId, responses => {
               for (let i = 0; i < responses.length; i++) {
                 const results = responses[i]
+                const isFirstTransaction = i === 0
                 let isDone
                 // logger.log(results)
                 const validResults = getValidResults(results, 'transaction')
@@ -309,7 +310,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                     }
                     transaction.status.updated_at = dateTime
 
-                    if (i === 0) {
+                    if (isFirstTransaction) {
                       // merge transaction body with order info and respond
                       checkoutRespond({
                         order: {
@@ -336,8 +337,10 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                       }
                     })
                     isDone = true
-                    continue
                   }
+                }
+                if (isDone) {
+                  continue
                 }
 
                 // unexpected response object from create transaction module
@@ -359,24 +362,22 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                     errorMessage = firstResult.error_message
                   }
                 }
-                if (i === 0) {
+                if (isFirstTransaction) {
                   errorCallback(null, null, errorMessage || 'No valid transaction object')
                 }
 
-                if (!isDone) {
-                  // cancel the created order
-                  setTimeout(() => {
-                    const body = {
-                      status: 'cancelled',
-                      staff_notes: 'Error trying to create transaction'
-                    }
-                    if (errorMessage) {
-                      body.staff_notes += ` - \`${errorMessage.substring(0, 200)}\``
-                    }
-                    Api('orders/' + orderId + '.json', 'PATCH', body, storeId)
-                  }, 400)
-                  break
-                }
+                // cancel the created order
+                setTimeout(() => {
+                  const body = {
+                    status: 'cancelled',
+                    staff_notes: 'Error trying to create transaction'
+                  }
+                  if (errorMessage) {
+                    body.staff_notes += ` - \`${errorMessage.substring(0, 200)}\``
+                  }
+                  Api('orders/' + orderId + '.json', 'PATCH', body, storeId)
+                }, 400)
+                break
               }
             })
           })
