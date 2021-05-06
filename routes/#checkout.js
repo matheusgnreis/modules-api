@@ -359,7 +359,9 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                     errorMessage = firstResult.error_message
                   }
                 }
-                errorCallback(null, null, errorMessage || 'No valid transaction object')
+                if (i === 0) {
+                  errorCallback(null, null, errorMessage || 'No valid transaction object')
+                }
 
                 if (!isDone) {
                   // cancel the created order
