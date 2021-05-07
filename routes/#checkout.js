@@ -266,8 +266,24 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
             // logger.log(JSON.stringify(transactionBody, null, 2))
             // logger.log(JSON.stringify(checkoutBody, null, 2))
 
+            const cancelOrder = (staffNotes, errorMessage) => {
+              setTimeout(() => {
+                const body = {
+                  status: 'cancelled',
+                  staff_notes: staffNotes
+                }
+                if (errorMessage) {
+                  body.staff_notes += ` - \`${errorMessage.substring(0, 200)}\``
+                }
+                Api('orders/' + orderId + '.json', 'PATCH', body, storeId)
+              }, 400)
+            }
+
             // finally pass to create transaction
             simulateRequests(transactionBody, checkoutRespond, 'transaction', storeId, responses => {
+              let countDone = 0
+              let paymentsAmount = 0
+
               for (let i = 0; i < responses.length; i++) {
                 const results = responses[i]
                 const isFirstTransaction = i === 0
@@ -288,7 +304,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                       'currency_id',
                       'currency_symbol'
                     ].forEach(field => {
-                      if (transactionBody.hasOwnProperty(field) && !transaction.hasOwnProperty(field)) {
+                      if (transactionBody[field] !== undefined && transaction[field] === undefined) {
                         transaction[field] = transactionBody[field]
                       }
                     })
@@ -303,7 +319,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                         'intermediator',
                         'payment_url'
                       ].forEach(field => {
-                        if (checkoutBody.transaction.hasOwnProperty(field)) {
+                        if (checkoutBody.transaction[field] !== undefined) {
                           transaction.app[field] = checkoutBody.transaction[field]
                         }
                       })
@@ -345,10 +361,18 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                       }
                     })
                     isDone = true
+                    paymentsAmount += transaction.amount
                     break
                   }
                 }
+
                 if (isDone) {
+                  countDone++
+                  if (countDone === responses.length) {
+                    if (amount.total / paymentsAmount > 1.01) {
+                      cancelOrder('Transaction amounts doesn\'t match (is lower) order total value')
+                    }
+                  }
                   continue
                 }
 
@@ -374,18 +398,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                 if (isFirstTransaction) {
                   errorCallback(null, null, errorMessage || 'No valid transaction object')
                 }
-
-                // cancel the created order
-                setTimeout(() => {
-                  const body = {
-                    status: 'cancelled',
-                    staff_notes: 'Error trying to create transaction'
-                  }
-                  if (errorMessage) {
-                    body.staff_notes += ` - \`${errorMessage.substring(0, 200)}\``
-                  }
-                  Api('orders/' + orderId + '.json', 'PATCH', body, storeId)
-                }, 400)
+                cancelOrder('Error trying to create transaction', errorMessage)
                 break
               }
             })
@@ -397,16 +410,16 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
       simulateRequests(checkoutBody, checkoutRespond, 'shipping', storeId, ([results]) => {
         const validResults = getValidResults(results, 'shipping_services')
         for (let i = 0; i < validResults.length; i++) {
-          let result = validResults[i]
+          const result = validResults[i]
           // treat calculate shipping response
-          let response = result.response
+          const response = result.response
           if (response && response.shipping_services) {
             // check chosen shipping code
-            let shippingCode = checkoutBody.shipping.service_code
+            const shippingCode = checkoutBody.shipping.service_code
 
             for (let i = 0; i < response.shipping_services.length; i++) {
-              let shippingService = response.shipping_services[i]
-              let shippingLine = shippingService.shipping_line
+              const shippingService = response.shipping_services[i]
+              const shippingLine = shippingService.shipping_line
               if (shippingLine && (!shippingCode || shippingCode === shippingService.service_code)) {
                 // update amount freight and total
                 let freight = typeof shippingLine.total_price === 'number'
@@ -421,7 +434,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                 fixAmount()
 
                 // app info
-                let shippingApp = {
+                const shippingApp = {
                   app: Object.assign({ _id: result._id }, shippingService)
                 }
                 // remove shipping line property
@@ -443,11 +456,11 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
         }
 
         // problem with shipping response object
-        let usrMsg = {
+        const usrMsg = {
           en_us: 'Shipping method not available, please choose another',
           pt_br: 'Forma de envio indisponível, por favor escolha outra'
         }
-        let devMsg = 'Any valid shipping service from /calculate_shipping module'
+        const devMsg = 'Any valid shipping service from /calculate_shipping module'
         checkoutRespond({}, null, 400, 'CKT901', devMsg, usrMsg)
       })
 
@@ -456,9 +469,9 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
         simulateRequests(checkoutBody, checkoutRespond, 'discount', storeId, ([results]) => {
           const validResults = getValidResults(results)
           for (let i = 0; i < validResults.length; i++) {
-            let result = validResults[i]
+            const result = validResults[i]
             // treat apply discount response
-            let response = result.response
+            const response = result.response
             if (response && response.discount_rule) {
               // check discount value
               const discountRule = response.discount_rule
@@ -504,9 +517,9 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
         simulateRequests(checkoutBody, checkoutRespond, 'payment', storeId, ([results]) => {
           const validResults = getValidResults(results, 'payment_gateways')
           for (let i = 0; i < validResults.length; i++) {
-            let result = validResults[i]
+            const result = validResults[i]
             // treat list payments response
-            let response = result.response
+            const response = result.response
             if (response && response.payment_gateways) {
               // check chosen payment method code and name
               let paymentMethodCode, paymentMethodName
@@ -517,7 +530,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
               // filter gateways by method code
               const possibleGateways = response.payment_gateways.filter(paymentGateway => {
-                let paymentMethod = paymentGateway.payment_method
+                const paymentMethod = paymentGateway.payment_method
                 return !paymentMethodCode || (paymentMethod && paymentMethod.code === paymentMethodCode)
               })
               let paymentGateway
@@ -532,7 +545,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
               }
 
               if (paymentGateway) {
-                let discount = paymentGateway.discount
+                const discount = paymentGateway.discount
                 let maxDiscount
 
                 // handle discount by payment method
@@ -561,17 +574,17 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
           }
 
           // problem with list payments response object
-          let usrMsg = {
+          const usrMsg = {
             en_us: 'Payment method not available, please choose another',
             pt_br: 'Forma de pagamento indisponível, por favor escolha outra'
           }
-          let devMsg = 'Any valid payment gateway from /list_payments module'
+          const devMsg = 'Any valid payment gateway from /list_payments module'
           checkoutRespond({}, null, 400, 'CKT902', devMsg, usrMsg)
         })
       }
     } else {
       // no valid items
-      let devMsg = 'Cannot handle checkout, any valid cart item'
+      const devMsg = 'Cannot handle checkout, any valid cart item'
       checkoutRespond({}, null, 400, 'CKT801', devMsg)
     }
   })
