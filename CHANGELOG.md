@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.22](https://github.com/ecomplus/modules-api/compare/v0.12.21...v0.12.22) (2021-05-07)
+
+
+### Features
+
+* **checkout:** support `amount_part` number to handle 2+ transactions ([237f46a](https://github.com/ecomplus/modules-api/commit/237f46a9e9708c7d16e623cfa1cbdaf854508504))
+
+
+### Bug Fixes
+
+* **checkout:** compare transactions amount sum with order total value ([cf0cdb5](https://github.com/ecomplus/modules-api/commit/cf0cdb51096481d1318af6c0f931b654e0304409))
+
 ### [0.12.21](https://github.com/ecomplus/modules-api/compare/v0.12.20...v0.12.21) (2021-05-06)
 
 
