@@ -1,5 +1,7 @@
 'use strict'
 
+/* eslint-disable quote-props, array-bracket-spacing */
+
 // log on files
 // const logger = require('console-files')
 
@@ -485,6 +487,14 @@ const schema = {
           'type': 'string',
           'maxLength': 255,
           'description': 'Payment or order ID if pre committed on gateway (authorization/capture)'
+        },
+        'amount_part': {
+          'type': 'number',
+          // 'multipleOf': 0.01,
+          'minimum': 0.01,
+          'maximum': 1,
+          'default': 1,
+          'description': 'Numeric part (multiplier) for final amount when ordering with 2+ transactions'
         }
       },
       'description': 'Transaction options object'
@@ -1027,7 +1037,7 @@ const GET = (id, meta, body, respond) => {
     // return JSON Schema
     respond(schema)
   } else {
-    let devMsg = 'GET is acceptable only to JSON schema, at /' + endpoint + '/schema.json'
+    const devMsg = 'GET is acceptable only to JSON schema, at /' + endpoint + '/schema.json'
     respond({}, null, 406, 'CKT101', devMsg)
   }
 }
@@ -1035,7 +1045,7 @@ const GET = (id, meta, body, respond) => {
 const POST = (id, meta, body, respond, storeId) => {
   // logger.log(JSON.stringify(body, null, 2))
   // ajv
-  let valid = validate(body)
+  const valid = validate(body)
   if (!valid) {
     errorHandling(validate.errors, respond, endpoint)
   } else {

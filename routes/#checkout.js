@@ -60,21 +60,29 @@ const simulateRequests = (checkoutBody, checkoutRespond, label, storeId, callbac
   moduleBodies.forEach(moduleBody => {
     if (moduleBody && moduleBody.app_id) {
       // mask request objects
-      let reqId = null
-      let reqMeta = {
+      const reqId = null
+      const reqMeta = {
         query: {
           app_id: moduleBody.app_id
         }
       }
       // mount request body with received checkout body object
-      let reqBody = cloneDeep({
+      const reqBody = cloneDeep({
         ...checkoutBody,
         ...moduleBody,
         is_checkout_confirmation: true
       })
+      if (reqBody.amount && reqBody.amount_part > 0 && reqBody.amount_part < 1) {
+        // fix amount for multiple transactions
+        const partialAmount = reqBody.amount.total * reqBody.amount_part
+        reqBody.amount.discount += reqBody.amount.total - partialAmount
+        reqBody.amount.total = partialAmount
+        delete reqBody.amount_part
+      }
+
       // handle response such as REST Auto Router
       // https://www.npmjs.com/package/rest-auto-router#callback-params
-      let reqRespond = (obj, meta, statusCode, errorCode, devMsg, usrMsg) => {
+      const reqRespond = (obj, meta, statusCode, errorCode, devMsg, usrMsg) => {
         if (obj && !errorCode && typeof callback === 'function') {
           // OK
           handleCallback(obj)
@@ -99,7 +107,7 @@ const simulateRequests = (checkoutBody, checkoutRespond, label, storeId, callbac
 const getValidResults = (results, checkProp) => {
   // results array returned from module
   // see ./#applications.js
-  let validResults = []
+  const validResults = []
   if (Array.isArray(results)) {
     for (let i = 0; i < results.length; i++) {
       const result = results[i]
@@ -130,9 +138,9 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
       checkoutBody.items = items
       // start mounting order body
       // https://developers.e-com.plus/docs/api/#/store/orders/orders
-      let customer = checkoutBody.customer
+      const customer = checkoutBody.customer
       const dateTime = new Date().toISOString()
-      let orderBody = {
+      const orderBody = {
         opened_at: dateTime,
         buyers: [
           // received customer info
@@ -203,7 +211,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
           // handle new order
           const errorCallback = (err, statusCode, devMsg) => {
             // not successful API call
-            let usrMsg = {
+            const usrMsg = {
               en_us: 'There was a problem saving your order, please try again later',
               pt_br: 'Houve um problema ao salvar o pedido, por favor tente novamente mais tarde'
             }
@@ -225,7 +233,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
             const errorCallback = (err, statusCode, devMsg) => {
               // not successful API call
-              let usrMsg = {
+              const usrMsg = {
                 en_us: 'Your order was saved, but we were unable to make the payment, ' +
                   'please contact us',
                 pt_br: 'Seu pedido foi salvo, mas não conseguimos efetuar o pagamento, ' +
