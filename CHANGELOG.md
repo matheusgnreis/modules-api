@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.23](https://github.com/ecomplus/modules-api/compare/v0.12.22...v0.12.23) (2021-05-11)
+
+
+### Bug Fixes
+
+* **checkout:** prevent (stupid) error with repeated item flags ([203191a](https://github.com/ecomplus/modules-api/commit/203191a6cdc79866bf5a1c340d67fb910f696ce7))
+
 ### [0.12.22](https://github.com/ecomplus/modules-api/compare/v0.12.21...v0.12.22) (2021-05-07)
 
 
