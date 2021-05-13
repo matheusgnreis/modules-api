@@ -249,12 +249,14 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
             let countDone = 0
             let paymentsAmount = 0
 
-            transactions.forEach((transaction, index) => {
+            const nextTransaction = (index = 0) => {
+              const transaction = transactions[index]
               // logger.log('transaction')
               // logger.log(number)
               // merge objects to create transaction request body
               const transactionBody = {
                 ...checkoutBody,
+                transaction,
                 order_id: orderId,
                 order_number: orderNumber,
                 // also need shipping address
@@ -347,6 +349,8 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                           Api('orders/' + orderId + '/payments_history.json', 'POST', paymentEntry, storeId)
                         }, 300)
                       }
+                      index++
+                      nextTransaction(index)
                     })
                     isDone = true
                     paymentsAmount += transaction.amount
@@ -388,7 +392,8 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                 }
                 cancelOrder('Error trying to create transaction', errorMessage)
               })
-            })
+            }
+            nextTransaction()
           })
         })
       }
@@ -524,7 +529,11 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
       const listPayments = () => {
         // simulate requets to list payments endpoint
-        simulateRequest(checkoutBody, checkoutRespond, 'payment', storeId, results => {
+        const paymentsBody = Object.assign({}, checkoutBody)
+        if (Array.isArray(paymentsBody.transaction)) {
+          paymentsBody.transaction = paymentsBody.transaction[0]
+        }
+        simulateRequest(paymentsBody, checkoutRespond, 'payment', storeId, results => {
           const validResults = getValidResults(results, 'payment_gateways')
           for (let i = 0; i < validResults.length; i++) {
             const result = validResults[i]
@@ -532,10 +541,11 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
             const response = result.response
             if (response && response.payment_gateways) {
               // check chosen payment method code and name
+              const paymentMethod = paymentsBody.transaction.payment_method
               let paymentMethodCode, paymentMethodName
-              if (checkoutBody.transaction.payment_method) {
-                paymentMethodCode = checkoutBody.transaction.payment_method.code
-                paymentMethodName = checkoutBody.transaction.payment_method.name
+              if (paymentMethod) {
+                paymentMethodCode = paymentMethod.code
+                paymentMethodName = paymentMethod.name
               }
 
               // filter gateways by method code
