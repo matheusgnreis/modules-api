@@ -262,6 +262,13 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                 to: { ...checkoutBody.shipping.to },
                 ...transaction
               }
+              if (transactionBody.amount && transaction.amount_part > 0 && transaction.amount_part < 1) {
+                // fix amount for multiple transactions
+                const partialAmount = transactionBody.amount.total * transaction.amount_part
+                transactionBody.amount.discount += transactionBody.amount.total - partialAmount
+                transactionBody.amount.total = partialAmount
+                delete transactionBody.amount_part
+              }
               // logger.log(JSON.stringify(transactionBody, null, 2))
               // logger.log(JSON.stringify(checkoutBody, null, 2))
 
