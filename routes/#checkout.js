@@ -432,27 +432,30 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                 // remove shipping line property
                 delete shippingApp.app.shipping_line
 
-                if (shippingLine.delivery_time) {
-                  // sum production time to shipping deadline
-                  let maxProductionDays = 0
-                  orderBody.items.forEach(item => {
-                    const productionTime = item.production_time
-                    if (productionTime) {
-                      let productionDays = productionTime.days
-                      if (productionDays && productionTime.cumulative) {
-                        productionDays *= item.quantity
-                      }
-                      if (productionDays > productionTime.max_time) {
-                        productionDays = productionTime.max_time
-                      }
-                      if (maxProductionDays < productionDays) {
-                        maxProductionDays = productionDays
-                      }
+                // sum production time to posting deadline
+                let maxProductionDays = 0
+                orderBody.items.forEach(item => {
+                  const productionTime = item.production_time
+                  if (productionTime) {
+                    let productionDays = productionTime.days
+                    if (productionDays && productionTime.cumulative) {
+                      productionDays *= item.quantity
                     }
-                  })
-                  if (maxProductionDays) {
-                    shippingLine.delivery_time.days += maxProductionDays
+                    if (productionDays > productionTime.max_time) {
+                      productionDays = productionTime.max_time
+                    }
+                    if (maxProductionDays < productionDays) {
+                      maxProductionDays = productionDays
+                    }
                   }
+                })
+                if (maxProductionDays) {
+                  if (!shippingLine.posting_deadline) {
+                    shippingLine.posting_deadline = {
+                      days: 0
+                    }
+                  }
+                  shippingLine.posting_deadline.days += maxProductionDays
                 }
 
                 // add to order body
