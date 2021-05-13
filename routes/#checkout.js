@@ -349,8 +349,8 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                           Api('orders/' + orderId + '/payments_history.json', 'POST', paymentEntry, storeId)
                         }, 300)
                       }
+                      index++
                       if (index < transactions.length) {
-                        index++
                         nextTransaction(index)
                       }
                     })
