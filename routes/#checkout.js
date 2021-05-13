@@ -22,85 +22,60 @@ const applyDiscount = require('./apply_discount').POST
 const createTransaction = require('./create_transaction').POST
 
 // abstraction to calculate shipping and create transaction
-const simulateRequests = (checkoutBody, checkoutRespond, label, storeId, callback) => {
+const simulateRequest = (checkoutBody, checkoutRespond, label, storeId, callback) => {
   // select module to handle by label param
-  let moduleHandler, moduleBodies
+  let moduleHandler, moduleBody
   switch (label) {
     case 'shipping':
       moduleHandler = calculateShipping
-      moduleBodies = checkoutBody.shipping
+      moduleBody = checkoutBody.shipping
       break
     case 'payment':
       moduleHandler = listPayments
-      moduleBodies = checkoutBody.transaction
+      moduleBody = checkoutBody.transaction
       break
     case 'discount':
       moduleHandler = applyDiscount
-      moduleBodies = checkoutBody.discount
+      moduleBody = checkoutBody.discount
       break
     case 'transaction':
       moduleHandler = createTransaction
-      moduleBodies = checkoutBody.transaction
-  }
-  if (!Array.isArray(moduleBodies)) {
-    moduleBodies = [moduleBodies]
+      moduleBody = checkoutBody.transaction
   }
 
-  let countDone = 0
-  const callbackObjs = []
-  const handleCallback = obj => {
-    countDone++
-    callbackObjs.push(obj)
-    if (countDone === moduleBodies.length) {
-      callback(callbackObjs)
+  if (moduleBody && moduleBody.app_id) {
+    // mask request objects
+    const reqId = null
+    const reqMeta = {
+      query: {
+        app_id: moduleBody.app_id
+      }
     }
-  }
-
-  let isResponseSent = false
-  moduleBodies.forEach(moduleBody => {
-    if (moduleBody && moduleBody.app_id) {
-      // mask request objects
-      const reqId = null
-      const reqMeta = {
-        query: {
-          app_id: moduleBody.app_id
-        }
+    // mount request body with received checkout body object
+    const reqBody = cloneDeep({
+      ...checkoutBody,
+      ...moduleBody,
+      is_checkout_confirmation: true
+    })
+    // handle response such as REST Auto Router
+    // https://www.npmjs.com/package/rest-auto-router#callback-params
+    const reqRespond = (obj, meta, statusCode, errorCode, devMsg, usrMsg) => {
+      if (obj && !errorCode && typeof callback === 'function') {
+        // OK
+        callback(obj)
+      } else {
+        // pass the response
+        devMsg = `Error on '${label}': ${devMsg} (${errorCode})`
+        checkoutRespond(obj || {}, null, statusCode || 400, 'CKT900', devMsg, usrMsg)
       }
-      // mount request body with received checkout body object
-      const reqBody = cloneDeep({
-        ...checkoutBody,
-        ...moduleBody,
-        is_checkout_confirmation: true
-      })
-      if (reqBody.amount && reqBody.amount_part > 0 && reqBody.amount_part < 1) {
-        // fix amount for multiple transactions
-        const partialAmount = reqBody.amount.total * reqBody.amount_part
-        reqBody.amount.discount += reqBody.amount.total - partialAmount
-        reqBody.amount.total = partialAmount
-        delete reqBody.amount_part
-      }
-
-      // handle response such as REST Auto Router
-      // https://www.npmjs.com/package/rest-auto-router#callback-params
-      const reqRespond = (obj, meta, statusCode, errorCode, devMsg, usrMsg) => {
-        if (obj && !errorCode && typeof callback === 'function') {
-          // OK
-          handleCallback(obj)
-        } else if (!isResponseSent) {
-          // pass the response
-          devMsg = `Error on '${label}': ${devMsg} (${errorCode})`
-          isResponseSent = true
-          checkoutRespond(obj || {}, null, statusCode || 400, 'CKT900', devMsg, usrMsg)
-        }
-      }
-
-      // simulate request to module endpoint
-      moduleHandler(reqId, reqMeta, reqBody, reqRespond, storeId)
-    } else {
-      // ignore
-      handleCallback()
     }
-  })
+
+    // simulate request to module endpoint
+    moduleHandler(reqId, reqMeta, reqBody, reqRespond, storeId)
+  } else {
+    // ignore
+    callback()
+  }
 }
 
 // filter modules response
@@ -251,42 +226,48 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
               }
             }
 
-            // logger.log('transaction')
-            // logger.log(number)
-            // merge objects to create transaction request body
-            const transactionBody = {
-              ...checkoutBody,
-              order_id: orderId,
-              order_number: orderNumber,
-              // also need shipping address
-              // send from shipping object if undefined on transaction object
-              to: { ...checkoutBody.shipping.to },
-              ...checkoutBody.transaction
-            }
-            // logger.log(JSON.stringify(transactionBody, null, 2))
-            // logger.log(JSON.stringify(checkoutBody, null, 2))
-
+            let isOrderCancelled = false
             const cancelOrder = (staffNotes, errorMessage) => {
-              setTimeout(() => {
-                const body = {
-                  status: 'cancelled',
-                  staff_notes: staffNotes
-                }
-                if (errorMessage) {
-                  body.staff_notes += ` - \`${errorMessage.substring(0, 200)}\``
-                }
-                Api('orders/' + orderId + '.json', 'PATCH', body, storeId)
-              }, 400)
+              if (!isOrderCancelled) {
+                setTimeout(() => {
+                  const body = {
+                    status: 'cancelled',
+                    staff_notes: staffNotes
+                  }
+                  if (errorMessage) {
+                    body.staff_notes += ` - \`${errorMessage.substring(0, 200)}\``
+                  }
+                  Api('orders/' + orderId + '.json', 'PATCH', body, storeId)
+                }, 400)
+              }
+              isOrderCancelled = true
             }
 
-            // finally pass to create transaction
-            simulateRequests(transactionBody, checkoutRespond, 'transaction', storeId, responses => {
-              let countDone = 0
-              let paymentsAmount = 0
+            const transactions = Array.isArray(checkoutBody.transaction)
+              ? checkoutBody.transaction
+              : [checkoutBody.transaction]
+            let countDone = 0
+            let paymentsAmount = 0
 
-              for (let i = 0; i < responses.length; i++) {
-                const results = responses[i]
-                const isFirstTransaction = i === 0
+            transactions.forEach((transaction, index) => {
+              // logger.log('transaction')
+              // logger.log(number)
+              // merge objects to create transaction request body
+              const transactionBody = {
+                ...checkoutBody,
+                order_id: orderId,
+                order_number: orderNumber,
+                // also need shipping address
+                // send from shipping object if undefined on transaction object
+                to: { ...checkoutBody.shipping.to },
+                ...transaction
+              }
+              // logger.log(JSON.stringify(transactionBody, null, 2))
+              // logger.log(JSON.stringify(checkoutBody, null, 2))
+
+              // finally pass to create transaction
+              simulateRequest(transactionBody, checkoutRespond, 'transaction', storeId, results => {
+                const isFirstTransaction = index === 0
                 let isDone
                 // logger.log(results)
                 const validResults = getValidResults(results, 'transaction')
@@ -368,12 +349,12 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
                 if (isDone) {
                   countDone++
-                  if (countDone === responses.length) {
+                  if (countDone === transactions.length) {
                     if (amount.total / paymentsAmount > 1.01) {
                       cancelOrder('Transaction amounts doesn\'t match (is lower) order total value')
                     }
                   }
-                  continue
+                  return
                 }
 
                 // unexpected response object from create transaction module
@@ -399,15 +380,14 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                   errorCallback(null, null, errorMessage || 'No valid transaction object')
                 }
                 cancelOrder('Error trying to create transaction', errorMessage)
-                break
-              }
+              })
             })
           })
         })
       }
 
       // simulate requets to calculate shipping endpoint
-      simulateRequests(checkoutBody, checkoutRespond, 'shipping', storeId, ([results]) => {
+      simulateRequest(checkoutBody, checkoutRespond, 'shipping', storeId, results => {
         const validResults = getValidResults(results, 'shipping_services')
         for (let i = 0; i < validResults.length; i++) {
           const result = validResults[i]
@@ -489,7 +469,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
       const applyDiscount = () => {
         // simulate request to apply discount endpoint to get extra discount value
-        simulateRequests(checkoutBody, checkoutRespond, 'discount', storeId, ([results]) => {
+        simulateRequest(checkoutBody, checkoutRespond, 'discount', storeId, results => {
           const validResults = getValidResults(results)
           for (let i = 0; i < validResults.length; i++) {
             const result = validResults[i]
@@ -537,7 +517,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
       const listPayments = () => {
         // simulate requets to list payments endpoint
-        simulateRequests(checkoutBody, checkoutRespond, 'payment', storeId, ([results]) => {
+        simulateRequest(checkoutBody, checkoutRespond, 'payment', storeId, results => {
           const validResults = getValidResults(results, 'payment_gateways')
           for (let i = 0; i < validResults.length; i++) {
             const result = validResults[i]
