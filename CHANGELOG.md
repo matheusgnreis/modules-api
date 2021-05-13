@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.25](https://github.com/ecomplus/modules-api/compare/v0.12.24...v0.12.25) (2021-05-13)
+
+
+### Bug Fixes
+
+* **checkout:** sum production time to posting deadline instead of delivery time ([1dbd3e2](https://github.com/ecomplus/modules-api/commit/1dbd3e26d7d0f645e788641b0fa7768a654f0e63))
+* **checkout:** sync process multiple transactions, list payments for first transaction only ([e0f55be](https://github.com/ecomplus/modules-api/commit/e0f55be6e4290d065b6b372b95216da0f470c827))
+
 ### [0.12.24](https://github.com/ecomplus/modules-api/compare/v0.12.23...v0.12.24) (2021-05-13)
 
 
