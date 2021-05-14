@@ -180,8 +180,16 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
       const createOrder = () => {
         // start creating new order to API
         getCustomerId(customer, storeId, customerId => {
+          const transactions = Array.isArray(checkoutBody.transaction)
+            ? checkoutBody.transaction
+            : [checkoutBody.transaction]
           // add customer ID to order and transaction
-          customer._id = checkoutBody.transaction.buyer.customer_id = customerId
+          customer._id = customerId
+          transactions.forEach(({ buyer }) => {
+            if (buyer) {
+              buyer.customer_id = customerId
+            }
+          })
 
           // handle new order
           const errorCallback = (err, statusCode, devMsg) => {
@@ -243,16 +251,13 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
               isOrderCancelled = true
             }
 
-            const transactions = Array.isArray(checkoutBody.transaction)
-              ? checkoutBody.transaction
-              : [checkoutBody.transaction]
             let countDone = 0
             let paymentsAmount = 0
-
             const nextTransaction = (index = 0) => {
               const transaction = transactions[index]
               // logger.log('transaction')
               // logger.log(number)
+
               // merge objects to create transaction request body
               const transactionBody = {
                 ...checkoutBody,
