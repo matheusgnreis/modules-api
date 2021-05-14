@@ -15,7 +15,7 @@ const Modules = require('./../lib/Modules.js')
 
 function runModule (params, respond, storeId, modName, validate, responseValidate, appId) {
   // ajv
-  let valid = validate(params)
+  const valid = validate(params)
   if (!valid) {
     // logger.log(validate.errors)
     errorHandling(validate.errors, respond, modName)
@@ -27,12 +27,12 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
       '&modules.' + modName + '.enabled=true' +
       '&fields=_id,app_id,version,data,hidden_data,modules.' + modName
     if (appId && (typeof appId === 'number' || (typeof appId === 'string' && /^\d+$/.test(appId)))) {
-      endpoint += '&app_id=' + appId
+      endpoint += `&app_id=${appId}&limit=1`
     }
-    let method = 'GET'
-    let body = null
+    const method = 'GET'
+    const body = null
 
-    let errorCallback = (err, statusCode, devMsg) => {
+    const errorCallback = (err, statusCode, devMsg) => {
       // not successful API call
       // send error response
       if (err) {
@@ -46,7 +46,7 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
       }
     }
 
-    let successCallback = (body) => {
+    const successCallback = (body) => {
       // https://ecomstore.docs.apiary.io/#reference/applications/all-applications/list-all-store-applications
       let list = body.result
       if (Array.isArray(list)) {
