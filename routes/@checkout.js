@@ -491,7 +491,7 @@ const schema = {
         'amount_part': {
           'type': 'number',
           // 'multipleOf': 0.01,
-          'minimum': 0.01,
+          'minimum': 0,
           'maximum': 1,
           'default': 1,
           'description': 'Numeric part (multiplier) for final amount when ordering with 2+ transactions'
