@@ -1,5 +1,7 @@
 'use strict'
 
+/* eslint-disable quote-props, array-bracket-spacing */
+
 // import common verbs (methods) functions
 const httpVerbs = require('./#applications.js')
 const modName = 'list_payments'
@@ -570,6 +572,12 @@ const responseSchema = {
               'minimum': 0,
               'maximum': 999999999,
               'description': 'Maximum number of points to apply'
+            },
+            'min_subtotal_to_earn': {
+              'type': 'integer',
+              'minimum': 1,
+              'maximum': 999999999,
+              'description': 'Minimum cart subtotal to earn new points'
             }
           },
           'description': 'Available loyalty points program object'
