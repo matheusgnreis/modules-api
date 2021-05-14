@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.26](https://github.com/ecomplus/modules-api/compare/v0.12.25...v0.12.26) (2021-05-14)
+
+
+### Bug Fixes
+
+* **applications:** when app id is set, limit fetching one app installation only ([b645ead](https://github.com/ecomplus/modules-api/commit/b645eadbe00fcea3682a765a3cf390cacf4d9704))
+* **checkout:** check transactions array length to proceed to next one ([1e4fb79](https://github.com/ecomplus/modules-api/commit/1e4fb7984a7d5bc6f8530e00a8ddcb4ea2b136d7))
+* **checkout:** check transactions array length to proceed to next one ([cddb375](https://github.com/ecomplus/modules-api/commit/cddb375f3571045fa998fae3fcb34da9a0ee50ab))
+* **checkout:** properly set customer id on all transactions ([4c350fb](https://github.com/ecomplus/modules-api/commit/4c350fb1094f0ac39c12683de96202a69aaaeeb7))
+* **create-transaction:** update schema to accept `amount_part` minimum to 0 ([8b1fbeb](https://github.com/ecomplus/modules-api/commit/8b1fbeb9a29c60b865ae9e3cb3b9220cb4ba4e54))
+
 ### [0.12.25](https://github.com/ecomplus/modules-api/compare/v0.12.24...v0.12.25) (2021-05-13)
 
 
