@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.27](https://github.com/ecomplus/modules-api/compare/v0.12.26...v0.12.27) (2021-05-14)
+
+
+### Features
+
+* **list-payments:** add `min_subtotal_to_earn` field to loyalty points programs object ([b75a623](https://github.com/ecomplus/modules-api/commit/b75a6235d6df0f2124081646f35f0e3f756a86d8))
+
 ### [0.12.26](https://github.com/ecomplus/modules-api/compare/v0.12.25...v0.12.26) (2021-05-14)
 
 
