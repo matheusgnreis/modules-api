@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.28](https://github.com/ecomplus/modules-api/compare/v0.12.27...v0.12.28) (2021-05-20)
+
+
+### Bug Fixes
+
+* **create-transaction:** set `credit_card.hash` max chars to 6k ([e197039](https://github.com/ecomplus/modules-api/commit/e197039d9a951a9e608d46a7ecf9b710ae62d8a0))
+
 ### [0.12.27](https://github.com/ecomplus/modules-api/compare/v0.12.26...v0.12.27) (2021-05-14)
 
 
