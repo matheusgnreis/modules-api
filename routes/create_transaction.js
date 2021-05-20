@@ -517,7 +517,7 @@ const schema = {
         },
         'hash': {
           'type': 'string',
-          'maxLength': 2000,
+          'maxLength': 6000,
           'description': 'Credit card encrypted hash'
         },
         'save': {
