@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.29](https://github.com/ecomplus/modules-api/compare/v0.12.28...v0.12.29) (2021-05-27)
+
+
+### Features
+
+* **list-paymenst:** add `earn_percentage` field to loyalty points program object ([93d06b2](https://github.com/ecomplus/modules-api/commit/93d06b2f0c4d3d9a2fe3e69d3021fa3108de43a2))
+
 ### [0.12.28](https://github.com/ecomplus/modules-api/compare/v0.12.27...v0.12.28) (2021-05-20)
 
 
