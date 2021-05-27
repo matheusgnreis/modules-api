@@ -578,6 +578,12 @@ const responseSchema = {
               'minimum': 1,
               'maximum': 999999999,
               'description': 'Minimum cart subtotal to earn new points'
+            },
+            'earn_percentage': {
+              'type': 'integer',
+              'minimum': 0,
+              'maximum': 100,
+              'description': 'Subtotal percentage that will be converted into new points on purchase'
             }
           },
           'description': 'Available loyalty points program object'
