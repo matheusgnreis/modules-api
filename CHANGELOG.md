@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.31](https://github.com/ecomplus/modules-api/compare/v0.12.30...v0.12.31) (2021-06-02)
+
+
+### Features
+
+* **calculate-shipping:** `pick_up`, `scheduled_delivery` and `delivery_instructions` on response ([3f1b69c](https://github.com/ecomplus/modules-api/commit/3f1b69ce0b0c6621429d3f561bb275c498095761))
+* **create-transaction:** add optional `payment_instructions` field to response schema ([f30ec3d](https://github.com/ecomplus/modules-api/commit/f30ec3d11655a2c06923be77a511ee3fb8dff14e))
+
 ### [0.12.30](https://github.com/ecomplus/modules-api/compare/v0.12.29...v0.12.30) (2021-05-27)
 
 ### [0.12.29](https://github.com/ecomplus/modules-api/compare/v0.12.28...v0.12.29) (2021-05-27)
