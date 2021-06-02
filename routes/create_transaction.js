@@ -4,6 +4,8 @@
 const httpVerbs = require('./#applications.js')
 const modName = 'create_transaction'
 
+/* eslint-disable quote-props, array-bracket-spacing */
+
 const schema = {
   'description': 'Triggered when order is being closed, must create payment transaction and return info',
   'type': 'object',
@@ -653,6 +655,11 @@ const responseSchema = {
           'maxLength': 1000,
           'format': 'uri',
           'description': 'Direct link to pay current transaction'
+        },
+        'payment_instructions': {
+          'type': 'string',
+          'maxLength': 1000,
+          'description': 'Additional text instructions for manual payments'
         },
         'intermediator': {
           'type': 'object',
