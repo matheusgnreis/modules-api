@@ -4,6 +4,8 @@
 const httpVerbs = require('./#applications.js')
 const modName = 'calculate_shipping'
 
+/* eslint-disable quote-props, array-bracket-spacing */
+
 const schema = {
   'description': 'Triggered to calculate shipping options, must return calculated values and times',
   'type': 'object',
@@ -420,6 +422,11 @@ const responseSchema = {
                 },
                 'description': 'Shipping object information'
               },
+              'pick_up': {
+                'type': 'string',
+                'enum': [ 'store', 'locker', 'point', 'other' ],
+                'description': 'Pick up option when no (or optional) freight'
+              },
               'price': {
                 'type': 'number',
                 // 'multipleOf': 0.00001,
@@ -592,9 +599,21 @@ const responseSchema = {
                 'description': 'Estimated delivery time'
               },
               'scheduled_delivery': {
+                'type': 'object',
+                'additionalProperties': false,
+                'patternProperties': {
+                  '^start|end$': {
+                    'type': 'string',
+                    'format': 'date-time',
+                    'description': 'Scheduled date and time on the ISO 8601 representation'
+                  }
+                },
+                'description': 'Date range when delivery will be made'
+              },
+              'delivery_instructions': {
                 'type': 'string',
-                'format': 'date-time',
-                'description': 'When delivery will be made on the ISO 8601 date time representation'
+                'maxLength': 1000,
+                'description': 'Additional text instructions for pick up or custom delivery process'
               },
               'warehouse_code': {
                 'type': 'string',
