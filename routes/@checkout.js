@@ -531,7 +531,7 @@ const schema = {
             'additionalProperties': false,
             'maxProperties': 100,
             'patternProperties': {
-              '^[a-z0-9_]{2,30}$': {
+              '^[A-Za-z0-9-_]{2,30}$': {
                 'type': 'number',
                 // 'multipleOf': 0.0001,
                 'minimum': 0,
