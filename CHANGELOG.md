@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.32](https://github.com/ecomplus/modules-api/compare/v0.12.31...v0.12.32) (2021-07-23)
+
+
+### Bug Fixes
+
+* **calculate-shipping:** update valid warehouse codes regex (add uppercase chars and -) ([680d8a2](https://github.com/ecomplus/modules-api/commit/680d8a2e423770a0c80a4d5afd0f91ea09597334))
+
 ### [0.12.31](https://github.com/ecomplus/modules-api/compare/v0.12.30...v0.12.31) (2021-06-02)
 
 

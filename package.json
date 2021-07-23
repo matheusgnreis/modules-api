@@ -1,6 +1,6 @@
 {
   "name": "ecomplus-mods",
-  "version": "0.12.31",
+  "version": "0.12.32",
   "description": "E-Com Plus Mods API Node.js App",
   "main": "main.js",
   "scripts": {
@@ -24,7 +24,7 @@
     "debug": "^4.3.1",
     "husky": "^2.7.0",
     "standard": "^16.0.3",
-    "standard-version": "^9.3.0"
+    "standard-version": "^9.3.1"
   },
   "husky": {
     "hooks": {
