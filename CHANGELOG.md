@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.35](https://github.com/ecomplus/modules-api/compare/v0.12.34...v0.12.35) (2021-10-18)
+
+
+### Bug Fixes
+
+* **applications:** properly checking empry params before set defaults ([eae9724](https://github.com/ecomplus/modules-api/commit/eae97243c251f40550049e06208697b70f8a9a28))
+
 ### [0.12.34](https://github.com/ecomplus/modules-api/compare/v0.12.33...v0.12.34) (2021-10-18)
 
 ### [0.12.33](https://github.com/ecomplus/modules-api/compare/v0.12.32...v0.12.33) (2021-10-18)
