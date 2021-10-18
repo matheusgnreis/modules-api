@@ -13,8 +13,9 @@ const ajv = Ajv({ allErrors: true })
 const Api = require('./../lib/Api.js')
 const Modules = require('./../lib/Modules.js')
 
-// cache list apps responses
-const apiCache = {}
+// cache list apps and no params modules results
+const appsCache = {}
+const resultsCache = {}
 
 function runModule (params, respond, storeId, modName, validate, responseValidate, appId) {
   // ajv
@@ -38,6 +39,15 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
     const method = 'GET'
     const body = null
 
+    let canCacheResults
+    if (canCache && (!params || !Object.keys(params).length)) {
+      if (resultsCache[cacheKey]) {
+        // cached response
+        return respond(resultsCache[cacheKey], params)
+      }
+      canCacheResults = true
+    }
+
     const errorCallback = (err, statusCode, devMsg) => {
       // not successful API call
       // send error response
@@ -56,11 +66,11 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
       // https://ecomstore.docs.apiary.io/#reference/applications/all-applications/list-all-store-applications
       const list = body.result
       if (Array.isArray(list)) {
-        if (canCache && !apiCache[cacheKey]) {
-          apiCache[cacheKey] = body
+        if (canCache && !appsCache[cacheKey]) {
+          appsCache[cacheKey] = body
           setTimeout(() => {
-            apiCache[cacheKey] = null
-            delete apiCache[cacheKey]
+            appsCache[cacheKey] = null
+            delete appsCache[cacheKey]
           }, list.length ? 60000 : 3000)
         }
 
@@ -133,6 +143,14 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
                 // all done
                 // params obj as response 'meta'
                 respond(results, params)
+
+                if (canCacheResults && !resultsCache[cacheKey]) {
+                  resultsCache[cacheKey] = results
+                  setTimeout(() => {
+                    resultsCache[cacheKey] = null
+                    delete resultsCache[cacheKey]
+                  }, 60000)
+                }
               }
             })
           }
@@ -143,8 +161,8 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
       }
     }
 
-    if (canCache && apiCache[cacheKey]) {
-      successCallback(apiCache[cacheKey])
+    if (canCache && appsCache[cacheKey]) {
+      successCallback(appsCache[cacheKey])
     } else {
       Api(endpoint, method, body, storeId, errorCallback, successCallback)
     }
