@@ -13,6 +13,9 @@ const ajv = Ajv({ allErrors: true })
 const Api = require('./../lib/Api.js')
 const Modules = require('./../lib/Modules.js')
 
+// cache list apps responses
+const apiCache = {}
+
 function runModule (params, respond, storeId, modName, validate, responseValidate, appId) {
   // ajv
   const valid = validate(params)
@@ -21,12 +24,15 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
     errorHandling(validate.errors, respond, modName)
   } else {
     // list module packages
+    let canCache = true
+    const cacheKey = `${storeId}:${modName}`
     let endpoint = 'applications.json' +
       '?state=active' +
       '&type=external' +
       '&modules.' + modName + '.enabled=true' +
       '&fields=_id,app_id,version,data,hidden_data,modules.' + modName
     if (appId && (typeof appId === 'number' || (typeof appId === 'string' && /^\d+$/.test(appId)))) {
+      canCache = false
       endpoint += `&app_id=${appId}&limit=1`
     }
     const method = 'GET'
@@ -48,8 +54,16 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
 
     const successCallback = (body) => {
       // https://ecomstore.docs.apiary.io/#reference/applications/all-applications/list-all-store-applications
-      let list = body.result
+      const list = body.result
       if (Array.isArray(list)) {
+        if (canCache && !apiCache[cacheKey]) {
+          apiCache[cacheKey] = body
+          setTimeout(() => {
+            apiCache[cacheKey] = null
+            delete apiCache[cacheKey]
+          }, list.length ? 60000 : 3000)
+        }
+
         let results = []
         let num = list.length
         if (num > 0) {
@@ -129,7 +143,11 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
       }
     }
 
-    Api(endpoint, method, body, storeId, errorCallback, successCallback)
+    if (canCache && apiCache[cacheKey]) {
+      successCallback(apiCache[cacheKey])
+    } else {
+      Api(endpoint, method, body, storeId, errorCallback, successCallback)
+    }
   }
 }
 
