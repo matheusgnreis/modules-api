@@ -19,6 +19,7 @@ const resultsCache = {}
 
 function runModule (params, respond, storeId, modName, validate, responseValidate, appId) {
   // ajv
+  const isEmptyParams = (!params || !Object.keys(params).length)
   const valid = validate(params)
   if (!valid) {
     // logger.log(validate.errors)
@@ -40,7 +41,7 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
     const body = null
 
     let canCacheResults
-    if (canCache && (!params || !Object.keys(params).length)) {
+    if (canCache && isEmptyParams) {
       if (resultsCache[cacheKey]) {
         // cached response
         return respond(resultsCache[cacheKey], params)
