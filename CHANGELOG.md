@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.36](https://github.com/ecomplus/modules-api/compare/v0.12.35...v0.12.36) (2021-10-18)
+
+
+### Bug Fixes
+
+* **modules:** set connection timeout 3s ([394aa6c](https://github.com/ecomplus/modules-api/commit/394aa6c1409c51c42a37eb586c17e3436429eaa0))
+
 ### [0.12.35](https://github.com/ecomplus/modules-api/compare/v0.12.34...v0.12.35) (2021-10-18)
 
 
