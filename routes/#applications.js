@@ -153,7 +153,7 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
                   }, 60000)
                 }
               }
-            })
+            }, parseInt(Math.random() * 1000000))
           }
         } else {
           // no packages
