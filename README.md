@@ -4,7 +4,7 @@ E-Com Plus Mods API Node.js App
 [REST API reference](https://developers.e-com.plus/modules-api/)
 
 # Technology stack
-+ [NodeJS](https://nodejs.org/en/) 8.9.x
++ [NodeJS](https://nodejs.org/en/) 12.x
 + [REST Auto Router](https://github.com/leomp12/nodejs-rest-auto-router) npm package
 
 # Setting up
