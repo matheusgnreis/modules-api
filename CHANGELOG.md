@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.38](https://github.com/ecomplus/modules-api/compare/v0.12.37...v0.12.38) (2021-10-20)
+
+
+### Bug Fixes
+
+* **applications:** control reverse requests to apps endpoints ([7186634](https://github.com/ecomplus/modules-api/commit/718663471799b76740750d3d8707ea62099c008d))
+* **modules:** blacklist urls to prevent consecultive errors ([b542c8c](https://github.com/ecomplus/modules-api/commit/b542c8c5059c8f10e8b415f2f33d1621826f1241))
+
 ### [0.12.37](https://github.com/ecomplus/modules-api/compare/v0.12.36...v0.12.37) (2021-10-18)
 
 
