@@ -16,6 +16,8 @@ const Modules = require('./../lib/Modules.js')
 // cache list apps and no params modules results
 const appsCache = {}
 const resultsCache = {}
+// control reverse requests to apps endpoints
+const runningReqs = {}
 
 function runModule (params, respond, storeId, modName, validate, responseValidate, appId) {
   // ajv
@@ -75,22 +77,23 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
           }, list.length ? 60000 : 3000)
         }
 
-        let results = []
-        let num = list.length
+        const results = []
+        const num = list.length
         if (num > 0) {
           // count packages done
           let done = 0
           // logger.log(modName)
           // logger.log(num)
 
+          const requestTimers = []
           for (let i = 0; i < num; i++) {
             // ok, proceed to modules
             const application = list[i]
             // declare data objects to prevent applications fatal errors
-            if (!application.hasOwnProperty('hidden_data')) {
+            if (!application.hidden_data) {
               application.hidden_data = {}
             }
-            if (!application.hasOwnProperty('data')) {
+            if (!application.data) {
               application.data = {}
             }
 
@@ -101,59 +104,82 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
               application
             }
             // logger.log(body)
-            let url = application.modules[modName].endpoint
+            const url = application.modules[modName].endpoint
             // handle request with big timeout if app ID was specified
-            let bigTimeout = !!(appId)
-            // count request->response time
-            let reqStartTime = Date.now()
+            const bigTimeout = !!(appId)
 
-            // send POST request
-            Modules(url, body, storeId, bigTimeout, (err, response) => {
-              // mount result object
-              let result = {
-                _id: application._id,
-                app_id: application.app_id,
-                took: Date.now() - reqStartTime,
-                version: application.version,
-                validated: false,
-                response_errors: null,
-                error: false,
-                error_message: null,
-                response
-              }
+            if (runningReqs[storeId] === undefined) {
+              runningReqs[storeId] = 0
+            }
+            if (runningReqs[url] === undefined) {
+              runningReqs[url] = 0
+            }
+            const reqDelay = 5 + Math.max(runningReqs[storeId] * 30, runningReqs[url] * 150)
+            if (reqDelay > 3000) {
+              requestTimers.forEach(timer => clearTimeout(timer))
+              return respond({}, null, 503, 'MOD503')
+            }
+            runningReqs[storeId]++
+            runningReqs[url]++
 
-              if (err) {
-                // logger.error(err)
-                result.error = true
-                result.error_message = err.message
-                // @TODO: debug app error
-              } else if (typeof response === 'object' && response !== null) {
-                // logger.log(response)
-                // validate response object
-                result.validated = responseValidate(response)
-                if (!result.validated) {
-                  result.response_errors = ajv.errorsText(responseValidate.errors, {
-                    separator: '\n'
-                  })
+            requestTimers.push(setTimeout(() => {
+              // count request->response time
+              const reqStartTime = Date.now()
+              Modules(url, body, storeId, bigTimeout, (err, response) => {
+                runningReqs[storeId]--
+                runningReqs[url]--
+
+                // mount result object
+                const result = {
+                  _id: application._id,
+                  app_id: application.app_id,
+                  queue_took: reqDelay,
+                  took: Date.now() - reqStartTime,
+                  version: application.version,
+                  validated: false,
+                  response_errors: null,
+                  error: false,
+                  error_message: null,
+                  response
                 }
-              }
-              results.push(result)
 
-              done++
-              if (done === num) {
-                // all done
-                // params obj as response 'meta'
-                respond(results, params)
-
-                if (canCacheResults && !resultsCache[cacheKey]) {
-                  resultsCache[cacheKey] = results
-                  setTimeout(() => {
-                    resultsCache[cacheKey] = null
-                    delete resultsCache[cacheKey]
-                  }, 60000)
+                if (err) {
+                  // logger.error(err)
+                  result.error = true
+                  result.error_message = err.message
+                  // @TODO: debug app error
+                } else if (typeof response === 'object' && response !== null) {
+                  // logger.log(response)
+                  // validate response object
+                  result.validated = responseValidate(response)
+                  if (!result.validated) {
+                    result.response_errors = ajv.errorsText(responseValidate.errors, {
+                      separator: '\n'
+                    })
+                  }
                 }
-              }
-            }, parseInt(Math.random() * 1000000))
+                results.push(result)
+
+                done++
+                if (done === num) {
+                  // all done
+                  // params obj as response 'meta'
+                  if (!results.find(({ response }) => response)) {
+                    respond(results, params, 409, 'MOD513')
+                  } else {
+                    respond(results, params)
+
+                    if (canCacheResults && !resultsCache[cacheKey]) {
+                      resultsCache[cacheKey] = results
+                      setTimeout(() => {
+                        resultsCache[cacheKey] = null
+                        delete resultsCache[cacheKey]
+                      }, 60000)
+                    }
+                  }
+                }
+              }, parseInt(Math.random() * 1000000))
+            }, reqDelay))
           }
         } else {
           // no packages
@@ -170,13 +196,13 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
   }
 }
 
-function post ([ id, meta, body, respond, storeId ], modName, validate, responseValidate) {
+function post ([id, meta, body, respond, storeId], modName, validate, responseValidate) {
   // run module with JSON body as object
   // logger.log(body)
   runModule(body, respond, storeId, modName, validate, responseValidate, meta.query.app_id)
 }
 
-function get ([ id, meta, , respond, storeId ], modName, validate, schema, responseValidate, responseSchema) {
+function get ([id, meta, , respond, storeId], modName, validate, schema, responseValidate, responseSchema) {
   if (id) {
     switch (id) {
       case 'schema':
@@ -196,8 +222,7 @@ function get ([ id, meta, , respond, storeId ], modName, validate, schema, respo
         break
 
       default:
-        let devMsg = 'Resource ID is acceptable only to JSON schema, at /' + modName + '/schema.json'
-        respond({}, null, 406, 'MOD101', devMsg)
+        respond({}, null, 406, 'MOD101', 'Resource ID is acceptable only to JSON schema, at /' + modName + '/schema.json')
     }
   } else {
     // run module with query params as object
@@ -213,10 +238,10 @@ module.exports = (modName, schema, responseSchema) => {
   const responseValidate = Ajv(validateOptions).compile(responseSchema)
 
   return {
-    'GET': function () {
+    GET: function () {
       get(arguments, modName, validate, schema, responseValidate, responseSchema)
     },
-    'POST': function () {
+    POST: function () {
       post(arguments, modName, validate, responseValidate)
     }
   }
