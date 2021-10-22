@@ -351,8 +351,19 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                           flags: ['checkout']
                         }
                         setTimeout(() => {
-                          Api('orders/' + orderId + '/payments_history.json', 'POST', paymentEntry, storeId)
-                        }, 300)
+                          if (isFirstTransaction) {
+                            const body = {
+                              financial_status: {
+                                current: paymentEntry.status,
+                                updated_at: dateTime
+                              },
+                              payments_history: [paymentEntry]
+                            }
+                            Api('orders/' + orderId + '.json', 'PATCH', body, storeId)
+                          } else {
+                            Api('orders/' + orderId + '/payments_history.json', 'POST', paymentEntry, storeId)
+                          }
+                        }, isFirstTransaction ? 200 : 400)
                       }
                       index++
                       if (index < transactions.length) {
