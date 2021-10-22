@@ -114,7 +114,7 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
             if (runningReqs[url] === undefined) {
               runningReqs[url] = 0
             }
-            const reqDelay = 5 + Math.max(runningReqs[storeId] * 30, runningReqs[url] * 150)
+            const reqDelay = 5 + Math.max(runningReqs[storeId] * 20, runningReqs[url] * 100)
             if (reqDelay > 3000) {
               requestTimers.forEach(timer => clearTimeout(timer))
               return respond({}, null, 503, 'MOD503')
