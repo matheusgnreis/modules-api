@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.39](https://github.com/ecomplus/modules-api/compare/v0.12.38...v0.12.39) (2021-10-22)
+
+
+### Bug Fixes
+
+* **checkout:** also set order `financial_status` after first transactions response ([71faac3](https://github.com/ecomplus/modules-api/commit/71faac3884b1bdf3d301b956c04a697f0ba760b0))
+
 ### [0.12.38](https://github.com/ecomplus/modules-api/compare/v0.12.37...v0.12.38) (2021-10-20)
 
 
