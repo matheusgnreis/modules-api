@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.40](https://github.com/ecomplus/modules-api/compare/v0.12.39...v0.12.40) (2021-10-26)
+
+
+### Bug Fixes
+
+* **applications:** respond with status 429 instead of 503 on big queue delays ([c003eb0](https://github.com/ecomplus/modules-api/commit/c003eb0ccbec3cec2acb5a0b5bab9396f4d63214))
+
 ### [0.12.39](https://github.com/ecomplus/modules-api/compare/v0.12.38...v0.12.39) (2021-10-22)
 
 
