@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.41](https://github.com/ecomplus/modules-api/compare/v0.12.40...v0.12.41) (2021-10-26)
+
+
+### Bug Fixes
+
+* **modules:** should restart on 50+ consecutive req aborts ([4a1f674](https://github.com/ecomplus/modules-api/commit/4a1f67478f8fc56cd6ff2f985a05918a94172835))
+
 ### [0.12.40](https://github.com/ecomplus/modules-api/compare/v0.12.39...v0.12.40) (2021-10-26)
 
 
