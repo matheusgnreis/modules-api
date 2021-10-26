@@ -78,15 +78,15 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
         }
 
         const results = []
-        const num = list.length
-        if (num > 0) {
+        let waitReqs = list.length
+        if (waitReqs > 0) {
           // count packages done
           let done = 0
           // logger.log(modName)
           // logger.log(num)
 
           const requestTimers = []
-          for (let i = 0; i < num; i++) {
+          for (let i = 0; i < list.length; i++) {
             // ok, proceed to modules
             const application = list[i]
             // declare data objects to prevent applications fatal errors
@@ -116,8 +116,11 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
             }
             const reqDelay = 5 + Math.max(runningReqs[storeId] * 20, runningReqs[url] * 100)
             if (reqDelay > 3000) {
-              requestTimers.forEach(timer => clearTimeout(timer))
-              return respond({}, null, 429, 'MOD503')
+              if (waitReqs === 1) {
+                return respond({}, null, 429, 'MOD503')
+              }
+              waitReqs--
+              continue
             }
             runningReqs[storeId]++
             runningReqs[url]++
@@ -161,7 +164,7 @@ function runModule (params, respond, storeId, modName, validate, responseValidat
                 results.push(result)
 
                 done++
-                if (done === num) {
+                if (done === waitReqs) {
                   // all done
                   // params obj as response 'meta'
                   if (!results.find(({ response }) => response)) {
