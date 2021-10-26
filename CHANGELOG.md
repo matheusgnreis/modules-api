@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.42](https://github.com/ecomplus/modules-api/compare/v0.12.41...v0.12.42) (2021-10-26)
+
+
+### Bug Fixes
+
+* **modules:** prevent error with undefined `response` object ([b94a0dd](https://github.com/ecomplus/modules-api/commit/b94a0dd4a66775e5c6df3358a6fe4013d9913475))
+
 ### [0.12.41](https://github.com/ecomplus/modules-api/compare/v0.12.40...v0.12.41) (2021-10-26)
 
 
