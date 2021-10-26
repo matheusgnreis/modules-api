@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.43](https://github.com/ecomplus/modules-api/compare/v0.12.42...v0.12.43) (2021-10-26)
+
+
+### Bug Fixes
+
+* **applications:** prevent aborting requests by queue delay when multiple apps ([0ff9da2](https://github.com/ecomplus/modules-api/commit/0ff9da236874782f92d96fd757d2e49ea7feb801))
+
 ### [0.12.42](https://github.com/ecomplus/modules-api/compare/v0.12.41...v0.12.42) (2021-10-26)
 
 
