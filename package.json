@@ -1,6 +1,6 @@
 {
   "name": "ecomplus-mods",
-  "version": "0.12.43",
+  "version": "0.12.44",
   "description": "E-Com Plus Mods API Node.js App",
   "main": "main.js",
   "scripts": {

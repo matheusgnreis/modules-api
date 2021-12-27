@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.44](https://github.com/ecomplus/modules-api/compare/v0.12.43...v0.12.44) (2021-12-27)
+
+
+### Bug Fixes
+
+* **checkout:** better object id (for item ids) function also using `Math.random` ([b2df539](https://github.com/ecomplus/modules-api/commit/b2df539bde0c2edd060a35138dfd8e9c0af6077b))
+* **checkout:** properly complete `transaction.app` object when multiple transactions ([688f120](https://github.com/ecomplus/modules-api/commit/688f120f04a8d4ab53c8f06c2fd35474980b5870))
+
 ### [0.12.43](https://github.com/ecomplus/modules-api/compare/v0.12.42...v0.12.43) (2021-10-26)
 
 
