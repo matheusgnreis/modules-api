@@ -308,16 +308,21 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                     if (!transaction.app) {
                       transaction.app = { _id: result._id }
                       // complete app object with some request body fields
-                      ;[
-                        'label',
-                        'icon',
-                        'intermediator',
-                        'payment_url'
-                      ].forEach(field => {
-                        if (checkoutBody.transaction[field] !== undefined) {
-                          transaction.app[field] = checkoutBody.transaction[field]
-                        }
-                      })
+                      const transactionOptions = Array.isArray(checkoutBody.transaction)
+                        ? checkoutBody.transaction.find(transaction => transaction.app_id === result._id)
+                        : checkoutBody.transaction
+                      if (transactionOptions) {
+                        ;[
+                          'label',
+                          'icon',
+                          'intermediator',
+                          'payment_url'
+                        ].forEach(field => {
+                          if (transactionOptions[field] !== undefined) {
+                            transaction.app[field] = transactionOptions[field]
+                          }
+                        })
+                      }
                       // logger.log(transaction.app)
                     }
 
