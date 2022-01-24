@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.45](https://github.com/ecomplus/modules-api/compare/v0.12.44...v0.12.45) (2022-01-24)
+
+
+### Bug Fixes
+
+* **checkout:** return invalid items when no subtotal and some item removed ([9caf043](https://github.com/ecomplus/modules-api/commit/9caf043ae26d1c0eba7d2d4542861f5cabebbed7))
+
 ### [0.12.44](https://github.com/ecomplus/modules-api/compare/v0.12.43...v0.12.44) (2021-12-27)
 
 
