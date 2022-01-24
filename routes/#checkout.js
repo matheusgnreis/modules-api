@@ -107,8 +107,14 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
   // valid body
   // handle checkout with shipping and transaction options
   // get each cart item first
+  const countCheckoutItems = checkoutBody.items.length
   fixItems(checkoutBody.items, storeId, items => {
     // all items done
+    const respondInvalidItems = () => {
+      const devMsg = 'Cannot handle checkout, any valid cart item'
+      checkoutRespond({}, null, 400, 'CKT801', devMsg)
+    }
+
     if (items.length) {
       checkoutBody.items = items
       // start mounting order body
@@ -154,6 +160,9 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
         // pass each item to prevent object overwrite
         orderBody.items.push(Object.assign({}, item))
       })
+      if (subtotal <= 0 && items.length < countCheckoutItems) {
+        return respondInvalidItems()
+      }
       const amount = {
         subtotal,
         discount: 0,
@@ -630,8 +639,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
       }
     } else {
       // no valid items
-      const devMsg = 'Cannot handle checkout, any valid cart item'
-      checkoutRespond({}, null, 400, 'CKT801', devMsg)
+      respondInvalidItems()
     }
   })
 }
