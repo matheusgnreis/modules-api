@@ -40,6 +40,8 @@ function middleware (id, meta, body, respond, req, res, resource, verb, endpoint
   // function called before endpoints
   // authentications and other prerequisites when necessary
   if (typeof req.headers['x-real-ip'] === 'string') {
+    // get real ip
+    const browser_ip = req.headers['x-real-ip'] 
     // requires store ID
     let storeId
     if (meta.query.hasOwnProperty('store_id')) {
@@ -57,9 +59,8 @@ function middleware (id, meta, body, respond, req, res, resource, verb, endpoint
       respond({}, null, 403, 121, 'Undefined or invalid Store ID')
       return
     }
-
     // pass to endpoint
-    endpoint(id, meta, body, respond, storeId)
+    endpoint(id, meta, body, respond, storeId, browser_ip)
   } else {
     respond({}, null, 403, 100, 'Who are you? Unknown IP address')
   }
