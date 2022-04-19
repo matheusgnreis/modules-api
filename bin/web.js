@@ -41,7 +41,7 @@ function middleware (id, meta, body, respond, req, res, resource, verb, endpoint
   // authentications and other prerequisites when necessary
   if (typeof req.headers['x-real-ip'] === 'string') {
     // get real ip
-    const browser_ip = req.headers['x-real-ip'] 
+    const browserIp = req.headers['x-real-ip'] 
     // requires store ID
     let storeId
     if (meta.query.hasOwnProperty('store_id')) {
