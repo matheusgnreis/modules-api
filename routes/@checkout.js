@@ -1042,7 +1042,7 @@ const GET = (id, meta, body, respond) => {
   }
 }
 
-const POST = (id, meta, body, respond, storeId) => {
+const POST = (id, meta, body, respond, storeId, ip) => {
   // logger.log(JSON.stringify(body, null, 2))
   // ajv
   const valid = validate(body)
@@ -1051,6 +1051,9 @@ const POST = (id, meta, body, respond, storeId) => {
   } else {
     // request body validated
     // handle checkout
+    if (!body.browser_ip) {
+      body.browser_ip = ip
+    }
     checkout(body, respond, storeId)
   }
 }

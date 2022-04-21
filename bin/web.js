@@ -39,7 +39,8 @@ const conf = {
 function middleware (id, meta, body, respond, req, res, resource, verb, endpoint) {
   // function called before endpoints
   // authentications and other prerequisites when necessary
-  if (typeof req.headers['x-real-ip'] === 'string') {
+  const ip = req.headers['x-real-ip']
+  if (typeof ip === 'string') {
     // requires store ID
     let storeId
     if (meta.query.hasOwnProperty('store_id')) {
@@ -59,7 +60,7 @@ function middleware (id, meta, body, respond, req, res, resource, verb, endpoint
     }
 
     // pass to endpoint
-    endpoint(id, meta, body, respond, storeId)
+    endpoint(id, meta, body, respond, storeId, ip)
   } else {
     respond({}, null, 403, 100, 'Who are you? Unknown IP address')
   }
