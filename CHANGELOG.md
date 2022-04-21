@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.47](https://github.com/ecomplus/modules-api/compare/v0.12.46...v0.12.47) (2022-04-21)
+
+
+### Bug Fixes
+
+* **checkout:** prevent error with invalid client ip address ([c768c44](https://github.com/ecomplus/modules-api/commit/c768c441d366f12647bab8ab620481c0f98ec0ef))
+
 ### [0.12.46](https://github.com/ecomplus/modules-api/compare/v0.12.45...v0.12.46) (2022-04-21)
 
 
