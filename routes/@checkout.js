@@ -1051,8 +1051,8 @@ const POST = (id, meta, body, respond, storeId, ip) => {
   } else {
     // request body validated
     // handle checkout
-    if (!body.browser_ip) {
-      body.browser_ip = ip
+    if (!body.browser_ip && ip) {
+      body.browser_ip = ip.substring(0, 30)
     }
     checkout(body, respond, storeId)
   }
