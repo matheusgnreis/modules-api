@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.48](https://github.com/ecomplus/modules-api/compare/v0.12.47...v0.12.48) (2022-04-21)
+
+
+### Bug Fixes
+
+* **checkout:** also accept ipv6 `browser_ip` ([856702c](https://github.com/ecomplus/modules-api/commit/856702c5ee4508c9d217db83386053b3d6ffce67))
+
 ### [0.12.47](https://github.com/ecomplus/modules-api/compare/v0.12.46...v0.12.47) (2022-04-21)
 
 
