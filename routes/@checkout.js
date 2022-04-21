@@ -838,8 +838,7 @@ const schema = {
     },
     'browser_ip': {
       'type': 'string',
-      'maxLength': 30,
-      'format': 'ipv4',
+      'maxLength': 50,
       'description': 'IP address of the browser used by the customer when placing the order'
     },
     'channel_id': {
@@ -1052,7 +1051,7 @@ const POST = (id, meta, body, respond, storeId, ip) => {
     // request body validated
     // handle checkout
     if (!body.browser_ip && ip) {
-      body.browser_ip = ip.substring(0, 30)
+      body.browser_ip = ip
     }
     checkout(body, respond, storeId)
   }

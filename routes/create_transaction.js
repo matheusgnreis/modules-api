@@ -606,8 +606,7 @@ const schema = {
     },
     'browser_ip': {
       'type': 'string',
-      'maxLength': 30,
-      'format': 'ipv4',
+      'maxLength': 50,
       'description': 'IP address of the browser used by the customer when placing the order'
     },
     'channel_id': {
