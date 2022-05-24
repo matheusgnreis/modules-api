@@ -278,7 +278,8 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                 // also need shipping address
                 // send from shipping object if undefined on transaction object
                 to: { ...checkoutBody.shipping.to },
-                ...transaction
+                ...transaction,
+                amount: { ...amount }
               }
               if (transactionBody.amount && transaction.amount_part > 0 && transaction.amount_part < 1) {
                 // fix amount for multiple transactions
