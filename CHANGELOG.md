@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.49](https://github.com/ecomplus/modules-api/compare/v0.12.48...v0.12.49) (2022-05-24)
+
+
+### Features
+
+* **checkout:** save loyalty points amount as `amount.balance` on new order ([cfc78e3](https://github.com/ecomplus/modules-api/commit/cfc78e396cf0eb9503d3ff951742d42f4596e707))
+
 ### [0.12.48](https://github.com/ecomplus/modules-api/compare/v0.12.47...v0.12.48) (2022-04-21)
 
 
