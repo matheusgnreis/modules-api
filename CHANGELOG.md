@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.50](https://github.com/ecomplus/modules-api/compare/v0.12.49...v0.12.50) (2022-05-24)
+
+
+### Bug Fixes
+
+* **checkout:** must set payment history entriy id ([73cab7b](https://github.com/ecomplus/modules-api/commit/73cab7b7f64f15c4708ab3a35c9d1b85b6599b07))
+
 ### [0.12.49](https://github.com/ecomplus/modules-api/compare/v0.12.48...v0.12.49) (2022-05-24)
 
 
