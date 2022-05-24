@@ -262,6 +262,8 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
 
             let countDone = 0
             let paymentsAmount = 0
+            let loyaltyPointsBalance = 0
+            const paymentHistory = []
             const nextTransaction = (index = 0) => {
               const transaction = transactions[index]
               // logger.log('transaction')
@@ -283,6 +285,9 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                 const partialAmount = transactionBody.amount.total * transaction.amount_part
                 transactionBody.amount.discount += transactionBody.amount.total - partialAmount
                 transactionBody.amount.total = partialAmount
+                if (transactionBody.payment_method.code === 'loyalty_points') {
+                  loyaltyPointsBalance += partialAmount
+                }
                 delete transactionBody.amount_part
               }
               // logger.log(JSON.stringify(transactionBody, null, 2))
@@ -364,19 +369,25 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                           date_time: dateTime,
                           flags: ['checkout']
                         }
+                        paymentHistory.push(paymentEntry)
                         setTimeout(() => {
-                          if (isFirstTransaction) {
-                            const body = {
-                              financial_status: {
-                                current: paymentEntry.status,
-                                updated_at: dateTime
-                              },
-                              payments_history: [paymentEntry]
-                            }
-                            Api('orders/' + orderId + '.json', 'PATCH', body, storeId)
-                          } else {
-                            Api('orders/' + orderId + '/payments_history.json', 'POST', paymentEntry, storeId)
+                          const body = {
+                            payments_history: paymentHistory
                           }
+                          if (isFirstTransaction) {
+                            body.financial_status = {
+                              current: paymentEntry.status,
+                              updated_at: dateTime
+                            }
+                          }
+                          if (loyaltyPointsBalance > 0) {
+                            body.amount = {
+                              ...amount,
+                              balance: loyaltyPointsBalance,
+                              total: amount.total - loyaltyPointsBalance
+                            }
+                          }
+                          Api('orders/' + orderId + '.json', 'PATCH', body, storeId)
                         }, isFirstTransaction ? 200 : 400)
                       }
                       index++
