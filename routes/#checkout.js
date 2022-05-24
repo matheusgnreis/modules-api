@@ -364,6 +364,7 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                       if (!err) {
                         // add entry to payments history
                         const paymentEntry = {
+                          _id: objectId(),
                           transaction_id: transactionId,
                           status: transaction.status.current,
                           date_time: dateTime,
@@ -381,10 +382,11 @@ module.exports = (checkoutBody, checkoutRespond, storeId) => {
                             }
                           }
                           if (loyaltyPointsBalance > 0) {
+                            const balance = Math.round(loyaltyPointsBalance * 100) / 100
                             body.amount = {
                               ...amount,
-                              balance: loyaltyPointsBalance,
-                              total: amount.total - loyaltyPointsBalance
+                              balance,
+                              total: amount.total - balance
                             }
                           }
                           Api('orders/' + orderId + '.json', 'PATCH', body, storeId)
