@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.51](https://github.com/ecomplus/modules-api/compare/v0.12.50...v0.12.51) (2022-05-24)
+
+
+### Bug Fixes
+
+* **checkout:** prevent amount being changed by reference on secondary transactions ([c5ff18e](https://github.com/ecomplus/modules-api/commit/c5ff18ef4c82d50795c2b10157fe4a0d9bf8f52d))
+
 ### [0.12.50](https://github.com/ecomplus/modules-api/compare/v0.12.49...v0.12.50) (2022-05-24)
 
 
