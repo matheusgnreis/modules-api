@@ -4,6 +4,8 @@
 const httpVerbs = require('./#applications.js')
 const modName = 'apply_discount'
 
+/* eslint-disable quote-props, array-bracket-spacing */
+
 const schema = {
   'description': 'Triggered to validate and apply discount value, must return discount and conditions',
   'type': 'object',
@@ -232,6 +234,37 @@ const responseSchema = {
   'type': 'object',
   'additionalProperties': false,
   'properties': {
+    'product_kit_discounts': {
+      'type': 'object',
+      'required': [ 'items' ],
+      'additionalProperties': false,
+      'properties': {
+        'value': {
+          'type': 'number',
+          // 'multipleOf': 0.00001,
+          'minimum': 0.01,
+          'maximum': 9999999999,
+          'description': 'Discount value'
+        },
+        'type': {
+          'type': 'string',
+          'enum': [ 'percentage', 'fixed' ],
+          'default': 'percentage',
+          'description': 'Discount type'
+        },
+        'items': {
+          'type': 'array',
+          'maxItems': 3000,
+          'items': {
+            'type': 'string',
+            'pattern': '^[a-f0-9]{24}$',
+            'description': 'Product ID'
+          },
+          'description': 'List of items from products kits'
+        }
+      },
+      'description': 'List product kits campaigns'
+    },
     'available_extra_discount': {
       'type': 'object',
       'required': [ 'value' ],
