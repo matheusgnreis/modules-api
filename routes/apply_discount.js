@@ -244,7 +244,7 @@ const responseSchema = {
         'patternProperties': {
           '^([a-f0-9]{24})$': {
             'type': 'object',
-            'required': [ 'quantity' ],
+            'required': [ 'discount' ],
             'additionalProperties': false,
             'properties': {
               'quantity': {
