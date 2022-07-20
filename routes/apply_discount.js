@@ -236,50 +236,52 @@ const responseSchema = {
   'properties': {
     'buy_together': {
       'type': 'array',
-      'maxItems': 20,
+      'maxItems': 300,
       'items': {
-        'type': 'object',
+        'type': 'array',
         'additionalProperties': false,
-        'maxProperties': 50,
-        'patternProperties': {
-          '^[a-f0-9]{24}$': {
-            'type': 'object',
-            'required': [ 'discount' ],
-            'additionalProperties': false,
-            'properties': {
-              'quantity': {
-                'type': 'number',
-                // 'multipleOf': 0.0001,
-                'minimum': 0,
-                'maximum': 9999999,
-                'description': 'Product quantity'
-              },
-              'discount': {
-                'type': 'object',
-                'required': [ 'value' ],
-                'additionalProperties': false,
-                'properties': {
-                  'type': {
-                    'type': 'string',
-                    'enum': [ 'percentage', 'fixed' ],
-                    'default': 'percentage',
-                    'description': 'Discount type'
-                  },
-                  'value': {
-                    'type': 'number',
-                    // 'multipleOf': 0.0001,
-                    'minimum': -99999999,
-                    'maximum': 99999999,
-                    'description': 'Discount value, percentage or fixed'
-                  }
-                },
-                'description': 'Discount object'
-              }
+        'maxItems': 3000,
+        'properties': {
+          'type': 'object',
+          'required': [ 'discount' ],
+          'additionalProperties': false,
+          'properties': {
+            'product_id': {
+              'type': 'string',
+              'pattern': '^[a-f0-9]{24}$',
+              'description': 'Product ID'
             },
-            'description': 'Product in buy together'
-          }
+            'discount': {
+              'type': 'object',
+              'required': [ 'value' ],
+              'additionalProperties': false,
+              'properties': {
+                'type': {
+                  'type': 'string',
+                  'enum': [ 'percentage', 'fixed' ],
+                  'default': 'percentage',
+                  'description': 'Discount type'
+                },
+                'value': {
+                  'type': 'number',
+                  // 'multipleOf': 0.0001,
+                  'minimum': -99999999,
+                  'maximum': 99999999,
+                  'description': 'Discount value, percentage or fixed'
+                }
+              },
+              'description': 'Discount object'
+            },
+            "quantity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9999999,
+              "description": "Product quantity"
+            }
+          },
+          'description': 'Product in buy together'
         },
-        'description': 'This product and others composing buy together, product ID as property name'
+        'description': 'List items'
       },
       'description': 'Buy together options'
     },
