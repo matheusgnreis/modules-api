@@ -242,7 +242,7 @@ const responseSchema = {
         'additionalProperties': false,
         'maxProperties': 50,
         'patternProperties': {
-          '^([a-f0-9]{24})$': {
+          '^[a-f0-9]{24}$': {
             'type': 'object',
             'required': [ 'discount' ],
             'additionalProperties': false,
