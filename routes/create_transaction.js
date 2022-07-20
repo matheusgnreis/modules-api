@@ -383,6 +383,11 @@ const schema = {
           'type': 'string',
           'maxLength': 50,
           'description': 'Municipal or state registration number (with characters) if exists'
+        },
+        'notes': {
+          'type': 'string',
+          'maxLength': 255,
+          'description': 'Customer note'
         }
       },
       'description': 'Order buyer info'
