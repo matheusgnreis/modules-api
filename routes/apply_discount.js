@@ -237,15 +237,23 @@ const responseSchema = {
     'buy_together': {
       'type': 'array',
       'maxItems': 20,
-      'product_kit_discounts': {
+      'items': {
         'type': 'object',
         'additionalProperties': false,
         'maxProperties': 50,
         'patternProperties': {
           '^([a-f0-9]{24})$': {
             'type': 'object',
+            'required': [ 'quantity' ],
             'additionalProperties': false,
             'properties': {
+              'quantity': {
+                'type': 'number',
+                // 'multipleOf': 0.0001,
+                'minimum': 0,
+                'maximum': 9999999,
+                'description': 'Product quantity'
+              },
               'discount': {
                 'type': 'object',
                 'required': [ 'value' ],
@@ -266,24 +274,6 @@ const responseSchema = {
                   }
                 },
                 'description': 'Discount object'
-              },
-              'items': {
-                'type': 'array',
-                'maxItems': 3000,
-                'items': {
-                  'type': 'object',
-                  'additionalProperties': false,
-                  'required': [ 'product_id' ],
-                  'properties': {
-                    'product_id': {
-                      'type': 'string',
-                      'pattern': '^[a-f0-9]{24}$',
-                      'description': 'Product ID'
-                    }
-                  },
-                  'description': 'One of the products kit'
-                },
-                'description': 'Products composing kit'
               }
             },
             'description': 'Product in buy together'
