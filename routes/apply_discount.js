@@ -242,14 +242,22 @@ const responseSchema = {
         'required': [ 'discount' ],
         'additionalProperties': false,
         'properties': {
-          'product_ids': {
-            'type': 'array',
-            'uniqueItems': true,
-            'maxItems': 100,
-            'items': {
-                'type': 'string',
-                'pattern': '^[a-f0-9]{24}$',
-                'description': 'Product ID'
+          'product': {
+            'type': 'object',
+            'maxProperties': 100,
+            'patternProperties': {
+              '^([a-f0-9]{24})$': {
+                'type': 'object',
+                'properties': {
+                  'quantity': {
+                    'type': 'number',
+                    'minimum': 0,
+                    'maximum': 9999999,
+                    'description': 'Product quantity'
+                  },
+                },
+                'required': ['quantity']
+              }
             },
             'description': 'List of products'
           },
@@ -273,13 +281,7 @@ const responseSchema = {
               }
             },
             'description': 'Discount object'
-          },
-          'quantity': {
-            'type': 'number',
-            'minimum': 0,
-            'maximum': 9999999,
-            'description': 'Product quantity'
-          },
+          }
         },
         'description': 'List of item from buy together'
       },
