@@ -277,7 +277,7 @@ const responseSchema = {
             'description': 'Discount object'
           }
         },
-        'description': 'List of item from buy together'
+        'description': 'Buy together offer object'
       },
       'description': 'List of buy together offers'
     },
