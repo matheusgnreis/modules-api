@@ -253,7 +253,7 @@ const responseSchema = {
                 'description': 'Product quantity to buy'
               }
             },
-            'description': 'List of products'
+            'description': 'Products to buy together with respective quantity, product ID as object property'
           },
           'discount': {
             'type': 'object',
