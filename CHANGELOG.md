@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.52](https://github.com/ecomplus/modules-api/compare/v0.12.51...v0.12.52) (2022-07-28)
+
+
+### Features
+
+* **apply-discount:** add `buy_together` (optional) to apply discount response schema ([#17](https://github.com/ecomplus/modules-api/issues/17)) ([f328ff6](https://github.com/ecomplus/modules-api/commit/f328ff658febb8acf8a0b60df0317e914d242552))
+
 ### [0.12.51](https://github.com/ecomplus/modules-api/compare/v0.12.50...v0.12.51) (2022-05-24)
 
 
