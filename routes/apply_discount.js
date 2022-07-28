@@ -247,16 +247,10 @@ const responseSchema = {
             'maxProperties': 100,
             'patternProperties': {
               '^([a-f0-9]{24})$': {
-                'type': 'object',
-                'properties': {
-                  'quantity': {
-                    'type': 'number',
-                    'minimum': 0,
-                    'maximum': 9999999,
-                    'description': 'Product quantity'
-                  },
-                },
-                'required': ['quantity']
+                'type': 'number',
+                'minimum': 1,
+                'maximum': 9999999,
+                'description': 'Product quantity to buy'
               }
             },
             'description': 'List of products'
