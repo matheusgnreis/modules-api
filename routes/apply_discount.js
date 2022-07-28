@@ -279,7 +279,7 @@ const responseSchema = {
         },
         'description': 'List of item from buy together'
       },
-      'description': 'Buy together options'
+      'description': 'List of buy together offers'
     },
     'available_extra_discount': {
       'type': 'object',
