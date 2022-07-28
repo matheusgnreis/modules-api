@@ -242,7 +242,7 @@ const responseSchema = {
         'required': [ 'discount' ],
         'additionalProperties': false,
         'properties': {
-          'product': {
+          'products': {
             'type': 'object',
             'maxProperties': 100,
             'patternProperties': {
