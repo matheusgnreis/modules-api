@@ -125,6 +125,18 @@ const schema = {
       },
       'description': 'Address object'
     },
+    'currency_id': {
+      'type': 'string',
+      'pattern': '^[A-Z]{3}$',
+      'default': 'BRL',
+      'description': 'Currency ID'
+    },
+    'currency_symbol': {
+      'type': 'string',
+      'maxLength': 20,
+      'default': 'R$',
+      'description': 'Currency Symbol'
+    },
     'transaction': {
       'type': 'object',
       'additionalProperties': false,
@@ -708,6 +720,18 @@ const schema = {
               }
             },
             'description': 'Gift wrap chosen by customer'
+          },
+          'currency_id': {
+            'type': 'string',
+            'pattern': '^[A-Z]{3}$',
+            'default': 'BRL',
+            'description': 'Currency ID'
+          },
+          'currency_symbol': {
+            'type': 'string',
+            'maxLength': 20,
+            'default': 'R$',
+            'description': 'Currency Symbol'
           },
           'flags': {
             'type': 'array',
